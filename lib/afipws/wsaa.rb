@@ -1,7 +1,7 @@
 module Afipws
   class WSAA
     # TODO ver si se puede poner un ttl mas largo
-    def generar_tra service = 'wsfe', ttl = 2400
+    def generar_tra service, ttl
       xml = Builder::XmlMarkup.new indent: 2
       xml.instruct!
       xml.loginTicketRequest version: 1 do
@@ -38,6 +38,10 @@ module Afipws
       end
       ta = Nokogiri::XML(Nokogiri::XML(response.to_xml).xpath('//loginCmsResponse').text)
       [ta.css('token').text, ta.css('sign').text]
+    end
+    
+    def request action, body
+      
     end
     
     private

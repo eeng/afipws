@@ -20,8 +20,11 @@ GEM
       rack
     linecache19 (0.5.11)
       ruby_core_source (>= 0.1.4)
+    mocha (0.9.10)
+      rake
     nokogiri (1.4.4)
     rack (1.2.1)
+    rake (0.8.7)
     rspec (2.4.0)
       rspec-core (~> 2.4.0)
       rspec-expectations (~> 2.4.0)
@@ -45,6 +48,10 @@ GEM
       crack (~> 0.1.8)
       gyoku (>= 0.1.1)
       httpi (>= 0.7.5)
+    savon_spec (0.1.2)
+      mocha (>= 0.9.8)
+      rspec (>= 2.0.0)
+      savon (~> 0.8.0)
 
 PLATFORMS
   ruby
@@ -56,3 +63,4 @@ DEPENDENCIES
   rspec
   ruby-debug19
   savon
+  savon_spec
