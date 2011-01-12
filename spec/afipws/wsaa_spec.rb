@@ -15,8 +15,8 @@ describe Afipws::WSAA do
   
   context "firmado del tra" do
     it "debería firmar el tra usando el certificado y la clave privada" do
-      key = File.read(File.dirname(__FILE__) + '/vitolen-dev.key')
-      crt = File.read(File.dirname(__FILE__) + '/vitolen-dev.crt')
+      key = File.read(File.dirname(__FILE__) + '/test.key')
+      crt = File.read(File.dirname(__FILE__) + '/test.crt')
       tra = subject.generar_tra 'wsfe', 2400
       subject.firmar_tra(tra, key, crt).to_s.should =~ /BEGIN PKCS7/
     end
