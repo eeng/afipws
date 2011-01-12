@@ -38,6 +38,10 @@ describe Afipws::WSAA do
       sign.should == 'i9xDN='
     end
     
-    it "si tira error ..."
+    it "debería burbugear SOAP Faults" do
+      subject.stubs(:tra).returns('')
+      savon.raises_soap_fault
+      expect { subject.login '', '' }.to raise_error Savon::SOAP::Fault
+    end
   end
 end

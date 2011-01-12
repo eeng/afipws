@@ -1,5 +1,12 @@
 module Afipws
   class WSAA
+    def initialize
+      @client = Savon::Client.new do
+        # TODO parametrizar segun env
+        wsdl.document = "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl"
+      end
+    end
+    
     # TODO ver si se puede poner un ttl mas largo
     def generar_tra service, ttl
       xml = Builder::XmlMarkup.new indent: 2
@@ -29,19 +36,13 @@ module Afipws
     end
     
     def login key, cert, service = 'wsfe', ttl = 2400
-      client = Savon::Client.new do
-        # TODO parametrizar segun env
-        wsdl.document = "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl"
-      end
-      response = client.request :login_cms do
-        soap.body = { :in0 => tra(key, cert, service, ttl) }
-      end
+      response = request :login_cms, :in0 => tra(key, cert, service, ttl)
       ta = Nokogiri::XML(Nokogiri::XML(response.to_xml).xpath('//loginCmsResponse').text)
       [ta.css('token').text, ta.css('sign').text]
     end
     
     def request action, body
-      
+      @client.request(action) { soap.body = body }
     end
     
     private
