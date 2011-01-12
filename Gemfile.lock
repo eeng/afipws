@@ -3,6 +3,8 @@ PATH
   specs:
     afipws (0.0.1)
       builder
+      nokogiri
+      savon
 
 GEM
   remote: http://rubygems.org/
@@ -10,10 +12,16 @@ GEM
     archive-tar-minitar (0.5.2)
     builder (2.1.2)
     columnize (0.3.2)
+    crack (0.1.8)
     diff-lcs (1.1.2)
+    gyoku (0.2.0)
+      builder (>= 2.1.2)
+    httpi (0.7.8)
+      rack
     linecache19 (0.5.11)
       ruby_core_source (>= 0.1.4)
     nokogiri (1.4.4)
+    rack (1.2.1)
     rspec (2.4.0)
       rspec-core (~> 2.4.0)
       rspec-expectations (~> 2.4.0)
@@ -32,6 +40,11 @@ GEM
       ruby-debug-base19 (>= 0.11.19)
     ruby_core_source (0.1.4)
       archive-tar-minitar (>= 0.5.2)
+    savon (0.8.2)
+      builder (>= 2.1.2)
+      crack (~> 0.1.8)
+      gyoku (>= 0.1.1)
+      httpi (>= 0.7.5)
 
 PLATFORMS
   ruby
@@ -42,3 +55,4 @@ DEPENDENCIES
   nokogiri
   rspec
   ruby-debug19
+  savon

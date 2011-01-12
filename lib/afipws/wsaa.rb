@@ -6,9 +6,6 @@ module Afipws
       xml.instruct!
       xml.loginTicketRequest version: 1 do
         xml.header do
-          # TODO parametrizar source, aunque creo que son opcionales los 2 campos sigs
-          xml.source "cn=VitolenDev,o=Nicolau Emmanuel,c=ar,serialNumber=CUIT 20300032673"
-          xml.destination "cn=wsaa,o=afip,c=ar,serialNumber=CUIT 33693450239"
           xml.uniqueId Time.now.to_i
           xml.generationTime xsd_datetime Time.now
           xml.expirationTime xsd_datetime Time.now + ttl
@@ -24,12 +21,28 @@ module Afipws
     end
     
     def codificar_tra pkcs7
-      Base64.encode64 pkcs7.to_pem.lines.to_a[1..-2].join
+      pkcs7.to_pem.lines.to_a[1..-2].join
+    end
+    
+    def tra key, cert, service, ttl
+      codificar_tra firmar_tra(generar_tra(service, ttl), key, cert)
+    end
+    
+    def login key, cert, service = 'wsfe', ttl = 2400
+      client = Savon::Client.new do
+        # TODO parametrizar segun env
+        wsdl.document = "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl"
+      end
+      response = client.request :login_cms do
+        soap.body = { :in0 => tra(key, cert, service, ttl) }
+      end
+      ta = Nokogiri::XML(Nokogiri::XML(response.to_xml).xpath('//loginCmsResponse').text)
+      [ta.css('token').text, ta.css('sign').text]
     end
     
     private
     def xsd_datetime time
-      time.strftime('%Y-%m-%dT%H:%M:%S%z')
+      time.strftime('%Y-%m-%dT%H:%M:%S%z').sub /(\d{2})(\d{2})$/, '\1:\2'
     end
   end
 end

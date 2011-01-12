@@ -1,4 +1,8 @@
 require 'builder'
 require 'base64'
-require 'openssl'
+require 'savon'
 require 'afipws/wsaa'
+
+Savon.configure do |config|
+  config.log = false
+end
