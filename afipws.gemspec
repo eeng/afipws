@@ -21,5 +21,6 @@ Gem::Specification.new do |s|
   
   s.add_development_dependency "rspec"
   s.add_development_dependency "nokogiri"
+  s.add_development_dependency "ruby-debug19"
   s.add_dependency "builder"
 end

@@ -17,6 +17,12 @@ module Afipws
       end
     end
     
+    def firmar_tra tra, key, crt
+      key = OpenSSL::PKey::RSA.new key
+      crt = OpenSSL::X509::Certificate.new crt
+      OpenSSL::PKCS7::sign(crt, key, tra, [], OpenSSL::PKCS7::BINARY)
+    end
+    
     private
     def xsd_datetime time
       time.strftime('%Y-%m-%dT%H:%M:%S%z')
