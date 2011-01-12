@@ -23,4 +23,14 @@ describe Afipws::WSAA do
       subject.firmar_tra(tra, key, crt).to_s.should =~ /BEGIN PKCS7/
     end
   end
+  
+  context "codificación del tra" do
+    it "debería quitarle el header y footer y codificar en base 64" do
+      subject.codificar_tra(OpenSSL::PKCS7.new).should == "TUFNR0FRQT0K\n"
+    end
+  end
+  
+  context "login" do
+    it "debería mandar el TRA al WS y obtener el TA" 
+  end
 end
