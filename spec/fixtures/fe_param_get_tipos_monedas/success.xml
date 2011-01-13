@@ -1,0 +1,22 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <soap:Body>
+      <FEParamGetTiposMonedasResponse xmlns="http://ar.gov.afip.dif.FEV1/">
+         <FEParamGetTiposMonedasResult>
+            <ResultGet>
+               <Moneda>
+                  <Id>PES</Id>
+                  <Desc>Pesos Argentinos</Desc>
+                  <FchDesde>20090403</FchDesde>
+                  <FchHasta>NULL</FchHasta>
+               </Moneda>
+               <Moneda>
+                  <Id>002</Id>
+                  <Desc>Dólar Libre EEUU</Desc>
+                  <FchDesde>20090416</FchDesde>
+                  <FchHasta>NULL</FchHasta>
+               </Moneda>
+            </ResultGet>
+         </FEParamGetTiposMonedasResult>
+      </FEParamGetTiposMonedasResponse>
+   </soap:Body>
+</soap:Envelope>

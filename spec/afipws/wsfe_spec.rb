@@ -16,14 +16,21 @@ describe Afipws::WSFE do
     it "tipos_comprobantes" do
       savon.expects('FEParamGetTiposCbte').returns(:success)
       ws.tipos_comprobantes.should == [
-        { :id => 1, :desc => "Factura A", :fch_desde => Date.new(2010,9,17), :fch_hasta => nil }, 
-        { :id => 2, :desc => "Nota de Débito A", :fch_desde => Date.new(2010,9,18), :fch_hasta => Date.new(2011,9,18) }]
+        { :id => '1', :desc => "Factura A", :fch_desde => Date.new(2010,9,17), :fch_hasta => nil }, 
+        { :id => '2', :desc => "Nota de Débito A", :fch_desde => Date.new(2010,9,18), :fch_hasta => Date.new(2011,9,18) }]
     end
     
     it "tipos_documentos" do
       savon.expects('FEParamGetTiposDoc').returns(:success)
       ws.tipos_documentos.should == [
-        { :id => 80, :desc => "CUIT", :fch_desde => Date.new(2008,7,25), :fch_hasta => nil }]
+        { :id => '80', :desc => "CUIT", :fch_desde => Date.new(2008,7,25), :fch_hasta => nil }]
+    end
+    
+    it "tipos_monedas" do
+      savon.expects('FEParamGetTiposMonedas').returns(:success)
+      ws.tipos_monedas.should == [
+        { :id => 'PES', :desc => "Pesos Argentinos", :fch_desde => Date.new(2009,4,3), :fch_hasta => nil }, 
+        { :id => '002', :desc => "Dólar Libre EEUU", :fch_desde => Date.new(2009,4,16), :fch_hasta => nil }]
     end
   end
   

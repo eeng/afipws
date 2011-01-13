@@ -19,6 +19,10 @@ module Afipws
     def tipos_documentos
       autenticar_y_tomar_array(:doc_tipo) { |auth| @client.fe_param_get_tipos_doc auth }
     end
+    
+    def tipos_monedas
+      autenticar_y_tomar_array(:moneda) { |auth| @client.fe_param_get_tipos_monedas auth }
+    end
 
     def login
       # TODO ver el tema de expiracion del token
@@ -34,7 +38,7 @@ module Afipws
     def autenticar_y_tomar_array array_element, &block
       response = autenticar &block
       array = Array.wrap response[:result_get][array_element]
-      parse array, :id => :integer, :fch_desde => :date, :fch_hasta => :date
+      parse array, :fch_desde => :date, :fch_hasta => :date
     end
     
     def parse array, types
