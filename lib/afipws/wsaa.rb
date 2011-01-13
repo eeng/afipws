@@ -7,13 +7,10 @@ module Afipws
       @cert = options[:cert]
       @service = options[:service] || 'wsfe'
       @ttl = options[:ttl] || 2400
-      @client = Savon::Client.new do
-        # TODO parametrizar segun env
-        wsdl.document = "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl"
-      end
+      @client = Client.new "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl"
     end
     
-    # TODO ver si se puede poner un ttl mas largo
+    # TODO ver si el ttl realmente se usa, el expirationTime deberia ser opcional me parece
     def generar_tra service, ttl
       xml = Builder::XmlMarkup.new indent: 2
       xml.instruct!
@@ -42,15 +39,11 @@ module Afipws
     end
     
     def login
-      response = request :login_cms, :in0 => tra(@key, @cert, @service, @ttl)
-      ta = Nokogiri::XML(Nokogiri::XML(response.to_xml).xpath('//loginCmsResponse').text)
+      response = @client.raw_request :login_cms, :in0 => tra(@key, @cert, @service, @ttl)
+      ta = Nokogiri::XML(Nokogiri::XML(response.to_xml).text)
       { :token => ta.css('token').text, :sign => ta.css('sign').text }
     rescue Savon::SOAP::Fault => f
       raise WSError, f.message
-    end
-    
-    def request action, body
-      @client.request(action) { soap.body = body }
     end
     
     private

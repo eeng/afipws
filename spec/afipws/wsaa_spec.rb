@@ -32,7 +32,7 @@ describe Afipws::WSAA do
     it "debería mandar el TRA al WS y obtener el TA" do
       ws = Afipws::WSAA.new :key => 'key', :cert => 'cert'
       ws.expects(:tra).with('key', 'cert', 'wsfe', 2400).returns('tra')
-      savon.expects('loginCms').with(:in0 => 'tra').returns(:success)
+      savon.expects('loginCms').with('wsdl:in0' => 'tra').returns(:success)
       ta = ws.login
       ta[:token].should == 'PD94='
       ta[:sign].should == 'i9xDN='

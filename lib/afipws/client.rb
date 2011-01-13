@@ -5,12 +5,16 @@ module Afipws
     end
     
     def request action, body = nil
-      response = @client.request(namespace, action) { soap.body = add_ns_to_keys(body) }.to_hash[:"#{action}_response"][:"#{action}_result"]
+      response = raw_request(action, body).to_hash[:"#{action}_response"][:"#{action}_result"]
       if response[:errors]
         raise WSError, Array.wrap(response[:errors][:err])
       else
         response
       end
+    end
+    
+    def raw_request action, body = nil
+      @client.request(namespace, action) { soap.body = add_ns_to_keys(body) }
     end
     
     def method_missing method_sym, *args
