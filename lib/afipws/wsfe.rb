@@ -32,15 +32,10 @@ module Afipws
       parse c, :mon_cotiz => :float, :fch_cotiz => :date
     end
 
-    def login
-      # TODO ver el tema de expiracion del token
-      @ta ||= @wsaa.login
-    end
-    
     private
     def autenticar
-      ta = login
-      rta = yield 'Auth' => { 'Token' => ta[:token], 'Sign' => ta[:sign], 'Cuit' => cuit }
+      @ta ||= @wsaa.login
+      rta = yield 'Auth' => { 'Token' => @ta[:token], 'Sign' => @ta[:sign], 'Cuit' => cuit }
       rta[:result_get]
     end
     
