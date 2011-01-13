@@ -28,7 +28,12 @@ module Afipws
       response = @client.request :wsdl, :fe_param_get_tipos_cbte do
         soap.body = xml.target!
       end
-      response.to_hash[:fe_param_get_tipos_cbte_response][:fe_param_get_tipos_cbte_result][:result_get][:cbte_tipo]
+      response = response.to_hash[:fe_param_get_tipos_cbte_response][:fe_param_get_tipos_cbte_result]
+      if response[:result_get]
+        response[:result_get][:cbte_tipo]
+      else
+        raise WSError, Array.wrap(response[:errors][:err])
+      end
     end
     
     def login

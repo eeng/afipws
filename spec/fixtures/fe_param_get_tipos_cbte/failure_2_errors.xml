@@ -1,0 +1,18 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <soap:Body>
+      <FEParamGetTiposCbteResponse xmlns="http://ar.gov.afip.dif.FEV1/">
+         <FEParamGetTiposCbteResult>
+            <Errors>
+               <Err>
+                  <Code>600</Code>
+                  <Msg>No se corresponden token con firma</Msg>
+               </Err>
+               <Err>
+                  <Code>601</Code>
+                  <Msg>CUIT representada no incluida en token</Msg>
+               </Err>
+            </Errors>
+         </FEParamGetTiposCbteResult>
+      </FEParamGetTiposCbteResponse>
+   </soap:Body>
+</soap:Envelope>

@@ -21,4 +21,24 @@ describe Afipws::WSFE do
   end
   
   it "debería autenticarse usando el WSAA"
+
+  context "manejo de errores" do
+    it "cuando hay un error" do
+      savon.expects('FEParamGetTiposCbte').returns(:failure_1_error)
+      expect { ws.tipos_comprobantes }.to raise_error { |e| 
+        e.should be_a Afipws::WSError
+        e.errors.should == [{ :code => "600", :msg => "No se corresponden token con firma" }] 
+        e.message.should == "600: No se corresponden token con firma" 
+      }
+    end
+
+    it "cuando hay varios errores" do
+      savon.expects('FEParamGetTiposCbte').returns(:failure_2_errors)
+      expect { ws.tipos_comprobantes }.to raise_error { |e| 
+        e.should be_a Afipws::WSError
+        e.errors.should == [{ :code => "600", :msg => "No se corresponden token con firma" }, { :code => "601", :msg => "CUIT representada no incluida en token" }] 
+        e.message.should == "600: No se corresponden token con firma; 601: CUIT representada no incluida en token" 
+      }
+    end
+  end
 end

@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     afipws (0.0.1)
+      activesupport
       builder
       nokogiri
       savon
@@ -9,6 +10,7 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
+    activesupport (3.0.3)
     archive-tar-minitar (0.5.2)
     builder (2.1.2)
     columnize (0.3.2)
@@ -57,6 +59,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activesupport
   afipws!
   builder
   nokogiri
