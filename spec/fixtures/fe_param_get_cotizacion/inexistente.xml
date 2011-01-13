@@ -1,0 +1,14 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <soap:Body>
+      <FEParamGetCotizacionResponse xmlns="http://ar.gov.afip.dif.FEV1/">
+         <FEParamGetCotizacionResult>
+            <Errors>
+               <Err>
+                  <Code>602</Code>
+                  <Msg>Sin Resultados: - Metodo FEParamGetCotizacion.Codigo  de moneda (PES) inexistente o SIN cotización</Msg>
+               </Err>
+            </Errors>
+         </FEParamGetCotizacionResult>
+      </FEParamGetCotizacionResponse>
+   </soap:Body>
+</soap:Envelope>

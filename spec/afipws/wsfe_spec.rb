@@ -32,6 +32,18 @@ describe Afipws::WSFE do
         { :id => 'PES', :desc => "Pesos Argentinos", :fch_desde => Date.new(2009,4,3), :fch_hasta => nil }, 
         { :id => '002', :desc => "Dólar Libre EEUU", :fch_desde => Date.new(2009,4,16), :fch_hasta => nil }]
     end
+    
+    context "cotizacion" do
+      it "cuando la moneda solicitada existe" do
+        savon.expects('FEParamGetCotizacion').with(has_entry 'wsdl:MonId', 'DOL').returns(:dolar)
+        ws.cotizacion('DOL').should == { :mon_id => 'DOL', :mon_cotiz => 3.976, :fch_cotiz => Date.new(2011,01,12) }
+      end
+      
+      it "cuando la moneda no existe" do
+        savon.expects('FEParamGetCotizacion').with(has_entry 'wsdl:MonId', 'PES').returns(:inexistente)
+        expect { ws.cotizacion('PES') }.to raise_error Afipws::WSError, /602: Sin Resultados/
+      end
+    end
   end
   
   context "autenticacion" do

@@ -1,0 +1,13 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <soap:Body>
+      <FEParamGetCotizacionResponse xmlns="http://ar.gov.afip.dif.FEV1/">
+         <FEParamGetCotizacionResult>
+            <ResultGet>
+               <MonId>DOL</MonId>
+               <MonCotiz>3.976</MonCotiz>
+               <FchCotiz>20110112</FchCotiz>
+            </ResultGet>
+         </FEParamGetCotizacionResult>
+      </FEParamGetCotizacionResponse>
+   </soap:Body>
+</soap:Envelope>

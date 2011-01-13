@@ -4,4 +4,5 @@ require 'afipws'
 ws = Afipws::WSFE.new :cuit => '20300032673', 
   :cert => File.read(File.dirname(__FILE__) + '/test.crt'), 
   :key => File.read(File.dirname(__FILE__) + '/test.key')
-p ws.tipos_comprobantes
+p ws.tipos_monedas
+p ws.cotizacion 'DOL'
