@@ -1,13 +1,17 @@
 module Afipws
   class WSAA
     attr_reader :key, :cert, :service
+    WSDL = {
+      :dev => "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl",
+      :test => Root + '/spec/fixtures/wsaa.wsdl'
+    }
     
     def initialize options = {}
       @key = options[:key]
       @cert = options[:cert]
       @service = options[:service] || 'wsfe'
       @ttl = options[:ttl] || 2400
-      @client = Client.new "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl"
+      @client = Client.new WSDL[options[:env] || :test]
     end
     
     # TODO ver si el ttl realmente se usa, el expirationTime deberia ser opcional me parece

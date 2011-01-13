@@ -1,11 +1,15 @@
 module Afipws
   class WSFE
     attr_reader :cuit, :wsaa, :ta
+    WSDL = {
+      :dev => "http://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL",
+      :test => Root + '/spec/fixtures/wsfe.wsdl'
+    }
     
     def initialize options = {}
       @cuit = options[:cuit]
       @wsaa = options[:wsaa] || WSAA.new(options.merge(:service => 'wsfe'))
-      @client = Client.new "http://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL"
+      @client = Client.new WSDL[options[:env] || :test]
     end
     
     def dummy
@@ -35,7 +39,7 @@ module Afipws
     private
     def autenticar
       @ta ||= @wsaa.login
-      rta = yield 'Auth' => { 'Token' => @ta[:token], 'Sign' => @ta[:sign], 'Cuit' => cuit }
+      rta = yield 'Auth' => { 'Token' => @ta[:token], 'Sign' => ta[:sign], 'Cuit' => cuit }
       rta[:result_get]
     end
     

@@ -1,0 +1,12 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <soapenv:Body>
+      <soapenv:Fault>
+         <faultcode xmlns:ns1="http://xml.apache.org/axis/">ns1:cms.bad</faultcode>
+         <faultstring>El CMS no es valido</faultstring>
+         <detail>
+            <ns2:exceptionName xmlns:ns2="http://xml.apache.org/axis/">gov.afip.desein.dvadac.sua.view.wsaa.LoginFault</ns2:exceptionName>
+            <ns3:hostname xmlns:ns3="http://xml.apache.org/axis/">avaricia.afip.gov.ar</ns3:hostname>
+         </detail>
+      </soapenv:Fault>
+   </soapenv:Body>
+</soapenv:Envelope>

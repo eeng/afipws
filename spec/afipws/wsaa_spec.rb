@@ -40,7 +40,7 @@ describe Afipws::WSAA do
     
     it "debería encapsular SOAP Faults" do
       subject.stubs(:tra).returns('')
-      savon.raises_soap_fault
+      savon.stubs('loginCms').returns(:fault)
       expect { subject.login }.to raise_error Afipws::WSError, /CMS no es valido/
     end
   end

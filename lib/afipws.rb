@@ -1,3 +1,7 @@
+module Afipws
+  Root = File.expand_path File.dirname(__FILE__) + '/..'
+end
+
 require 'builder'
 require 'base64'
 require 'savon'
