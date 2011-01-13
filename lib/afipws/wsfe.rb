@@ -17,6 +17,7 @@ module Afipws
     def tipos_comprobantes
       token, sign = login
       
+      # no puedo pasarle un hash a savon xq es necesario el namespace sino WSFE no acepta el request
       xml = Builder::XmlMarkup.new
       xml.wsdl :Auth do
         xml.wsdl :Token, token
@@ -24,9 +25,10 @@ module Afipws
         xml.wsdl :Cuit, cuit
       end
       
-      @client.request :wsdl, :fe_param_get_tipos_cbte do
-        soap.body = xml.to_xml
+      response = @client.request :wsdl, :fe_param_get_tipos_cbte do
+        soap.body = xml.target!
       end
+      response.to_hash[:fe_param_get_tipos_cbte_response][:fe_param_get_tipos_cbte_result][:result_get][:cbte_tipo]
     end
     
     def login
