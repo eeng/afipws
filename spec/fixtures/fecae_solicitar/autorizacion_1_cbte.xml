@@ -1,0 +1,30 @@
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <soap:Body>
+      <FECAESolicitarResponse xmlns="http://ar.gov.afip.dif.FEV1/">
+         <FECAESolicitarResult>
+            <FeCabResp>
+               <Cuit>20300032673</Cuit>
+               <PtoVta>1</PtoVta>
+               <CbteTipo>1</CbteTipo>
+               <FchProceso>20110113</FchProceso>
+               <CantReg>1</CantReg>
+               <Resultado>A</Resultado>
+               <Reproceso>N</Reproceso>
+            </FeCabResp>
+            <FeDetResp>
+               <FECAEDetResponse>
+                  <Concepto>1</Concepto>
+                  <DocTipo>80</DocTipo>
+                  <DocNro>30521189203</DocNro>
+                  <CbteDesde>1</CbteDesde>
+                  <CbteHasta>1</CbteHasta>
+                  <CbteFch>20110113</CbteFch>
+                  <Resultado>A</Resultado>
+                  <CAE>61023008595705</CAE>
+                  <CAEFchVto>20110123</CAEFchVto>
+               </FECAEDetResponse>
+            </FeDetResp>
+         </FECAESolicitarResult>
+      </FECAESolicitarResponse>
+   </soap:Body>
+</soap:Envelope>

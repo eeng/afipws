@@ -37,6 +37,20 @@ describe Afipws::WSFE do
       ws.tipos_iva.should == [{ :id => 5, :desc => "21%", :fch_desde => Date.new(2009,2,20), :fch_hasta => nil }] 
     end
     
+    it "autorizar_comprobante" do
+      savon.expects('FECAESolicitar').returns(:autorizacion_1_cbte)
+      rta = ws.autorizar_comprobante('CantReg' => 1, 'CbteTipo' => 1, 'PtoVta' => 1, 'Concepto' => 1, 
+        'DocNro' => 30521189203, 'DocTipo' => 80, 'CbteDesde' => 1, 'CbteHasta' => 1, 'CbteFch' => '20110113', 
+        'ImpTotal' => 1270.48, 'ImpNeto' => 1049.98, 'ImpIva' => 220.50, 'ImpTotConc' => 0, 'ImpOpEx' => 0, 
+        'ImpTrib' => 0, 'MonId' => 'PES', 'MonCotiz' => 1,
+        'Iva' => [{ 'Alicuota' => { 'Id' => 5, 'BaseImp' => 1049.98, 'Importe' => 220.50 }}])
+      rta[:fe_cab_resp][:fch_proceso].should == Date.new(2011,01,13)
+      rta[:fe_cab_resp][:resultado].should == 'A'
+      rta[:fe_det_resp][:fecae_det_response][:cbte_desde].should == 1
+      rta[:fe_det_resp][:fecae_det_response][:cae].should == '61023008595705'
+      rta[:fe_det_resp][:fecae_det_response][:cae_fch_vto].should == Date.new(2011,01,23)
+    end
+    
     context "cotizacion" do
       it "cuando la moneda solicitada existe" do
         savon.expects('FEParamGetCotizacion').with(has_entry 'wsdl:MonId', 'DOL').returns(:dolar)

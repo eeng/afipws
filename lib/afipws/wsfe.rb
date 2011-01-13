@@ -37,26 +37,31 @@ module Afipws
     end
 
     def cotizacion moneda_id
-      c = autenticar { |auth| @client.fe_param_get_cotizacion auth.merge 'MonId' => moneda_id }
+      c = autenticar { |auth| @client.fe_param_get_cotizacion auth.merge 'MonId' => moneda_id }[:result_get]
       parse c, :mon_cotiz => :float, :fch_cotiz => :date
+    end
+    
+    def autorizar_comprobante comprobante = {}
+      r = autenticar { |auth| @client.fecae_solicitar auth.merge comprobante }
+      parse r, :fch_proceso => :date, :cbte_desde => :integer, :cbte_hasta => :integer, :cae_fch_vto => :date
     end
     
     private
     def autenticar
       @ta ||= @wsaa.login
-      rta = yield 'Auth' => { 'Token' => @ta[:token], 'Sign' => ta[:sign], 'Cuit' => cuit }
-      rta[:result_get]
+      yield 'Auth' => { 'Token' => @ta[:token], 'Sign' => ta[:sign], 'Cuit' => cuit }
     end
     
     def autenticar_y_tomar_array array_element, &block
       response = autenticar &block
-      Array.wrap response[array_element]
+      Array.wrap response[:result_get][array_element]
     end
-    
+
+    # Hace una conversión recursiva de tipo de todos los values según los tipos de las keys indicados en types
     def parse array_o_hash, types
       case array_o_hash
       when Array then array_o_hash.map { |hash| parse hash, types }
-      when Hash then Hash[array_o_hash.map { |k, v| [k, parsing_fn[types[k]].call(v)] }]
+      when Hash then Hash[array_o_hash.map { |k, v| [k, v.is_a?(Hash) || v.is_a?(Array) ? parse(v, types) : parsing_fn[types[k]].call(v)] }]
       else array_o_hash
       end
     end
