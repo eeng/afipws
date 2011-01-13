@@ -20,8 +20,18 @@ describe Afipws::WSFE do
       { :id => "2", :desc => "Nota de Débito A", :fch_desde => "20100917", :fch_hasta => "NULL" }]
   end
   
-  it "debería autenticarse usando el WSAA"
-
+  context "autenticacion" do
+    it "debería autenticarse usando el WSAA" do
+      wsfe = Afipws::WSFE.new :cuit => '1', :cert => 'cert', :key => 'key'
+      wsfe.wsaa.cert.should == 'cert'
+      wsfe.wsaa.key.should == 'key'
+      wsfe.wsaa.service.should == 'wsfe'
+      wsfe.wsaa.expects(:login).returns({ :token => 't', :sign => 's' })
+      savon.stubs('FEParamGetTiposCbte').returns(:success)
+      wsfe.tipos_comprobantes
+    end
+  end
+  
   context "manejo de errores" do
     it "cuando hay un error" do
       savon.expects('FEParamGetTiposCbte').returns(:failure_1_error)

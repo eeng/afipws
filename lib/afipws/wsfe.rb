@@ -1,13 +1,13 @@
 module Afipws
   class WSFE
-    attr_reader :cuit
+    attr_reader :cuit, :wsaa
     
     def initialize options = {}
       @cuit = options[:cuit]
       @client = Savon::Client.new do
         wsdl.document = "http://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL"
       end
-      @wsaa = options[:wsaa] || WSAA.new(options)
+      @wsaa = options[:wsaa] || WSAA.new(options.merge(:service => 'wsfe'))
     end
     
     def dummy

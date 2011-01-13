@@ -1,5 +1,7 @@
 module Afipws
   class WSAA
+    attr_reader :key, :cert, :service
+    
     def initialize options = {}
       @key = options[:key]
       @cert = options[:cert]
