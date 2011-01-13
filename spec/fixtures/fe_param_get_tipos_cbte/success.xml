@@ -12,8 +12,8 @@
                <CbteTipo>
                   <Id>2</Id>
                   <Desc>Nota de Débito A</Desc>
-                  <FchDesde>20100917</FchDesde>
-                  <FchHasta>NULL</FchHasta>
+                  <FchDesde>20100918</FchDesde>
+                  <FchHasta>20110918</FchHasta>
                </CbteTipo>
             </ResultGet>
          </FEParamGetTiposCbteResult>
