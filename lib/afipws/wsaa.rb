@@ -43,6 +43,8 @@ module Afipws
       response = request :login_cms, :in0 => tra(@key, @cert, @service, @ttl)
       ta = Nokogiri::XML(Nokogiri::XML(response.to_xml).xpath('//loginCmsResponse').text)
       [ta.css('token').text, ta.css('sign').text]
+    rescue Savon::SOAP::Fault => f
+      raise WSError, f.message
     end
     
     def request action, body

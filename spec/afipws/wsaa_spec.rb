@@ -38,10 +38,10 @@ describe Afipws::WSAA do
       sign.should == 'i9xDN='
     end
     
-    it "debería burbugear SOAP Faults" do
+    it "debería encapsular SOAP Faults" do
       subject.stubs(:tra).returns('')
       savon.raises_soap_fault
-      expect { subject.login }.to raise_error Savon::SOAP::Fault
+      expect { subject.login }.to raise_error Afipws::WSError, /CMS no es valido/
     end
   end
 end
