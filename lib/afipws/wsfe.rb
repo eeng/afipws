@@ -1,64 +1,43 @@
 module Afipws
   class WSFE
-    attr_reader :cuit, :wsaa
+    attr_reader :cuit, :wsaa, :ta
     
     def initialize options = {}
       @cuit = options[:cuit]
-      @client = Savon::Client.new do
-        wsdl.document = "http://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL"
-      end
       @wsaa = options[:wsaa] || WSAA.new(options.merge(:service => 'wsfe'))
+      @client = Client.new "http://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL"
     end
     
     def dummy
-      @client.request(:fe_dummy).to_hash[:fe_dummy_response][:fe_dummy_result]
+      @client.fe_dummy
     end
     
     def tipos_comprobantes
-      ta = login
-      # no puedo pasarle un hash a savon xq es necesario el namespace sino WSFE no acepta el request
-      xml = Builder::XmlMarkup.new
-      xml.wsdl :Auth do
-        xml.wsdl :Token, ta[:token]
-        xml.wsdl :Sign, ta[:sign]
-        xml.wsdl :Cuit, cuit
-      end
-      
-      response = @client.request :wsdl, :fe_param_get_tipos_cbte do
-        soap.body = xml.target!
-      end
-      response = response.to_hash[:fe_param_get_tipos_cbte_response][:fe_param_get_tipos_cbte_result]
-      if response[:result_get]
-        Array.wrap response[:result_get][:cbte_tipo]
-      else
-        raise WSError, Array.wrap(response[:errors][:err])
+      autenticar_y_tomar_array :cbte_tipo do |auth|
+        @client.fe_param_get_tipos_cbte auth
       end
     end
     
     def tipos_documentos
-      ta = login
-      # no puedo pasarle un hash a savon xq es necesario el namespace sino WSFE no acepta el request
-      xml = Builder::XmlMarkup.new
-      xml.wsdl :Auth do
-        xml.wsdl :Token, ta[:token]
-        xml.wsdl :Sign, ta[:sign]
-        xml.wsdl :Cuit, cuit
-      end
-      
-      response = @client.request :wsdl, :fe_param_get_tipos_doc do
-        soap.body = xml.target!
-      end
-      response = response.to_hash[:fe_param_get_tipos_doc_response][:fe_param_get_tipos_doc_result]
-      if response[:result_get]
-        Array.wrap response[:result_get][:doc_tipo]
-      else
-        raise WSError, Array.wrap(response[:errors][:err])
+      autenticar_y_tomar_array :doc_tipo do |auth|
+        @client.fe_param_get_tipos_doc auth
       end
     end
-    
+
     def login
       # TODO ver el tema de expiracion del token
       @ta ||= @wsaa.login
+    end
+    
+    private
+    def autenticar
+      ta = login
+      yield 'Auth' => { 'Token' => ta[:token], 'Sign' => ta[:sign], 'Cuit' => cuit }
+    end
+    
+    def autenticar_y_tomar_array array_element, &block
+      response = autenticar &block
+      Array.wrap response[:result_get][array_element]
     end
   end
 end

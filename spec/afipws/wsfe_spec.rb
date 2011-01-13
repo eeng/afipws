@@ -35,7 +35,7 @@ describe Afipws::WSFE do
       wsfe.wsaa.key.should == 'key'
       wsfe.wsaa.service.should == 'wsfe'
       wsfe.wsaa.expects(:login).returns({ :token => 't', :sign => 's' })
-      savon.expects('FEParamGetTiposCbte').with('<wsdl:Auth><wsdl:Token>t</wsdl:Token><wsdl:Sign>s</wsdl:Sign><wsdl:Cuit>1</wsdl:Cuit></wsdl:Auth>').returns(:success)
+      savon.expects('FEParamGetTiposCbte').with('wsdl:Auth' => {'wsdl:Token' => 't', 'wsdl:Sign' => 's', 'wsdl:Cuit' => '1'}).returns(:success)
       wsfe.tipos_comprobantes
     end
   end
