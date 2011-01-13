@@ -18,12 +18,12 @@ module Afipws
     
     def tipos_comprobantes
       t = autenticar_y_tomar_array(:cbte_tipo) { |auth| @client.fe_param_get_tipos_cbte auth }
-      parse t, :fch_desde => :date, :fch_hasta => :date
+      parse t, :id => :integer, :fch_desde => :date, :fch_hasta => :date
     end
     
     def tipos_documentos
       t = autenticar_y_tomar_array(:doc_tipo) { |auth| @client.fe_param_get_tipos_doc auth }
-      parse t, :fch_desde => :date, :fch_hasta => :date
+      parse t, :id => :integer, :fch_desde => :date, :fch_hasta => :date
     end
     
     def tipos_monedas
