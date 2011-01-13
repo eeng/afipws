@@ -15,13 +15,13 @@ module Afipws
     end
     
     def tipos_comprobantes
-      token, sign = login
+      ta = login
       
       # no puedo pasarle un hash a savon xq es necesario el namespace sino WSFE no acepta el request
       xml = Builder::XmlMarkup.new
       xml.wsdl :Auth do
-        xml.wsdl :Token, token
-        xml.wsdl :Sign, sign
+        xml.wsdl :Token, ta[:token]
+        xml.wsdl :Sign, ta[:sign]
         xml.wsdl :Cuit, cuit
       end
       
@@ -37,7 +37,8 @@ module Afipws
     end
     
     def login
-      @token_and_sign ||= @wsaa.login
+      # TODO ver el tema de expiracion del token
+      @ta ||= @wsaa.login
     end
   end
 end

@@ -33,9 +33,9 @@ describe Afipws::WSAA do
       ws = Afipws::WSAA.new :key => 'key', :cert => 'cert'
       ws.expects(:tra).with('key', 'cert', 'wsfe', 2400).returns('tra')
       savon.expects('loginCms').with(:in0 => 'tra').returns(:success)
-      token, sign = ws.login
-      token.should == 'PD94='
-      sign.should == 'i9xDN='
+      ta = ws.login
+      ta[:token].should == 'PD94='
+      ta[:sign].should == 'i9xDN='
     end
     
     it "debería encapsular SOAP Faults" do
