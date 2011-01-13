@@ -22,8 +22,7 @@ describe Afipws::WSFE do
     
     it "tipos_documentos" do
       savon.expects('FEParamGetTiposDoc').returns(:success)
-      ws.tipos_documentos.should == [
-        { :id => 80, :desc => "CUIT", :fch_desde => Date.new(2008,7,25), :fch_hasta => nil }]
+      ws.tipos_documentos.should == [{ :id => 80, :desc => "CUIT", :fch_desde => Date.new(2008,7,25), :fch_hasta => nil }]
     end
     
     it "tipos_monedas" do
@@ -31,6 +30,11 @@ describe Afipws::WSFE do
       ws.tipos_monedas.should == [
         { :id => 'PES', :desc => "Pesos Argentinos", :fch_desde => Date.new(2009,4,3), :fch_hasta => nil }, 
         { :id => '002', :desc => "Dólar Libre EEUU", :fch_desde => Date.new(2009,4,16), :fch_hasta => nil }]
+    end
+    
+    it "tipos_iva" do
+      savon.expects('FEParamGetTiposIva').returns(:success)
+      ws.tipos_iva.should == [{ :id => 5, :desc => "21%", :fch_desde => Date.new(2009,2,20), :fch_hasta => nil }] 
     end
     
     context "cotizacion" do

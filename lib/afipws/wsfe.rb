@@ -31,11 +31,16 @@ module Afipws
       parse t, :fch_desde => :date, :fch_hasta => :date
     end
     
+    def tipos_iva
+      t = autenticar_y_tomar_array(:iva_tipo) { |auth| @client.fe_param_get_tipos_iva auth }
+      parse t, :id => :integer, :fch_desde => :date, :fch_hasta => :date
+    end
+
     def cotizacion moneda_id
       c = autenticar { |auth| @client.fe_param_get_cotizacion auth.merge 'MonId' => moneda_id }
       parse c, :mon_cotiz => :float, :fch_cotiz => :date
     end
-
+    
     private
     def autenticar
       @ta ||= @wsaa.login
