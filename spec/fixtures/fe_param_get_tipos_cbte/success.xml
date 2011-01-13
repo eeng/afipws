@@ -1,0 +1,22 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <soap:Body>
+      <FEParamGetTiposCbteResponse xmlns="http://ar.gov.afip.dif.FEV1/">
+         <FEParamGetTiposCbteResult>
+            <ResultGet>
+               <CbteTipo>
+                  <Id>1</Id>
+                  <Desc>Factura A</Desc>
+                  <FchDesde>20100917</FchDesde>
+                  <FchHasta>NULL</FchHasta>
+               </CbteTipo>
+               <CbteTipo>
+                  <Id>2</Id>
+                  <Desc>Nota de Débito A</Desc>
+                  <FchDesde>20100917</FchDesde>
+                  <FchHasta>NULL</FchHasta>
+               </CbteTipo>
+            </ResultGet>
+         </FEParamGetTiposCbteResult>
+      </FEParamGetTiposCbteResponse>
+   </soap:Body>
+</soap:Envelope>

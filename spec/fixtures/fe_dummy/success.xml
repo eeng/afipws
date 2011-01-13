@@ -1,0 +1,11 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <soap:Body>
+      <FEDummyResponse xmlns="http://ar.gov.afip.dif.FEV1/">
+         <FEDummyResult>
+            <AppServer>OK</AppServer>
+            <DbServer>OK</DbServer>
+            <AuthServer>OK</AuthServer>
+         </FEDummyResult>
+      </FEDummyResponse>
+   </soap:Body>
+</soap:Envelope>

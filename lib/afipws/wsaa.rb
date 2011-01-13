@@ -1,6 +1,10 @@
 module Afipws
   class WSAA
-    def initialize
+    def initialize options = {}
+      @key = options[:key]
+      @cert = options[:cert]
+      @service = options[:service] || 'wsfe'
+      @ttl = options[:ttl] || 2400
       @client = Savon::Client.new do
         # TODO parametrizar segun env
         wsdl.document = "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl"
@@ -35,8 +39,8 @@ module Afipws
       codificar_tra firmar_tra(generar_tra(service, ttl), key, cert)
     end
     
-    def login key, cert, service = 'wsfe', ttl = 2400
-      response = request :login_cms, :in0 => tra(key, cert, service, ttl)
+    def login
+      response = request :login_cms, :in0 => tra(@key, @cert, @service, @ttl)
       ta = Nokogiri::XML(Nokogiri::XML(response.to_xml).xpath('//loginCmsResponse').text)
       [ta.css('token').text, ta.css('sign').text]
     end

@@ -30,10 +30,10 @@ describe Afipws::WSAA do
   
   context "login" do
     it "debería mandar el TRA al WS y obtener el TA" do
-      key, crt, tra = 'key', 'cert', 'tra'
-      subject.expects(:tra).with(key, crt, 'wsfe', 2400).returns(tra)
-      savon.expects(:login_cms).with(:in0 => tra).returns(:success)
-      token, sign = subject.login key, crt
+      ws = Afipws::WSAA.new :key => 'key', :cert => 'cert'
+      ws.expects(:tra).with('key', 'cert', 'wsfe', 2400).returns('tra')
+      savon.expects(:login_cms).with(:in0 => 'tra').returns(:success)
+      token, sign = ws.login
       token.should == 'PD94='
       sign.should == 'i9xDN='
     end
@@ -41,7 +41,7 @@ describe Afipws::WSAA do
     it "debería burbugear SOAP Faults" do
       subject.stubs(:tra).returns('')
       savon.raises_soap_fault
-      expect { subject.login '', '' }.to raise_error Savon::SOAP::Fault
+      expect { subject.login }.to raise_error Savon::SOAP::Fault
     end
   end
 end
