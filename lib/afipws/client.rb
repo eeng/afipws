@@ -23,9 +23,12 @@ module Afipws
     
     private
     def add_ns_to_keys body
-      if body.is_a? Hash
+      case body
+      when Hash
         Hash[body.map { |k, v| ["#{namespace}:#{k}", add_ns_to_keys(v)] }]
-      else
+      when Array
+        body.map { |x| add_ns_to_keys x }
+      else 
         body
       end
     end

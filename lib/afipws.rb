@@ -7,6 +7,8 @@ require 'base64'
 require 'savon'
 require 'nokogiri'
 require 'active_support/core_ext/array/wrap'
+# TODO reemplazar wrap x un local
+require 'core_ext/string'
 require 'afipws/excepciones'
 require 'afipws/client'
 require 'afipws/wsaa'

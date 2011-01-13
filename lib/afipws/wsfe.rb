@@ -41,9 +41,13 @@ module Afipws
       parse c, :mon_cotiz => :float, :fch_cotiz => :date
     end
     
-    def autorizar_comprobante comprobante = {}
-      r = autenticar { |auth| @client.fecae_solicitar auth.merge comprobante }
+    def autorizar_comprobante comprobante
+      r = autenticar { |auth| @client.fecae_solicitar auth.merge camelize_strings(comprobante) }
       parse r, :fch_proceso => :date, :cbte_desde => :integer, :cbte_hasta => :integer, :cae_fch_vto => :date
+    end
+    
+    def ultimo_comprobante_autorizado opciones
+      autenticar { |auth| @client.fe_comp_ultimo_autorizado auth.merge camelize_strings(opciones) }[:cbte_nro].to_i
     end
     
     private
@@ -72,6 +76,17 @@ module Afipws
         p[:integer] = Proc.new { |integer| integer.to_i }
         p[:float] = Proc.new { |float| float.to_f }
       }
+    end
+    
+    def camelize_strings elem
+      case elem
+      when Hash
+        Hash[elem.map { |k, v| [k.to_s.camelize, camelize_strings(v)] }]
+      when Array
+        elem.map { |x| camelize_strings x }
+      else
+        elem
+      end
     end
   end
 end
