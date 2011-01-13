@@ -7,17 +7,25 @@ describe Afipws::WSFE do
     Afipws::WSFE.new :cuit => '1', :wsaa => wsaa
   end
   
-  it "dummy" do
-    savon.expects('FEDummy').returns(:success)
-    ws.dummy.should == { :app_server => "OK", :db_server => "OK", :auth_server => "OK" }
-  end
-  
-  it "tipos_comprobantes" do
-    savon.expects('FEParamGetTiposCbte').with('<wsdl:Auth><wsdl:Token>t</wsdl:Token><wsdl:Sign>s</wsdl:Sign><wsdl:Cuit>1</wsdl:Cuit></wsdl:Auth>').returns(:success)
-    # TODO quizas convendria convertir los tipos de datos date, null, integer
-    ws.tipos_comprobantes.should == [
-      { :id => "1", :desc => "Factura A", :fch_desde => "20100917", :fch_hasta => "NULL" }, 
-      { :id => "2", :desc => "Nota de Débito A", :fch_desde => "20100917", :fch_hasta => "NULL" }]
+  context "Métodos de negocio" do
+    it "dummy" do
+      savon.expects('FEDummy').returns(:success)
+      ws.dummy.should == { :app_server => "OK", :db_server => "OK", :auth_server => "OK" }
+    end
+
+    it "tipos_comprobantes" do
+      savon.expects('FEParamGetTiposCbte').returns(:success)
+      # TODO quizas convendria convertir los tipos de datos date, null, integer
+      ws.tipos_comprobantes.should == [
+        { :id => "1", :desc => "Factura A", :fch_desde => "20100917", :fch_hasta => "NULL" }, 
+        { :id => "2", :desc => "Nota de Débito A", :fch_desde => "20100917", :fch_hasta => "NULL" }]
+    end
+    
+    it "tipos_documentos" do
+      savon.expects('FEParamGetTiposDoc').returns(:success)
+      ws.tipos_documentos.should == [
+        { :id => "80", :desc => "CUIT", :fch_desde => "20080725", :fch_hasta => "NULL" }]
+    end
   end
   
   context "autenticacion" do
@@ -27,7 +35,7 @@ describe Afipws::WSFE do
       wsfe.wsaa.key.should == 'key'
       wsfe.wsaa.service.should == 'wsfe'
       wsfe.wsaa.expects(:login).returns({ :token => 't', :sign => 's' })
-      savon.stubs('FEParamGetTiposCbte').returns(:success)
+      savon.expects('FEParamGetTiposCbte').with('<wsdl:Auth><wsdl:Token>t</wsdl:Token><wsdl:Sign>s</wsdl:Sign><wsdl:Cuit>1</wsdl:Cuit></wsdl:Auth>').returns(:success)
       wsfe.tipos_comprobantes
     end
   end

@@ -16,7 +16,6 @@ module Afipws
     
     def tipos_comprobantes
       ta = login
-      
       # no puedo pasarle un hash a savon xq es necesario el namespace sino WSFE no acepta el request
       xml = Builder::XmlMarkup.new
       xml.wsdl :Auth do
@@ -30,7 +29,28 @@ module Afipws
       end
       response = response.to_hash[:fe_param_get_tipos_cbte_response][:fe_param_get_tipos_cbte_result]
       if response[:result_get]
-        response[:result_get][:cbte_tipo]
+        Array.wrap response[:result_get][:cbte_tipo]
+      else
+        raise WSError, Array.wrap(response[:errors][:err])
+      end
+    end
+    
+    def tipos_documentos
+      ta = login
+      # no puedo pasarle un hash a savon xq es necesario el namespace sino WSFE no acepta el request
+      xml = Builder::XmlMarkup.new
+      xml.wsdl :Auth do
+        xml.wsdl :Token, ta[:token]
+        xml.wsdl :Sign, ta[:sign]
+        xml.wsdl :Cuit, cuit
+      end
+      
+      response = @client.request :wsdl, :fe_param_get_tipos_doc do
+        soap.body = xml.target!
+      end
+      response = response.to_hash[:fe_param_get_tipos_doc_response][:fe_param_get_tipos_doc_result]
+      if response[:result_get]
+        Array.wrap response[:result_get][:doc_tipo]
       else
         raise WSError, Array.wrap(response[:errors][:err])
       end
