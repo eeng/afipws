@@ -52,6 +52,10 @@ module Afipws
     def ultimo_comprobante_autorizado opciones
       @client.fe_comp_ultimo_autorizado(auth.merge(opciones))[:cbte_nro].to_i
     end
+
+    def consultar_comprobante opciones
+      @client.fe_comp_consultar(auth.merge(opciones))[:result_get]
+    end
     
     private
     def get_array response, array_element

@@ -50,25 +50,34 @@ describe Afipws::WSFE do
       end
     end
     
-    # TODO Probar uno con varias alicuotas
-    it "autorizar_comprobante" do
-      savon.expects('FECAESolicitar').with(has_entries 'wsdl:CantReg' => 1, 'wsdl:PtoVta' => 2, 'wsdl:CbteFch' => '20110113',
-        'wsdl:Iva' => [{'wsdl:Alicuota' => {'wsdl:Id' => 5, 'wsdl:BaseImp' => 1049.98, 'wsdl:Importe' => 220.5}}]).returns(:autorizacion_1_cbte)
-      rta = ws.autorizar_comprobante(:cant_reg => 1, :cbte_tipo => 1, :pto_vta => 2, :concepto => 1, 
-        :doc_nro => 30521189203, :doc_tipo => 80, :cbte_desde => 1, :cbte_hasta => 1, :cbte_fch => Date.new(2011,01,13), 
-        :imp_total => 1270.48, :imp_neto => 1049.98, :imp_iva => 220.50, :imp_tot_conc => 0, :imp_op_ex => 0, 
-        :imp_trib => 0, :mon_id => 'PES', :mon_cotiz => 1,
-        :iva => [{ :alicuota => { :id => 5, :base_imp => 1049.98, :importe => 220.50 }}])
-      rta[:fe_cab_resp][:fch_proceso].should == Date.new(2011,01,13)
-      rta[:fe_cab_resp][:resultado].should == 'A'
-      rta[:fe_det_resp][:fecae_det_response][:cbte_desde].should == 1
-      rta[:fe_det_resp][:fecae_det_response][:cae].should == '61023008595705'
-      rta[:fe_det_resp][:fecae_det_response][:cae_fch_vto].should == Date.new(2011,01,23)
-    end    
+    context "autorizar_comprobante" do
+      # TODO Probar uno con varias alicuotas
+      it "autorizar_comprobante" do
+        savon.expects('FECAESolicitar').with(has_entries 'wsdl:CantReg' => 1, 'wsdl:PtoVta' => 2, 'wsdl:CbteFch' => '20110113',
+          'wsdl:Iva' => [{'wsdl:Alicuota' => {'wsdl:Id' => 5, 'wsdl:BaseImp' => 1049.98, 'wsdl:Importe' => 220.5}}]).returns(:autorizacion_1_cbte)
+        rta = ws.autorizar_comprobante(:cant_reg => 1, :cbte_tipo => 1, :pto_vta => 2, :concepto => 1, 
+          :doc_nro => 30521189203, :doc_tipo => 80, :cbte_desde => 1, :cbte_hasta => 1, :cbte_fch => Date.new(2011,01,13), 
+          :imp_total => 1270.48, :imp_neto => 1049.98, :imp_iva => 220.50, :imp_tot_conc => 0, :imp_op_ex => 0, 
+          :imp_trib => 0, :mon_id => 'PES', :mon_cotiz => 1,
+          :iva => [{ :alicuota => { :id => 5, :base_imp => 1049.98, :importe => 220.50 }}])
+        rta[:fe_cab_resp][:fch_proceso].should == Date.new(2011,01,13)
+        rta[:fe_cab_resp][:resultado].should == 'A'
+        rta[:fe_det_resp][:fecae_det_response][:cbte_desde].should == 1
+        rta[:fe_det_resp][:fecae_det_response][:cae].should == '61023008595705'
+        rta[:fe_det_resp][:fecae_det_response][:cae_fch_vto].should == Date.new(2011,01,23)
+      end    
+    end
     
     it "ultimo_comprobante_autorizado" do
       savon.expects('FECompUltimoAutorizado').with(has_entries 'wsdl:PtoVta' => 1, 'wsdl:CbteTipo' => 1).returns(:success)
       ws.ultimo_comprobante_autorizado(:pto_vta => 1, :cbte_tipo => 1).should == 20
+    end
+    
+    it "consultar_comprobante" do
+      savon.expects('FECompConsultar').with(has_entries 'wsdl:PtoVta' => 1, 'wsdl:CbteTipo' => 2, 'wsdl:CbteNro' => 3).returns(:success)
+      rta = ws.consultar_comprobante(:pto_vta => 1, :cbte_tipo => 2, :cbte_nro => 3)
+      rta[:cod_autorizacion].should == '61023008595705'
+      rta[:emision_tipo].should == 'CAE'
     end
   end
   
