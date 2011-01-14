@@ -50,11 +50,12 @@ describe Afipws::WSFE do
       end
     end
     
+    # TODO Probar uno con varias alicuotas
     it "autorizar_comprobante" do
-      savon.expects('FECAESolicitar').with(has_entries 'wsdl:CantReg' => 1, 'wsdl:PtoVta' => 2, 
+      savon.expects('FECAESolicitar').with(has_entries 'wsdl:CantReg' => 1, 'wsdl:PtoVta' => 2, 'wsdl:CbteFch' => '20110113',
         'wsdl:Iva' => [{'wsdl:Alicuota' => {'wsdl:Id' => 5, 'wsdl:BaseImp' => 1049.98, 'wsdl:Importe' => 220.5}}]).returns(:autorizacion_1_cbte)
       rta = ws.autorizar_comprobante(:cant_reg => 1, :cbte_tipo => 1, :pto_vta => 2, :concepto => 1, 
-        :doc_nro => 30521189203, :doc_tipo => 80, :cbte_desde => 1, :cbte_hasta => 1, :cbte_fch => '20110113', 
+        :doc_nro => 30521189203, :doc_tipo => 80, :cbte_desde => 1, :cbte_hasta => 1, :cbte_fch => Date.new(2011,01,13), 
         :imp_total => 1270.48, :imp_neto => 1049.98, :imp_iva => 220.50, :imp_tot_conc => 0, :imp_op_ex => 0, 
         :imp_trib => 0, :mon_id => 'PES', :mon_cotiz => 1,
         :iva => [{ :alicuota => { :id => 5, :base_imp => 1049.98, :importe => 220.50 }}])

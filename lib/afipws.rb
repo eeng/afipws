@@ -11,6 +11,7 @@ require 'active_support/core_ext/array/wrap'
 # TODO reemplazar wrap x un local
 require 'core_ext/string'
 require 'afipws/excepciones'
+require 'afipws/type_conversions'
 require 'afipws/client'
 require 'afipws/wsaa'
 require 'afipws/wsfe'
