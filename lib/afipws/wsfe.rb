@@ -39,14 +39,22 @@ module Afipws
       x2r get_array(r, :iva_tipo), :id => :integer, :fch_desde => :date, :fch_hasta => :date
     end
 
+    # TODO simplificar lo q devuelve
     def cotizacion moneda_id
       r = @client.fe_param_get_cotizacion auth.merge :mon_id => moneda_id
       x2r r[:result_get], :mon_cotiz => :float, :fch_cotiz => :date
     end
     
     def autorizar_comprobante comprobante
-      r = @client.fecae_solicitar auth.merge r2x(comprobante, :cbte_fch => :date)
-      x2r r[:fe_det_resp][:fecae_det_response].select { |k, _| [:cae, :cae_fch_vto].include? k }, :cae_fch_vto => :date
+      request = { 'FeCAEReq' => {
+        'FeCabReq' => comprobante.select_keys(:cant_reg, :cbte_tipo, :pto_vta),
+        'FeDetReq' => { 
+          'FECAEDetRequest' => comprobante.select_keys(:concepto, :doc_tipo, :doc_nro, :cbte_desde, 
+            :cbte_hasta, :cbte_fch, :imp_total, :imp_tot_conc, :imp_neto, :imp_op_ex, :imp_trib, 
+            :mon_id, :mon_cotiz, :iva).merge({ 'ImpIVA' => comprobante[:imp_iva] })
+      }}}
+      r = @client.fecae_solicitar auth.merge r2x(request, :cbte_fch => :date)
+      x2r r[:fe_det_resp][:fecae_det_response].select_keys(:cae, :cae_fch_vto), :cae_fch_vto => :date
     end
     
     def ultimo_comprobante_autorizado opciones
