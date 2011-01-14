@@ -25,7 +25,7 @@ module Afipws
     def add_ns_to_keys body
       case body
       when Hash
-        Hash[body.map { |k, v| ["#{namespace}:#{k}", add_ns_to_keys(v)] }]
+        Hash[body.map { |k, v| ["#{namespace}:#{camelize(k)}", add_ns_to_keys(v)] }]
       when Array
         body.map { |x| add_ns_to_keys x }
       else 
@@ -35,6 +35,10 @@ module Afipws
     
     def namespace
       :wsdl
+    end
+    
+    def camelize k
+      k.is_a?(String) ? k : k.to_s.camelize
     end
   end
 end

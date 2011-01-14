@@ -3,7 +3,8 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Afipws::WSFE do
   let :ws do 
-    wsaa = stub :login => { :token => 't', :sign => 's' }
+    wsaa = Afipws::WSAA.new 
+    wsaa.stubs :login => { :token => 't', :sign => 's' }
     Afipws::WSFE.new :cuit => '1', :wsaa => wsaa
   end
   

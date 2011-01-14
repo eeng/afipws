@@ -1,13 +1,15 @@
 module Afipws
   class WSFE
-    attr_reader :cuit, :wsaa, :ta
+    extend Forwardable
+    attr_reader :wsaa
+    def_delegators :wsaa, :ta, :auth, :cuit
+
     WSDL = {
       :dev => "http://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL",
       :test => Root + '/spec/fixtures/wsfe.wsdl'
     }
     
     def initialize options = {}
-      @cuit = options[:cuit]
       @wsaa = options[:wsaa] || WSAA.new(options.merge(:service => 'wsfe'))
       @client = Client.new WSDL[options[:env] || :test]
     end
@@ -17,47 +19,41 @@ module Afipws
     end
     
     def tipos_comprobantes
-      t = autenticar_y_tomar_array(:cbte_tipo) { |auth| @client.fe_param_get_tipos_cbte auth }
-      parse t, :id => :integer, :fch_desde => :date, :fch_hasta => :date
+      r = @client.fe_param_get_tipos_cbte auth
+      parse get_array(r, :cbte_tipo), :id => :integer, :fch_desde => :date, :fch_hasta => :date
     end
     
     def tipos_documentos
-      t = autenticar_y_tomar_array(:doc_tipo) { |auth| @client.fe_param_get_tipos_doc auth }
-      parse t, :id => :integer, :fch_desde => :date, :fch_hasta => :date
+      r = @client.fe_param_get_tipos_doc auth
+      parse get_array(r, :doc_tipo), :id => :integer, :fch_desde => :date, :fch_hasta => :date
     end
     
     def tipos_monedas
-      t = autenticar_y_tomar_array(:moneda) { |auth| @client.fe_param_get_tipos_monedas auth }
-      parse t, :fch_desde => :date, :fch_hasta => :date
+      r = @client.fe_param_get_tipos_monedas auth
+      parse get_array(r, :moneda), :fch_desde => :date, :fch_hasta => :date
     end
     
     def tipos_iva
-      t = autenticar_y_tomar_array(:iva_tipo) { |auth| @client.fe_param_get_tipos_iva auth }
-      parse t, :id => :integer, :fch_desde => :date, :fch_hasta => :date
+      r = @client.fe_param_get_tipos_iva auth
+      parse get_array(r, :iva_tipo), :id => :integer, :fch_desde => :date, :fch_hasta => :date
     end
 
     def cotizacion moneda_id
-      c = autenticar { |auth| @client.fe_param_get_cotizacion auth.merge 'MonId' => moneda_id }[:result_get]
-      parse c, :mon_cotiz => :float, :fch_cotiz => :date
+      r = @client.fe_param_get_cotizacion auth.merge :mon_id => moneda_id
+      parse r[:result_get], :mon_cotiz => :float, :fch_cotiz => :date
     end
     
     def autorizar_comprobante comprobante
-      r = autenticar { |auth| @client.fecae_solicitar auth.merge camelize_strings(comprobante) }
+      r = @client.fecae_solicitar auth.merge comprobante
       parse r, :fch_proceso => :date, :cbte_desde => :integer, :cbte_hasta => :integer, :cae_fch_vto => :date
     end
     
     def ultimo_comprobante_autorizado opciones
-      autenticar { |auth| @client.fe_comp_ultimo_autorizado auth.merge camelize_strings(opciones) }[:cbte_nro].to_i
+      @client.fe_comp_ultimo_autorizado(auth.merge(opciones))[:cbte_nro].to_i
     end
     
     private
-    def autenticar
-      @ta ||= @wsaa.login
-      yield 'Auth' => { 'Token' => @ta[:token], 'Sign' => ta[:sign], 'Cuit' => cuit }
-    end
-    
-    def autenticar_y_tomar_array array_element, &block
-      response = autenticar &block
+    def get_array response, array_element
       Array.wrap response[:result_get][array_element]
     end
 
@@ -76,17 +72,6 @@ module Afipws
         p[:integer] = Proc.new { |integer| integer.to_i }
         p[:float] = Proc.new { |float| float.to_f }
       }
-    end
-    
-    def camelize_strings elem
-      case elem
-      when Hash
-        Hash[elem.map { |k, v| [k.to_s.camelize, camelize_strings(v)] }]
-      when Array
-        elem.map { |x| camelize_strings x }
-      else
-        elem
-      end
     end
   end
 end

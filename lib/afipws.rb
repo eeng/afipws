@@ -2,6 +2,7 @@ module Afipws
   Root = File.expand_path File.dirname(__FILE__) + '/..'
 end
 
+require 'forwardable'
 require 'builder'
 require 'base64'
 require 'savon'

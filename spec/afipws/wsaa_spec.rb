@@ -36,12 +36,33 @@ describe Afipws::WSAA do
       ta = ws.login
       ta[:token].should == 'PD94='
       ta[:sign].should == 'i9xDN='
+      ta[:generation_time].should == Time.local(2011,01,12,18,57,04)
+      ta[:expiration_time].should == Time.local(2011,01,13,06,57,04)
     end
     
     it "debería encapsular SOAP Faults" do
       subject.stubs(:tra).returns('')
       savon.stubs('loginCms').returns(:fault)
       expect { subject.login }.to raise_error Afipws::WSError, /CMS no es valido/
+    end
+  end
+  
+  context "auth" do
+    before { Time.stubs(:now).returns(now = Time.local(2010,1,1)) }
+    
+    it "debería cachear TA" do
+      subject.expects(:login).once.returns(ta = {token: 'token', sign: 'sign', expiration_time: Time.now + 60})
+      subject.auth
+      subject.auth
+      subject.ta.should equal ta
+    end
+    
+    it "si el TA expiró debería ejecutar solicitar uno nuevo" do
+      subject.expects(:login).twice.returns(token: 't1', expiration_time: Time.now - 2).then.returns(token: 't2')
+      subject.auth
+      subject.ta[:token].should == 't1'
+      subject.auth
+      subject.ta[:token].should == 't2'
     end
   end
 end

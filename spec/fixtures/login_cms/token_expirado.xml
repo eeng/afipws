@@ -1,0 +1,14 @@
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <soap:Body>
+      <FEParamGetTiposIvaResponse xmlns="http://ar.gov.afip.dif.FEV1/">
+         <FEParamGetTiposIvaResult>
+            <Errors>
+               <Err>
+                  <Code>600</Code>
+                  <Msg>ValidacionDeToken: No validaron las fechas del token GenTime, ExpTime, NowUTC: 1294931263 (1/13/2011 3:07:13 PM), 1294974523 (1/14/2011 3:08:43 AM), 1/14/2011 2:31:22 PM</Msg>
+               </Err>
+            </Errors>
+         </FEParamGetTiposIvaResult>
+      </FEParamGetTiposIvaResponse>
+   </soap:Body>
+</soap:Envelope>
