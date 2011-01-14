@@ -52,7 +52,7 @@ describe Afipws::WSFE do
     
     context "autorizar_comprobante" do
       # TODO Probar uno con varias alicuotas
-      it "autorizar_comprobante" do
+      it "debería devolver un hash con el CAE y su fecha de vencimiento" do
         savon.expects('FECAESolicitar').with(has_entries 'wsdl:CantReg' => 1, 'wsdl:PtoVta' => 2, 'wsdl:CbteFch' => '20110113',
           'wsdl:Iva' => [{'wsdl:Alicuota' => {'wsdl:Id' => 5, 'wsdl:BaseImp' => 1049.98, 'wsdl:Importe' => 220.5}}]).returns(:autorizacion_1_cbte)
         rta = ws.autorizar_comprobante(:cant_reg => 1, :cbte_tipo => 1, :pto_vta => 2, :concepto => 1, 
@@ -60,11 +60,7 @@ describe Afipws::WSFE do
           :imp_total => 1270.48, :imp_neto => 1049.98, :imp_iva => 220.50, :imp_tot_conc => 0, :imp_op_ex => 0, 
           :imp_trib => 0, :mon_id => 'PES', :mon_cotiz => 1,
           :iva => [{ :alicuota => { :id => 5, :base_imp => 1049.98, :importe => 220.50 }}])
-        rta[:fe_cab_resp][:fch_proceso].should == Date.new(2011,01,13)
-        rta[:fe_cab_resp][:resultado].should == 'A'
-        rta[:fe_det_resp][:fecae_det_response][:cbte_desde].should == 1
-        rta[:fe_det_resp][:fecae_det_response][:cae].should == '61023008595705'
-        rta[:fe_det_resp][:fecae_det_response][:cae_fch_vto].should == Date.new(2011,01,23)
+        rta.should == { :cae => '61023008595705', :cae_fch_vto => Date.new(2011,01,23) }
       end    
     end
     

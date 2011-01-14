@@ -46,7 +46,7 @@ module Afipws
     
     def autorizar_comprobante comprobante
       r = @client.fecae_solicitar auth.merge r2x(comprobante, :cbte_fch => :date)
-      x2r r, :fch_proceso => :date, :cbte_desde => :integer, :cbte_hasta => :integer, :cae_fch_vto => :date
+      x2r r[:fe_det_resp][:fecae_det_response].select { |k, _| [:cae, :cae_fch_vto].include? k }, :cae_fch_vto => :date
     end
     
     def ultimo_comprobante_autorizado opciones
