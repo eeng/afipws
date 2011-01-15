@@ -38,6 +38,11 @@ describe Afipws::WSFE do
       ws.tipos_iva.should == [{ :id => 5, :desc => "21%", :fch_desde => Date.new(2009,2,20), :fch_hasta => nil }] 
     end
     
+    it "tipos_tributos" do
+      savon.expects('FEParamGetTiposTributos').returns(:success)
+      ws.tipos_tributos.should == [{ :id => 2, :desc => "Impuestos provinciales", :fch_desde => Date.new(2010,9,17), :fch_hasta => nil }]
+    end
+    
     context "cotizacion" do
       it "cuando la moneda solicitada existe" do
         savon.expects('FEParamGetCotizacion').with(has_path '/MonId' => 'DOL').returns(:dolar)
@@ -60,26 +65,55 @@ describe Afipws::WSFE do
         savon.expects('FECAESolicitar').with(has_path '/FeCAEReq/FeCabReq/CantReg' => 1,
           '/FeCAEReq/FeCabReq/PtoVta' => 2,
           '/FeCAEReq/FeCabReq/CbteTipo' => 1,
-          '/FeCAEReq/FeDetReq/FECAEDetRequest/DocTipo' => 80,
-          '/FeCAEReq/FeDetReq/FECAEDetRequest/DocNro' => 30521189203,
-          '/FeCAEReq/FeDetReq/FECAEDetRequest/CbteFch' => '20110113',
-          '/FeCAEReq/FeDetReq/FECAEDetRequest/ImpTotal' => 1270.48,
-          '/FeCAEReq/FeDetReq/FECAEDetRequest/ImpIVA' => 220.5,
-          '/FeCAEReq/FeDetReq/FECAEDetRequest/Iva' => [{ 'wsdl:AlicIva' => { 'wsdl:Id' => 5, 'wsdl:BaseImp' => 1049.98, 'wsdl:Importe' => 220.5 }}]
+          '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/DocTipo' => 80,
+          '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/DocNro' => 30521189203,
+          '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/CbteFch' => '20110113',
+          '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/ImpTotal' => 1270.48,
+          '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/ImpIVA' => 220.5,
+          '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/Iva/AlicIva[0]/Id' => 5,
+          '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/Iva/AlicIva[0]/Importe' => 220.5
         ).returns(:autorizacion_1_cbte)
-        rta = ws.autorizar_comprobante(:cant_reg => 1, :cbte_tipo => 1, :pto_vta => 2, :concepto => 1, 
-          :doc_nro => 30521189203, :doc_tipo => 80, :cbte_desde => 1, :cbte_hasta => 1, :cbte_fch => Date.new(2011,01,13), 
-          :imp_total => 1270.48, :imp_neto => 1049.98, :imp_iva => 220.50, :imp_tot_conc => 0, :imp_op_ex => 0, 
-          :imp_trib => 0, :mon_id => 'PES', :mon_cotiz => 1,
-          :iva => [{ :alic_iva => { :id => 5, :base_imp => 1049.98, :importe => 220.50 }}])
-        rta.should == { :cae => '61023008595705', :cae_fch_vto => Date.new(2011,01,23) }
+        rta = ws.autorizar_comprobantes(:cbte_tipo => 1, :pto_vta => 2, :comprobantes => [{:cbte_nro => 1, :concepto => 1, 
+          :doc_nro => 30521189203, :doc_tipo => 80, :cbte_fch => Date.new(2011,01,13), 
+          :imp_total => 1270.48, :imp_neto => 1049.98, :imp_iva => 220.50, :mon_id => 'PES', :mon_cotiz => 1,
+          :iva => { :alic_iva => [{ :id => 5, :base_imp => 1049.98, :importe => 220.50 }]}
+        }])
+        rta[0].should have_entries :cae => '61023008595705', :cae_fch_vto => Date.new(2011,01,23), :cbte_nro => 1
+        rta.should have(1).item
       end
 
-      it "con varias alicuotas iva"
+      it "con varias alicuotas iva" do
+        savon.expects('FECAESolicitar').with(has_path({
+          '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/Iva/AlicIva[0]/Id' => 5,
+          '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/Iva/AlicIva[0]/Importe' => 21,
+          '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/Iva/AlicIva[1]/Id' => 4,
+          '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/Iva/AlicIva[1]/Importe' => 5.25
+        })).returns(:autorizacion_1_cbte)
+        ws.autorizar_comprobantes(:cbte_tipo => 1, :pto_vta => 2, :comprobantes => [{:iva => {:alic_iva => [
+            { :id => 5, :base_imp => 100, :importe => 21 },
+            { :id => 4, :base_imp => 50, :importe => 5.25 }
+        ]}}])
+      end
       
-      it "con varios FECAEDetRequest"
+      it "con varios comprobantes aprobados" do
+        savon.expects('FECAESolicitar').with(has_path({
+          '/FeCAEReq/FeCabReq/CantReg' => 2,
+          '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/CbteDesde' => 5,
+          '/FeCAEReq/FeDetReq/FECAEDetRequest[1]/CbteDesde' => 6,
+        })).returns(:autorizacion_2_cbtes)
+        rta = ws.autorizar_comprobantes(:cbte_tipo => 1, :pto_vta => 2, :comprobantes => [
+          { :cbte_nro => 5 }, { :cbte_nro => 6 }
+        ])
+        rta[0].should have_entries :cbte_nro => 5, :cae => '61033008894096'
+        rta[1].should have_entries :cbte_nro => 6, :cae => '61033008894101'
+      end
       
-      it "cuando hay observaciones"
+      it "con observaciones" do
+        savon.stubs('FECAESolicitar').returns(:observaciones)
+        rta = ws.autorizar_comprobantes :comprobantes => []
+        rta[0].should have_entries :cbte_nro => 3, :cae => nil, :observaciones => [
+          {:code => 10048, :msg => 'Msg 1'}, {:code => 10018, :msg => 'Msg 2'}]
+      end
     end
     
     it "ultimo_comprobante_autorizado" do

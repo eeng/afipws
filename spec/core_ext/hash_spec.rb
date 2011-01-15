@@ -12,6 +12,14 @@ describe Hash do
       hash.fetch_path('/3/6').should == { '7' => '8' }
       hash.fetch_path('/3/6/7').should == '8'
     end
+    
+    it "debería permitir acceder a values tipo array con subindice" do
+      hash = { '1' => [{ '2' => 3 }, { '4' => 5 }] }
+      hash.fetch_path('/1[0]/2').should == 3
+      hash.fetch_path('/1[1]/4').should == 5
+      hash.fetch_path('/1[0]').should == { '2' => 3 }
+      hash.fetch_path('/1[2]').should == nil
+    end
   end
   
   context "select_keys" do
@@ -21,6 +29,16 @@ describe Hash do
       hash.select_keys(1, 3).should == {1 => 2, 3 => 4}
       hash.select_keys(5).should == {}
       hash.select_keys(5, 3).should == {3 => 4}
+    end
+  end
+  
+  context "has_entries?" do
+    subject { Hash[1, 2, 3, 4] }
+    
+    it "debería devolver true cuando self incluye todas las entries del hash parametro" do
+      should have_entries 1 => 2
+      should have_entries 3 => 4, 1 => 2
+      should_not have_entries 1 => 3
     end
   end
 end

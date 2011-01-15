@@ -6,9 +6,9 @@
                <Cuit>20300032673</Cuit>
                <PtoVta>1</PtoVta>
                <CbteTipo>1</CbteTipo>
-               <FchProceso>20110114</FchProceso>
-               <CantReg>1</CantReg>
-               <Resultado>R</Resultado>
+               <FchProceso>20110115</FchProceso>
+               <CantReg>2</CantReg>
+               <Resultado>A</Resultado>
                <Reproceso>N</Reproceso>
             </FeCabResp>
             <FeDetResp>
@@ -16,22 +16,23 @@
                   <Concepto>1</Concepto>
                   <DocTipo>80</DocTipo>
                   <DocNro>30521189203</DocNro>
-                  <CbteDesde>3</CbteDesde>
-                  <CbteHasta>3</CbteHasta>
+                  <CbteDesde>5</CbteDesde>
+                  <CbteHasta>5</CbteHasta>
                   <CbteFch>20110113</CbteFch>
-                  <Resultado>R</Resultado>
-                  <Observaciones>
-                     <Obs>
-                        <Code>10048</Code>
-                        <Msg>Msg 1</Msg>
-                     </Obs>
-                     <Obs>
-                        <Code>10018</Code>
-                        <Msg>Msg 2</Msg>
-                     </Obs>
-                  </Observaciones>
-                  <CAE/>
-                  <CAEFchVto/>
+                  <Resultado>A</Resultado>
+                  <CAE>61033008894096</CAE>
+                  <CAEFchVto>20110123</CAEFchVto>
+               </FECAEDetResponse>
+               <FECAEDetResponse>
+                  <Concepto>1</Concepto>
+                  <DocTipo>80</DocTipo>
+                  <DocNro>30521189203</DocNro>
+                  <CbteDesde>6</CbteDesde>
+                  <CbteHasta>6</CbteHasta>
+                  <CbteFch>20110113</CbteFch>
+                  <Resultado>A</Resultado>
+                  <CAE>61033008894101</CAE>
+                  <CAEFchVto>20110123</CAEFchVto>
                </FECAEDetResponse>
             </FeDetResp>
          </FECAESolicitarResult>
