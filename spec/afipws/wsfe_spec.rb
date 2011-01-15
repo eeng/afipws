@@ -73,6 +73,8 @@ describe Afipws::WSFE do
       it "con varias alicuotas iva"
       
       it "con varios FECAEDetRequest"
+      
+      it "cuando hay observaciones"
     end
     
     it "ultimo_comprobante_autorizado" do
