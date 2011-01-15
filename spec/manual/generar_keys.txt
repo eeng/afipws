@@ -1,0 +1,8 @@
+# Generar clave privada
+openssl genrsa -out test.key 1024
+
+# Generar el CSR para enviar a la AFIP
+openssl req -new -key test.key -subj "/C=AR/O=[empresa]/CN=[nombre]/serialNumber=CUIT [nro_cuit]" -out test.csr
+
+# Genera un certificado firmado por nosotros, sería el paso que tiene que hacer la AFIP en base al CSR
+openssl req -x509 -days 1095 -out test.crt -verify -key test.key -sha1 -new -batch

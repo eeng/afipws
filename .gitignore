@@ -1,3 +1,5 @@
 pkg/*
 *.gem
 .bundle
+spec/manual/*.key
+spec/manual/*.crt
