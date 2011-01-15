@@ -44,10 +44,8 @@ module Afipws
       x2r get_array(r, :tributo_tipo), :id => :integer, :fch_desde => :date, :fch_hasta => :date      
     end
 
-    # TODO simplificar lo q devuelve
     def cotizacion moneda_id
-      r = @client.fe_param_get_cotizacion auth.merge :mon_id => moneda_id
-      x2r r[:result_get], :mon_cotiz => :float, :fch_cotiz => :date
+      @client.fe_param_get_cotizacion(auth.merge(:mon_id => moneda_id))[:result_get][:mon_cotiz].to_f
     end
     
     def autorizar_comprobantes opciones

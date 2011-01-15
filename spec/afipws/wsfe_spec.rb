@@ -46,7 +46,7 @@ describe Afipws::WSFE do
     context "cotizacion" do
       it "cuando la moneda solicitada existe" do
         savon.expects('FEParamGetCotizacion').with(has_path '/MonId' => 'DOL').returns(:dolar)
-        ws.cotizacion('DOL').should == { :mon_id => 'DOL', :mon_cotiz => 3.976, :fch_cotiz => Date.new(2011,01,12) }
+        ws.cotizacion('DOL').should == 3.976
       end
       
       it "cuando la moneda no existe" do
