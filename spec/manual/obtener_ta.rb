@@ -7,7 +7,7 @@ ws = Afipws::WSFE.new :env => :dev, :cuit => '20300032673',
   :cert => File.read(File.dirname(__FILE__) + '/test.crt'), 
   :key => File.read(File.dirname(__FILE__) + '/test.key') 
 
-ws.auth
+puts ws.cotizacion 'DOL'
 
 xml = Builder::XmlMarkup.new indent: 2
 xml.ar :Auth do
