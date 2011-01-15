@@ -1,12 +1,20 @@
 = Afipws
 
-== TODO 
+== Uso 
 
-Guía de Uso
+Primero hay que crear la clave privada y obtener el certificado correspondiente según los pasos indicados {aquí}[http://www.sistemasagiles.com.ar/trac/wiki/ManualPyAfipWs#Certificados].
+Luego usamos el Web Service de la siguiente forma:
+
+  ws = Afipws::WSFE.new :env => :dev, :cuit => '...', :key => File.read('test.key') , :cert => File.read('test.crt')
+  puts ws.cotizacion 'DOL'
+
+De momento sólo están soportados los servicios WSAA y WSFEv1. 
+Ver specs para más ejemplos.
 
 == Testing
 
   git clone git://github.com/eeng/afipws.git
+  cd afipws
   bundle
   rake
 
