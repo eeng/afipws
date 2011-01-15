@@ -65,6 +65,10 @@ module Afipws
       @client.fe_comp_consultar(auth.merge(opciones))[:result_get]
     end
     
+    def cant_max_registros_x_request
+      @client.fe_comp_tot_x_request[:reg_x_req].to_i
+    end
+    
     private
     def get_array response, array_element
       Array.wrap response[:result_get][array_element]

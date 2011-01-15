@@ -51,6 +51,7 @@ describe Afipws::WSFE do
     end
     
     it "cant_max_registros_x_request" do
+      savon.expects('FECompTotXRequest').returns(:success)
       ws.cant_max_registros_x_request.should == 250
     end
     
