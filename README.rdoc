@@ -5,6 +5,9 @@
 Primero hay que crear la clave privada y obtener el certificado correspondiente según los pasos indicados {aquí}[http://www.sistemasagiles.com.ar/trac/wiki/ManualPyAfipWs#Certificados].
 Luego usamos el Web Service de la siguiente forma:
 
+  gem install 'afipws'
+  
+  require 'afipws'
   ws = Afipws::WSFE.new :env => :dev, :cuit => '...', :key => File.read('test.key') , :cert => File.read('test.crt')
   puts ws.cotizacion 'DOL'
 
