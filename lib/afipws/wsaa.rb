@@ -22,7 +22,7 @@ module Afipws
       xml.loginTicketRequest version: 1 do
         xml.header do
           xml.uniqueId Time.now.to_i
-          xml.generationTime xsd_datetime Time.now
+          xml.generationTime xsd_datetime Time.now - ttl
           # TODO me parece que no le da mucha bola el WS al expirationTime
           xml.expirationTime xsd_datetime Time.now + ttl
         end

@@ -7,7 +7,7 @@ describe Afipws::WSAA do
       Time.stubs(:now).returns Time.local(2001, 12, 31, 12, 00)
       xml = subject.generar_tra 'wsfe', 2400
       xml.should match_xpath "/loginTicketRequest/header/uniqueId", Time.now.to_i.to_s
-      xml.should match_xpath "/loginTicketRequest/header/generationTime", "2001-12-31T12:00:00-03:00"
+      xml.should match_xpath "/loginTicketRequest/header/generationTime", "2001-12-31T11:20:00-03:00"
       xml.should match_xpath "/loginTicketRequest/header/expirationTime", "2001-12-31T12:40:00-03:00"
       xml.should match_xpath "/loginTicketRequest/service", "wsfe"
     end
