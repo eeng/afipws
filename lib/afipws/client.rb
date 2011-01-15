@@ -17,6 +17,10 @@ module Afipws
       @client.request(namespace, action) { soap.body = add_ns_to_keys(body) }
     end
     
+    def soap_actions
+      @client.wsdl.soap_actions
+    end
+    
     def method_missing method_sym, *args
       request method_sym, *args
     end

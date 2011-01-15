@@ -50,6 +50,10 @@ describe Afipws::WSFE do
       end
     end
     
+    it "cant_max_registros_x_request" do
+      ws.cant_max_registros_x_request.should == 250
+    end
+    
     context "autorizar_comprobante" do
       it "debería devolver un hash con el CAE y su fecha de vencimiento" do
         savon.expects('FECAESolicitar').with(has_path '/FeCAEReq/FeCabReq/CantReg' => 1,

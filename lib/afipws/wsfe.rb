@@ -2,7 +2,7 @@ module Afipws
   class WSFE
     extend Forwardable
     include TypeConversions
-    attr_reader :wsaa
+    attr_reader :wsaa, :client
     def_delegators :wsaa, :ta, :auth, :cuit
 
     WSDL = {
