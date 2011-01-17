@@ -43,6 +43,14 @@ describe Afipws::WSFE do
       ws.tipos_tributos.should == [{ :id => 2, :desc => "Impuestos provinciales", :fch_desde => Date.new(2010,9,17), :fch_hasta => nil }]
     end
     
+    it "puntos_venta" do
+      savon.expects('FEParamGetPtosVenta').returns(:success)
+      ws.puntos_venta.should == [
+        { :nro => 1, :emision_tipo => "CAE", :bloqueado => false, :fch_baja => nil },
+        { :nro => 2, :emision_tipo => "CAEA", :bloqueado => true, :fch_baja => Date.new(2011,1,31) }
+      ]
+    end
+    
     context "cotizacion" do
       it "cuando la moneda solicitada existe" do
         savon.expects('FEParamGetCotizacion').with(has_path '/MonId' => 'DOL').returns(:dolar)
@@ -114,6 +122,10 @@ describe Afipws::WSFE do
         rta[0].should have_entries :cbte_nro => 3, :cae => nil, :observaciones => [
           {:code => 10048, :msg => 'Msg 1'}, {:code => 10018, :msg => 'Msg 2'}]
       end
+    end
+    
+    context "CAEA" do
+      it "probar 5 dias antes de la quincena"
     end
     
     it "ultimo_comprobante_autorizado" do

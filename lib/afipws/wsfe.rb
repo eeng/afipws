@@ -44,6 +44,12 @@ module Afipws
       x2r get_array(r, :tributo_tipo), :id => :integer, :fch_desde => :date, :fch_hasta => :date      
     end
 
+    # TODO probar una vez q habiliten algunos ptos de venta
+    def puntos_venta
+      r = @client.fe_param_get_ptos_venta auth
+      x2r get_array(r, :pto_venta), :nro => :integer, :fch_baja => :date, :bloqueado => :boolean
+    end
+    
     def cotizacion moneda_id
       @client.fe_param_get_cotizacion(auth.merge(:mon_id => moneda_id))[:result_get][:mon_cotiz].to_f
     end

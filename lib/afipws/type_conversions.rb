@@ -22,10 +22,11 @@ module Afipws
     end
     
     def parsing_fn
-      @parsing ||= Hash.new(Proc.new { |other| other }).tap { |p|
-        p[:date] = Proc.new { |date| ::Date.parse(date) rescue nil }
-        p[:integer] = Proc.new { |integer| integer.to_i }
-        p[:float] = Proc.new { |float| float.to_f }
+      @parsing ||= Hash.new(Proc.new { |v| v }).tap { |p|
+        p[:date] = Proc.new { |v| ::Date.parse(v) rescue nil }
+        p[:integer] = Proc.new { |v| v.to_i }
+        p[:float] = Proc.new { |v| v.to_f }
+        p[:boolean] = Proc.new { |v| v == "S" }
       }
     end
 
