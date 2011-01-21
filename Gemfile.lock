@@ -12,7 +12,7 @@ GEM
   specs:
     activesupport (3.0.3)
     archive-tar-minitar (0.5.2)
-    builder (2.1.2)
+    builder (3.0.0)
     columnize (0.3.2)
     crack (0.1.8)
     diff-lcs (1.1.2)
@@ -45,11 +45,11 @@ GEM
       ruby-debug-base19 (>= 0.11.19)
     ruby_core_source (0.1.4)
       archive-tar-minitar (>= 0.5.2)
-    savon (0.8.2)
+    savon (0.8.3)
       builder (>= 2.1.2)
       crack (~> 0.1.8)
-      gyoku (>= 0.1.1)
-      httpi (>= 0.7.5)
+      gyoku (>= 0.2.0)
+      httpi (>= 0.7.8)
     savon_spec (0.1.2)
       mocha (>= 0.9.8)
       rspec (>= 2.0.0)
@@ -59,11 +59,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport
   afipws!
-  builder
-  nokogiri
   rspec
   ruby-debug19
-  savon
   savon_spec
