@@ -87,7 +87,8 @@ describe Afipws::WSFE do
           :imp_total => 1270.48, :imp_neto => 1049.98, :imp_iva => 220.50, :mon_id => 'PES', :mon_cotiz => 1,
           :iva => { :alic_iva => [{ :id => 5, :base_imp => 1049.98, :importe => 220.50 }]}
         }])
-        rta[0].should have_entries :cae => '61023008595705', :cae_fch_vto => Date.new(2011,01,23), :cbte_nro => 1
+        rta[0].should have_entries :cae => '61023008595705', :cae_fch_vto => Date.new(2011,01,23), :cbte_nro => 1, 
+          :resultado => 'A', :observaciones => []
         rta.should have(1).item
       end
 
@@ -119,11 +120,17 @@ describe Afipws::WSFE do
         rta[1].should have_entries :cbte_nro => 6, :cae => '61033008894101'
       end
       
-      it "con observaciones" do
-        savon.stubs('FECAESolicitar').returns(:observaciones)
+      it "con 2 observaciones" do
+        savon.stubs('FECAESolicitar').returns(:dos_observaciones)
         rta = ws.autorizar_comprobantes :comprobantes => []
-        rta[0].should have_entries :cbte_nro => 3, :cae => nil, :observaciones => [
+        rta[0].should have_entries :cbte_nro => 3, :cae => nil, :resultado => 'R', :observaciones => [
           {:code => 10048, :msg => 'Msg 1'}, {:code => 10018, :msg => 'Msg 2'}]
+      end
+
+      it "con 1 observación" do
+        savon.stubs('FECAESolicitar').returns(:una_observacion)
+        rta = ws.autorizar_comprobantes :comprobantes => []
+        rta[0].should have_entries :observaciones => [{:code => 10048, :msg => 'Msg 1'}]
       end
     end
     
@@ -150,6 +157,25 @@ describe Afipws::WSFE do
           ws.periodo_para_solicitud_caea.should == { :periodo => '201102', :orden => 1 }
         end        
       end
+    end
+    
+    it "informar_comprobantes_caea" do
+      savon.expects('FECAEARegInformativo').with(has_path({ '/Auth/Token' => 't',
+        '/FeCAEARegInfReq/FeCabReq/CantReg' => 2,
+        '/FeCAEARegInfReq/FeCabReq/PtoVta' => 3,
+        '/FeCAEARegInfReq/FeCabReq/CbteTipo' => 1,
+        '/FeCAEARegInfReq/FeDetReq/FECAEADetRequest[0]/CbteDesde' => 1,
+        '/FeCAEARegInfReq/FeDetReq/FECAEADetRequest[0]/CbteHasta' => 1,
+        '/FeCAEARegInfReq/FeDetReq/FECAEADetRequest[0]/CAEA' => '21043476341977',
+        '/FeCAEARegInfReq/FeDetReq/FECAEADetRequest[1]/CbteDesde' => 2,
+        '/FeCAEARegInfReq/FeDetReq/FECAEADetRequest[1]/CbteHasta' => 2,
+        '/FeCAEARegInfReq/FeDetReq/FECAEADetRequest[1]/CAEA' => '21043476341977',
+      })).returns(:informe_rtdo_parcial)
+      rta = ws.informar_comprobantes_caea(:cbte_tipo => 1, :pto_vta => 3, :comprobantes => [
+        { :cbte_nro => 1, :caea => '21043476341977' }, { :cbte_nro => 2, :caea => '21043476341977' },
+      ])
+      rta[0].should have_entries :cbte_nro => 1, :caea => '21043476341977', :resultado => 'A', :observaciones => []
+      rta[1].should have_entries :cbte_nro => 2, :caea => '21043476341977', :resultado => 'R', :observaciones => [{:code => 724, :msg => 'Msg'}]
     end
     
     context "consultar_caea" do

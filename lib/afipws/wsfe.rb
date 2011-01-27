@@ -68,8 +68,8 @@ module Afipws
       }}}
       r = @client.fecae_solicitar auth.merge r2x(request, :cbte_fch => :date)
       r = Array.wrap(r[:fe_det_resp][:fecae_det_response]).map do |h| 
-        obs = h[:observaciones] ? h[:observaciones][:obs] : nil
-        h.select_keys(:cae, :cae_fch_vto).merge(:cbte_nro => h[:cbte_desde]).tap { |h| h.merge!(:observaciones => obs) if obs }
+        obs = Array.wrap(h[:observaciones] ? h[:observaciones][:obs] : nil)
+        h.select_keys(:cae, :cae_fch_vto, :resultado).merge(:cbte_nro => h[:cbte_desde], :observaciones => obs)
       end
       x2r r, :cae_fch_vto => :date, :cbte_nro => :integer, :code => :integer
     end
@@ -80,6 +80,26 @@ module Afipws
     
     def consultar_caea fecha
       convertir_rta_caea @client.fecaea_consultar auth.merge(periodo_para_consulta_caea(fecha))
+    end
+    
+    def informar_comprobantes_caea opciones
+      comprobantes = opciones[:comprobantes]
+      request = { 'FeCAEARegInfReq' => {
+        'FeCabReq' => opciones.select_keys(:cbte_tipo, :pto_vta).merge(:cant_reg => comprobantes.size),
+        'FeDetReq' => { 
+          'FECAEADetRequest' => comprobantes.map do |comprobante|
+            comprobante.merge(:cbte_desde => comprobante[:cbte_nro], :cbte_hasta => comprobante[:cbte_nro]).
+              select_keys(:concepto, :doc_tipo, :doc_nro, :cbte_desde, 
+              :cbte_hasta, :cbte_fch, :imp_total, :imp_tot_conc, :imp_neto, :imp_op_ex, :imp_trib, 
+              :mon_id, :mon_cotiz, :iva).merge({ 'ImpIVA' => comprobante[:imp_iva], 'CAEA' => comprobante[:caea] })
+          end
+      }}}
+      r = @client.fecaea_reg_informativo auth.merge r2x(request, :cbte_fch => :date)
+      r = Array.wrap(r[:fe_det_resp][:fecaea_det_response]).map do |h| 
+        obs = Array.wrap(h[:observaciones] ? h[:observaciones][:obs] : nil)
+        h.select_keys(:caea, :resultado).merge(:cbte_nro => h[:cbte_desde], :observaciones => obs)
+      end
+      x2r r, :cbte_nro => :integer, :code => :integer
     end
     
     def ultimo_comprobante_autorizado opciones

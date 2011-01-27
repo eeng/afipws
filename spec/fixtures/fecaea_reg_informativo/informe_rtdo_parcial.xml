@@ -1,0 +1,45 @@
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <soap:Body>
+      <FECAEARegInformativoResponse xmlns="http://ar.gov.afip.dif.FEV1/">
+         <FECAEARegInformativoResult>
+            <FeCabResp>
+               <Cuit>20300032673</Cuit>
+               <PtoVta>3</PtoVta>
+               <CbteTipo>1</CbteTipo>
+               <FchProceso>20110127</FchProceso>
+               <CantReg>2</CantReg>
+               <Resultado>A</Resultado>
+               <Reproceso>N</Reproceso>
+            </FeCabResp>
+            <FeDetResp>
+               <FECAEADetResponse>
+                  <Concepto>1</Concepto>
+                  <DocTipo>80</DocTipo>
+                  <DocNro>30521189203</DocNro>
+                  <CbteDesde>1</CbteDesde>
+                  <CbteHasta>1</CbteHasta>
+                  <CbteFch>20110201</CbteFch>
+                  <Resultado>A</Resultado>
+                  <CAEA>21043476341977</CAEA>
+               </FECAEADetResponse>
+               <FECAEADetResponse>
+                  <Concepto>1</Concepto>
+                  <DocTipo>80</DocTipo>
+                  <DocNro>30521189203</DocNro>
+                  <CbteDesde>2</CbteDesde>
+                  <CbteHasta>2</CbteHasta>
+                  <CbteFch>20110201</CbteFch>
+                  <Resultado>R</Resultado>
+                  <Observaciones>
+                     <Obs>
+                        <Code>724</Code>
+                        <Msg>Msg</Msg>
+                     </Obs>
+                  </Observaciones>
+                  <CAEA>21043476341977</CAEA>
+               </FECAEADetResponse>
+            </FeDetResp>
+         </FECAEARegInformativoResult>
+      </FECAEARegInformativoResponse>
+   </soap:Body>
+</soap:Envelope>
