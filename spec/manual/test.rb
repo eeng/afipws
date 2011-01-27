@@ -20,18 +20,17 @@ end
 
 def autorizar_comprobante ws
   ultimo = ws.ultimo_comprobante_autorizado :pto_vta => 1, :cbte_tipo => 1
-  puts ws.autorizar_comprobantes(:cbte_tipo => 1, :pto_vta => 1, :comprobantes => [
+  # cant_informar = ws.cant_max_registros_x_request
+  cant_informar = 2
+  puts "Informando #{cant_informar} comprobantes"
+  comprobantes = (1..cant_informar).to_a.map do |i|
     { 
-      :cbte_nro => ultimo + 1, :concepto => 1, :doc_nro => 30521189203, :doc_tipo => 80, :cbte_fch => Date.new(2011,01,13), 
+      :cbte_nro => ultimo + i, :concepto => 1, :doc_nro => 30521189203, :doc_tipo => 80, :cbte_fch => Date.today, 
       :imp_total => 1270.48, :imp_neto => 1049.98, :imp_iva => 220.50, :mon_id => 'PES', :mon_cotiz => 1,
       :iva => { :alic_iva => [{ :id => 5, :base_imp => 1049.98, :importe => 220.50 }]}
-    },
-    { 
-      :cbte_nro => ultimo + 2, :concepto => 1, :doc_nro => 30521189203, :doc_tipo => 80, :cbte_fch => Date.new(2011,01,13), 
-      :imp_total => 1270.48, :imp_neto => 1049.98, :imp_iva => 220.50, :mon_id => 'PES', :mon_cotiz => 1,
-      :iva => { :alic_iva => [{ :id => 5, :base_imp => 1049.98, :importe => 220.60 }]}
     }
-  ])
+  end
+  puts ws.autorizar_comprobantes(:cbte_tipo => 1, :pto_vta => 1, :comprobantes => comprobantes)
 end
 
 def consultar_caea ws
@@ -42,4 +41,4 @@ def soap_actions ws
   ws.client.soap_actions
 end
 
-obtener_ta ws
+autorizar_comprobante ws

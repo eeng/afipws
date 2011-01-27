@@ -91,7 +91,7 @@ module Afipws
     end
     
     def cant_max_registros_x_request
-      @client.fe_comp_tot_x_request[:reg_x_req].to_i
+      @client.fe_comp_tot_x_request(auth)[:reg_x_req].to_i
     end
     
     def periodo_para_solicitud_caea

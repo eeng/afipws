@@ -58,19 +58,20 @@ describe Afipws::WSFE do
       end
       
       it "cuando la moneda no existe" do
-        savon.expects('FEParamGetCotizacion').with(has_path '/MonId' => 'PES').returns(:inexistente)
+        savon.expects('FEParamGetCotizacion').with(has_path '/Auth/Token' => 't', '/MonId' => 'PES').returns(:inexistente)
         expect { ws.cotizacion('PES') }.to raise_error Afipws::WSError, /602: Sin Resultados/
       end
     end
     
     it "cant_max_registros_x_request" do
-      savon.expects('FECompTotXRequest').returns(:success)
+      savon.expects('FECompTotXRequest').with(has_path '/Auth/Token' => 't').returns(:success)
       ws.cant_max_registros_x_request.should == 250
     end
     
     context "autorizar_comprobante" do
       it "debería devolver un hash con el CAE y su fecha de vencimiento" do
-        savon.expects('FECAESolicitar').with(has_path '/FeCAEReq/FeCabReq/CantReg' => 1,
+        savon.expects('FECAESolicitar').with(has_path '/Auth/Token' => 't',
+          '/FeCAEReq/FeCabReq/CantReg' => 1,
           '/FeCAEReq/FeCabReq/PtoVta' => 2,
           '/FeCAEReq/FeCabReq/CbteTipo' => 1,
           '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/DocTipo' => 80,
