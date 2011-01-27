@@ -75,13 +75,11 @@ module Afipws
     end
     
     def solicitar_caea
-      r = @client.fecaea_solicitar auth.merge(periodo_para_solicitud_caea)
-      x2r r[:result_get], :fch_tope_inf => :date, :fch_vig_desde => :date, :fch_vig_hasta => :date
+      convertir_rta_caea @client.fecaea_solicitar auth.merge(periodo_para_solicitud_caea)
     end
     
     def consultar_caea fecha
-      r = @client.fecaea_consultar auth.merge(periodo_para_consulta_caea(fecha))
-      x2r r[:result_get], :fch_tope_inf => :date, :fch_vig_desde => :date, :fch_vig_hasta => :date
+      convertir_rta_caea @client.fecaea_consultar auth.merge(periodo_para_consulta_caea(fecha))
     end
     
     def ultimo_comprobante_autorizado opciones
@@ -112,6 +110,10 @@ module Afipws
     private
     def get_array response, array_element
       Array.wrap response[:result_get][array_element]
+    end
+    
+    def convertir_rta_caea r
+      x2r r[:result_get], :fch_tope_inf => :date, :fch_vig_desde => :date, :fch_vig_hasta => :date
     end
   end
 end

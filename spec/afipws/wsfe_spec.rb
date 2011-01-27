@@ -128,7 +128,8 @@ describe Afipws::WSFE do
       it "debería mandar automáticamente el período y orden" do
         Date.stubs :today => Date.new(2011,1,27)
         savon.expects('FECAEASolicitar').with(has_path '/Periodo' => '201102', '/Orden' => 1).returns(:success)
-        ws.solicitar_caea.should have_entries :caea => '21043476341977', :fch_tope_inf => Date.new(2011,03,17)
+        ws.solicitar_caea.should have_entries :caea => '21043476341977', :fch_tope_inf => Date.new(2011,03,17), 
+          :fch_vig_desde => Date.new(2011,02,01), :fch_vig_hasta => Date.new(2011,02,15)
       end
       
       context "periodo_para_solicitud_caea" do
