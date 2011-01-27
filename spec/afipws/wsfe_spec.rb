@@ -148,6 +148,21 @@ describe Afipws::WSFE do
       end
     end
     
+    context "consultar_caea" do
+      it "consultar_caea" do
+        savon.expects('FECAEAConsultar').with(has_path '/Periodo' => '201101', '/Orden' => 1).returns(:success)
+        ws.consultar_caea(Date.new(2011,1,1)).should have_entries :caea => '21043476341977', :fch_tope_inf => Date.new(2011,03,17)
+      end
+
+      it "periodo_para_consulta_caea" do
+        ws.periodo_para_consulta_caea(Date.new(2011,1,1)).should == { :periodo => '201101', :orden => 1 }
+        ws.periodo_para_consulta_caea(Date.new(2011,1,15)).should == { :periodo => '201101', :orden => 1 }
+        ws.periodo_para_consulta_caea(Date.new(2011,1,16)).should == { :periodo => '201101', :orden => 2 }
+        ws.periodo_para_consulta_caea(Date.new(2011,1,31)).should == { :periodo => '201101', :orden => 2 }
+        ws.periodo_para_consulta_caea(Date.new(2011,2,2)).should == { :periodo => '201102', :orden => 1 }
+      end
+    end
+    
     it "ultimo_comprobante_autorizado" do
       savon.expects('FECompUltimoAutorizado').with(has_path '/PtoVta' => 1, '/CbteTipo' => 1).returns(:success)
       ws.ultimo_comprobante_autorizado(:pto_vta => 1, :cbte_tipo => 1).should == 20

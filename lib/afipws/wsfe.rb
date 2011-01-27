@@ -79,6 +79,11 @@ module Afipws
       x2r r[:result_get], :fch_tope_inf => :date, :fch_vig_desde => :date, :fch_vig_hasta => :date
     end
     
+    def consultar_caea fecha
+      r = @client.fecaea_consultar auth.merge(periodo_para_consulta_caea(fecha))
+      x2r r[:result_get], :fch_tope_inf => :date, :fch_vig_desde => :date, :fch_vig_hasta => :date
+    end
+    
     def ultimo_comprobante_autorizado opciones
       @client.fe_comp_ultimo_autorizado(auth.merge(opciones))[:cbte_nro].to_i
     end
@@ -97,6 +102,11 @@ module Afipws
       else
         { :orden => 1, :periodo => Date.today.next_month.strftime('%Y%m') }
       end
+    end
+    
+    def periodo_para_consulta_caea fecha
+      orden = fecha.day <= 15 ? 1 : 2
+      { :orden => orden, :periodo => fecha.strftime('%Y%m') }
     end
     
     private
