@@ -107,7 +107,9 @@ describe Afipws::WSFE do
         savon.expects('FECAESolicitar').with(has_path({
           '/FeCAEReq/FeCabReq/CantReg' => 2,
           '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/CbteDesde' => 5,
+          '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/CbteHasta' => 5,
           '/FeCAEReq/FeDetReq/FECAEDetRequest[1]/CbteDesde' => 6,
+          '/FeCAEReq/FeDetReq/FECAEDetRequest[1]/CbteHasta' => 6,
         })).returns(:autorizacion_2_cbtes)
         rta = ws.autorizar_comprobantes(:cbte_tipo => 1, :pto_vta => 2, :comprobantes => [
           { :cbte_nro => 5 }, { :cbte_nro => 6 }

@@ -42,4 +42,4 @@ def soap_actions ws
   ws.client.soap_actions
 end
 
-p soap_actions ws
+obtener_ta ws
