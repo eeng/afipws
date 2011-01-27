@@ -124,8 +124,28 @@ describe Afipws::WSFE do
       end
     end
     
-    context "CAEA" do
-      it "probar 5 dias antes de la quincena"
+    context "solicitar_caea" do
+      it "debería mandar automáticamente el período y orden" do
+        Date.stubs :today => Date.new(2011,1,27)
+        savon.expects('FECAEASolicitar').with(has_path '/Periodo' => '201102', '/Orden' => 1).returns(:success)
+        ws.solicitar_caea.should have_entries :caea => '21043476341977', :fch_tope_inf => Date.new(2011,03,17)
+      end
+      
+      context "periodo_para_solicitud_caea" do
+        it "cuando estoy en la primer quincena" do
+          Date.stubs :today => Date.new(2011,1,12)
+          ws.periodo_para_solicitud_caea.should == { :periodo => '201101', :orden => 2 }
+          Date.stubs :today => Date.new(2011,1,15)
+          ws.periodo_para_solicitud_caea.should == { :periodo => '201101', :orden => 2 }
+        end
+        
+        it "cuando estoy en la segunda quincena" do
+          Date.stubs :today => Date.new(2011,1,16)
+          ws.periodo_para_solicitud_caea.should == { :periodo => '201102', :orden => 1 }
+          Date.stubs :today => Date.new(2011,1,31)
+          ws.periodo_para_solicitud_caea.should == { :periodo => '201102', :orden => 1 }
+        end        
+      end
     end
     
     it "ultimo_comprobante_autorizado" do

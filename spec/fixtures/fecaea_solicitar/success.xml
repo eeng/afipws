@@ -1,0 +1,17 @@
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <soap:Body>
+      <FECAEASolicitarResponse xmlns="http://ar.gov.afip.dif.FEV1/">
+         <FECAEASolicitarResult>
+            <ResultGet>
+               <CAEA>21043476341977</CAEA>
+               <Periodo>201102</Periodo>
+               <Orden>1</Orden>
+               <FchVigDesde>20110201</FchVigDesde>
+               <FchVigHasta>20110215</FchVigHasta>
+               <FchTopeInf>20110317</FchTopeInf>
+               <FchProceso>20110127124928</FchProceso>
+            </ResultGet>
+         </FECAEASolicitarResult>
+      </FECAEASolicitarResponse>
+   </soap:Body>
+</soap:Envelope>

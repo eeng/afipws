@@ -74,6 +74,11 @@ module Afipws
       x2r r, :cae_fch_vto => :date, :cbte_nro => :integer, :code => :integer
     end
     
+    def solicitar_caea
+      r = @client.fecaea_solicitar auth.merge(periodo_para_solicitud_caea)
+      x2r r[:result_get], :fch_tope_inf => :date, :fch_vig_desde => :date, :fch_vig_hasta => :date
+    end
+    
     def ultimo_comprobante_autorizado opciones
       @client.fe_comp_ultimo_autorizado(auth.merge(opciones))[:cbte_nro].to_i
     end
@@ -84,6 +89,14 @@ module Afipws
     
     def cant_max_registros_x_request
       @client.fe_comp_tot_x_request[:reg_x_req].to_i
+    end
+    
+    def periodo_para_solicitud_caea
+      if Date.today.day <= 15
+        { :orden => 2, :periodo => Date.today.strftime('%Y%m') }
+      else
+        { :orden => 1, :periodo => Date.today.next_month.strftime('%Y%m') }
+      end
     end
     
     private

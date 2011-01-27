@@ -58,7 +58,7 @@ module Afipws
     # en los otros WS.
     def auth
       @ta = login if ta_expirado?
-      { :auth => { :token => @ta[:token], :sign => ta[:sign], :cuit => @cuit } }
+      { :auth => { :token => @ta[:token], :sign => @ta[:sign], :cuit => @cuit } }
     end
     
     private

@@ -4,6 +4,7 @@ PATH
     afipws (0.0.1)
       activesupport
       builder
+      i18n
       nokogiri
       savon
 
@@ -20,6 +21,7 @@ GEM
       builder (>= 2.1.2)
     httpi (0.7.8)
       rack
+    i18n (0.5.0)
     linecache19 (0.5.11)
       ruby_core_source (>= 0.1.4)
     mocha (0.9.10)
