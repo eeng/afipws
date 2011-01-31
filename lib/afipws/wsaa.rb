@@ -1,9 +1,10 @@
 module Afipws
   class WSAA
-    attr_reader :key, :cert, :service, :ta, :cuit
+    attr_reader :key, :cert, :service, :ta, :cuit, :client
 
     WSDL = {
-      :dev => "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl",
+      :development => "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl",
+      :production => 'https://wsaa.afip.gov.ar/ws/services/LoginCms?wsdl',
       :test => Root + '/spec/fixtures/wsaa.wsdl'
     }
     

@@ -2,7 +2,7 @@
 
 == Uso 
 
-Primero hay que crear la clave privada y obtener el certificado correspondiente según los pasos indicados {aquí}[http://www.sistemasagiles.com.ar/trac/wiki/ManualPyAfipWs#Certificados].
+Primero hay que crear la clave privada y obtener el certificado correspondiente según los pasos indicados {aquí}[http://www.afip.gov.ar/ws/WSAA/cert-req-howto.txt].
 
 Luego hay que instalar la librería:
 
@@ -11,7 +11,7 @@ Luego hay que instalar la librería:
 Y por último usamos el web service de esta forma:
   
   require 'afipws'
-  ws = Afipws::WSFE.new :env => :dev, :cuit => '...', :key => File.read('test.key') , :cert => File.read('test.crt')
+  ws = Afipws::WSFE.new :env => :development, :cuit => '...', :key => File.read('test.key') , :cert => File.read('test.crt')
   puts ws.cotizacion 'DOL'
 
 De momento sólo están soportados los servicios WSAA y WSFEv1. 

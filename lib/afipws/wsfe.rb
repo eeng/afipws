@@ -6,7 +6,8 @@ module Afipws
     def_delegators :wsaa, :ta, :auth, :cuit
 
     WSDL = {
-      :dev => "http://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL",
+      :development => "https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL",
+      :production => "TODO",
       :test => Root + '/spec/fixtures/wsfe.wsdl'
     }
     

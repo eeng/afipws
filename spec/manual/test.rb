@@ -3,7 +3,7 @@ require 'afipws'
 
 Savon.configure { |config| config.log = true }
 
-ws = Afipws::WSFE.new :env => :dev, :cuit => '20300032673', 
+ws = Afipws::WSFE.new :env => :development, :cuit => '20300032673', 
   :cert => File.read(File.dirname(__FILE__) + '/test.crt'), 
   :key => File.read(File.dirname(__FILE__) + '/test.key') 
 
@@ -41,4 +41,4 @@ def soap_actions ws
   ws.client.soap_actions
 end
 
-autorizar_comprobante ws
+p ws.tipos_comprobantes
