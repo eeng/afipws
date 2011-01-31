@@ -7,7 +7,7 @@ module Afipws
 
     WSDL = {
       :development => "https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL",
-      :production => "TODO",
+      :production => "https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL",
       :test => Root + '/spec/fixtures/wsfe.wsdl'
     }
     
