@@ -12,9 +12,9 @@ module Afipws
     }
     
     def initialize options = {}
-      @env = options[:env] || :test
+      @env = (options[:env] || :test).to_sym
       @wsaa = options[:wsaa] || WSAA.new(options.merge(:service => 'wsfe'))
-      @client = Client.new WSDL[@env.to_sym]
+      @client = Client.new WSDL[@env]
     end
     
     def dummy
