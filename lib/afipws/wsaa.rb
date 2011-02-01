@@ -9,12 +9,13 @@ module Afipws
     }
     
     def initialize options = {}
+      @env = options[:env] || :test
       @key = options[:key]
       @cert = options[:cert]
       @service = options[:service] || 'wsfe'
       @ttl = options[:ttl] || 2400
       @cuit = options[:cuit]
-      @client = Client.new WSDL[options[:env] || :test]
+      @client = Client.new WSDL[@env.to_sym]
     end
     
     def generar_tra service, ttl

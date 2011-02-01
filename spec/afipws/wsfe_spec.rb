@@ -233,7 +233,7 @@ describe Afipws::WSFE do
     it "debería usar las url para production cuando el env es production" do
       Afipws::Client.expects(:new).with("https://wsaa.afip.gov.ar/ws/services/LoginCms?wsdl")
       Afipws::Client.expects(:new).with("https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL")
-      wsfe = Afipws::WSFE.new :env => :production
+      wsfe = Afipws::WSFE.new :env => 'production'
       wsfe.env.should == :production
     end
   end
