@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    afipws (0.1.0)
+    afipws (0.1.1)
       activesupport
       builder
       httpclient
