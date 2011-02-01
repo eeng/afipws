@@ -157,6 +157,11 @@ describe Afipws::WSFE do
           ws.periodo_para_solicitud_caea.should == { :periodo => '201102', :orden => 1 }
         end        
       end
+      
+      it "cuando el caea ya fue otorgado" do
+        savon.expects('FECAEASolicitar').returns(:caea_ya_otorgado)
+        expect { ws.solicitar_caea }.to raise_error Afipws::WSError, /15008: Existe un CAEA/ 
+      end
     end
     
     it "informar_comprobantes_caea" do
