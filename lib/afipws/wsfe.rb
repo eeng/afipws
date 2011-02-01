@@ -77,6 +77,12 @@ module Afipws
     
     def solicitar_caea
       convertir_rta_caea @client.fecaea_solicitar auth.merge(periodo_para_solicitud_caea)
+    rescue Afipws::WSError => e
+      if e.errors.any? { |e| e[:code] == '15008' }
+        consultar_caea fecha_inicio_quincena_siguiente
+      else
+        raise
+      end
     end
     
     def consultar_caea fecha
@@ -116,16 +122,17 @@ module Afipws
     end
     
     def periodo_para_solicitud_caea
-      if Date.today.day <= 15
-        { :orden => 2, :periodo => Date.today.strftime('%Y%m') }
-      else
-        { :orden => 1, :periodo => Date.today.next_month.strftime('%Y%m') }
-      end
+      periodo_para_consulta_caea fecha_inicio_quincena_siguiente
     end
     
     def periodo_para_consulta_caea fecha
       orden = fecha.day <= 15 ? 1 : 2
       { :orden => orden, :periodo => fecha.strftime('%Y%m') }
+    end
+    
+    def fecha_inicio_quincena_siguiente
+      hoy = Date.today
+      hoy.day <= 15 ? hoy.change(:day => 16) : hoy.next_month.change(:day => 1)      
     end
     
     private

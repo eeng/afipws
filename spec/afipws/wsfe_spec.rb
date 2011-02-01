@@ -4,7 +4,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe Afipws::WSFE do
   let :ws do 
     wsaa = Afipws::WSAA.new 
-    wsaa.stubs :login => { :token => 't', :sign => 's' }
+    wsaa.stubs :login => { :token => 't', :sign => 's', :expiration_time => 12.hours.from_now }
     Afipws::WSFE.new :cuit => '1', :wsaa => wsaa
   end
   
@@ -158,10 +158,17 @@ describe Afipws::WSFE do
         end        
       end
       
-      it "cuando el caea ya fue otorgado" do
-        savon.expects('FECAEASolicitar').returns(:caea_ya_otorgado)
-        expect { ws.solicitar_caea }.to raise_error Afipws::WSError, /15008: Existe un CAEA/ 
-      end
+      it "cuando el caea ya fue otorgado debería consultarlo y devolverlo" do
+        Date.stubs :today => Date.new(2011,1,27)
+        savon.expects('FECAEASolicitar').with(has_path '/Periodo' => '201102', '/Orden' => 1).returns(:caea_ya_otorgado)
+        savon.expects('FECAEAConsultar').with(has_path '/Periodo' => '201102', '/Orden' => 1).returns(:success)
+        ws.solicitar_caea.should have_entries :caea => '21043476341977', :fch_vig_desde => Date.new(2011,02,01)
+      end    
+      
+      it "cuando hay otro error debería burbujearlo" do
+        savon.expects('FECAEASolicitar').returns(:error_distinto)
+        expect { ws.solicitar_caea }.to raise_error Afipws::WSError, /15007/
+      end  
     end
     
     it "informar_comprobantes_caea" do
@@ -187,14 +194,6 @@ describe Afipws::WSFE do
       it "consultar_caea" do
         savon.expects('FECAEAConsultar').with(has_path '/Periodo' => '201101', '/Orden' => 1).returns(:success)
         ws.consultar_caea(Date.new(2011,1,1)).should have_entries :caea => '21043476341977', :fch_tope_inf => Date.new(2011,03,17)
-      end
-
-      it "periodo_para_consulta_caea" do
-        ws.periodo_para_consulta_caea(Date.new(2011,1,1)).should == { :periodo => '201101', :orden => 1 }
-        ws.periodo_para_consulta_caea(Date.new(2011,1,15)).should == { :periodo => '201101', :orden => 1 }
-        ws.periodo_para_consulta_caea(Date.new(2011,1,16)).should == { :periodo => '201101', :orden => 2 }
-        ws.periodo_para_consulta_caea(Date.new(2011,1,31)).should == { :periodo => '201101', :orden => 2 }
-        ws.periodo_para_consulta_caea(Date.new(2011,2,2)).should == { :periodo => '201102', :orden => 1 }
       end
     end
     
@@ -240,6 +239,32 @@ describe Afipws::WSFE do
         e.errors.should == [{ :code => "600", :msg => "No se corresponden token con firma" }, { :code => "601", :msg => "CUIT representada no incluida en token" }] 
         e.message.should == "600: No se corresponden token con firma; 601: CUIT representada no incluida en token" 
       }
+    end
+  end
+  
+  context "cálculo de fechas y períodos" do
+    it "periodo_para_consulta_caea" do
+      ws.periodo_para_consulta_caea(Date.new(2011,1,1)).should == { :periodo => '201101', :orden => 1 }
+      ws.periodo_para_consulta_caea(Date.new(2011,1,15)).should == { :periodo => '201101', :orden => 1 }
+      ws.periodo_para_consulta_caea(Date.new(2011,1,16)).should == { :periodo => '201101', :orden => 2 }
+      ws.periodo_para_consulta_caea(Date.new(2011,1,31)).should == { :periodo => '201101', :orden => 2 }
+      ws.periodo_para_consulta_caea(Date.new(2011,2,2)).should == { :periodo => '201102', :orden => 1 }
+    end
+    
+    it "fecha_inicio_quincena_siguiente" do
+      fecha_inicio_quincena_siguiente(Date.new(2010,1,1)).should == Date.new(2010,1,16)
+      fecha_inicio_quincena_siguiente(Date.new(2010,1,10)).should == Date.new(2010,1,16)
+      fecha_inicio_quincena_siguiente(Date.new(2010,1,15)).should == Date.new(2010,1,16)
+      
+      fecha_inicio_quincena_siguiente(Date.new(2010,1,16)).should == Date.new(2010,2,1)
+      fecha_inicio_quincena_siguiente(Date.new(2010,1,20)).should == Date.new(2010,2,1)
+      fecha_inicio_quincena_siguiente(Date.new(2010,1,31)).should == Date.new(2010,2,1)
+      fecha_inicio_quincena_siguiente(Date.new(2010,12,31)).should == Date.new(2011,1,1)
+    end
+    
+    def fecha_inicio_quincena_siguiente fecha
+      Date.stubs(:today => fecha)
+      subject.fecha_inicio_quincena_siguiente
     end
   end
 end
