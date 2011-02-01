@@ -222,6 +222,22 @@ describe Afipws::WSFE do
     end
   end
   
+  context "entorno" do
+    it "debería usar las url para development cuando el env es development" do
+      Afipws::Client.expects(:new).with("https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl")
+      Afipws::Client.expects(:new).with("https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL")
+      wsfe = Afipws::WSFE.new :env => :development
+      wsfe.env.should == :development
+    end
+
+    it "debería usar las url para production cuando el env es production" do
+      Afipws::Client.expects(:new).with("https://wsaa.afip.gov.ar/ws/services/LoginCms?wsdl")
+      Afipws::Client.expects(:new).with("https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL")
+      wsfe = Afipws::WSFE.new :env => :production
+      wsfe.env.should == :production
+    end
+  end
+  
   context "manejo de errores" do
     it "cuando hay un error" do
       savon.expects('FEParamGetTiposCbte').returns(:failure_1_error)

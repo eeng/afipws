@@ -2,18 +2,19 @@ module Afipws
   class WSFE
     extend Forwardable
     include TypeConversions
-    attr_reader :wsaa, :client
+    attr_reader :wsaa, :client, :env
     def_delegators :wsaa, :ta, :auth, :cuit
 
     WSDL = {
       :development => "https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL",
       :production => "https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL",
-      :test => Root + '/spec/fixtures/wsfe.wsdl'
+      :test => Root + "/spec/fixtures/wsfe.wsdl"
     }
     
     def initialize options = {}
+      @env = options[:env] || :test
       @wsaa = options[:wsaa] || WSAA.new(options.merge(:service => 'wsfe'))
-      @client = Client.new WSDL[options[:env] || :test]
+      @client = Client.new WSDL[@env]
     end
     
     def dummy

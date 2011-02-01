@@ -4,8 +4,8 @@ module Afipws
 
     WSDL = {
       :development => "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl",
-      :production => 'https://wsaa.afip.gov.ar/ws/services/LoginCms?wsdl',
-      :test => Root + '/spec/fixtures/wsaa.wsdl'
+      :production => "https://wsaa.afip.gov.ar/ws/services/LoginCms?wsdl",
+      :test => Root + "/spec/fixtures/wsaa.wsdl"
     }
     
     def initialize options = {}
