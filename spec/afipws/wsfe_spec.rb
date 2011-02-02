@@ -63,9 +63,9 @@ describe Afipws::WSFE do
       end
     end
     
-    it "cant_max_registros_x_request" do
+    it "cant_max_registros_x_lote" do
       savon.expects('FECompTotXRequest').with(has_path '/Auth/Token' => 't').returns(:success)
-      ws.cant_max_registros_x_request.should == 250
+      ws.cant_max_registros_x_lote.should == 250
     end
     
     context "autorizar_comprobante" do

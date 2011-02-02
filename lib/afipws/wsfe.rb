@@ -122,7 +122,7 @@ module Afipws
       @client.fe_comp_consultar(auth.merge(opciones))[:result_get]
     end
     
-    def cant_max_registros_x_request
+    def cant_max_registros_x_lote
       @client.fe_comp_tot_x_request(auth)[:reg_x_req].to_i
     end
     

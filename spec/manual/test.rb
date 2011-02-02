@@ -20,7 +20,7 @@ end
 
 def autorizar_comprobante ws
   ultimo = ws.ultimo_comprobante_autorizado :pto_vta => 1, :cbte_tipo => 1
-  # cant_informar = ws.cant_max_registros_x_request
+  # cant_informar = ws.cant_max_registros_x_lote
   cant_informar = 2
   puts "Informando #{cant_informar} comprobantes"
   comprobantes = (1..cant_informar).to_a.map do |i|
