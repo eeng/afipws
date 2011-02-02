@@ -190,6 +190,13 @@ describe Afipws::WSFE do
       rta[1].should have_entries :cbte_nro => 2, :caea => '21043476341977', :resultado => 'R', :observaciones => [{:code => 724, :msg => 'Msg'}]
     end
     
+    it "informar_caea_sin_movimientos" do
+      savon.expects('FECAEASinMovimientoInformar').with(has_path('/Auth/Token' => 't',
+        '/PtoVta' => 4, '/CAEA' => '21043476341977')).returns(:success)
+      rta = ws.informar_caea_sin_movimientos('21043476341977', 4)
+      rta.should have_entries :caea => '21043476341977', :resultado => 'A'
+    end
+    
     context "consultar_caea" do
       it "consultar_caea" do
         savon.expects('FECAEAConsultar').with(has_path '/Periodo' => '201101', '/Orden' => 1).returns(:success)

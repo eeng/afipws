@@ -41,4 +41,4 @@ def soap_actions ws
   ws.client.soap_actions
 end
 
-p ws.tipos_comprobantes
+obtener_ta ws

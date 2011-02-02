@@ -110,6 +110,10 @@ module Afipws
       x2r r, :cbte_nro => :integer, :code => :integer
     end
     
+    def informar_caea_sin_movimientos caea, pto_vta
+      @client.fecaea_sin_movimiento_informar(auth.merge('CAEA' => caea, 'PtoVta' => pto_vta))
+    end
+    
     def ultimo_comprobante_autorizado opciones
       @client.fe_comp_ultimo_autorizado(auth.merge(opciones))[:cbte_nro].to_i
     end
