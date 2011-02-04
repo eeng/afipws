@@ -80,12 +80,17 @@ describe Afipws::WSFE do
           '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/ImpTotal' => 1270.48,
           '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/ImpIVA' => 220.5,
           '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/Iva/AlicIva[0]/Id' => 5,
-          '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/Iva/AlicIva[0]/Importe' => 220.5
+          '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/Iva/AlicIva[0]/Importe' => 220.5,
+          '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/Tributos/Tributo[0]/Id' => 0,
+          '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/Tributos/Tributo[0]/BaseImp' => 150,
+          '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/Tributos/Tributo[0]/Alic' => 5.2,
+          '/FeCAEReq/FeDetReq/FECAEDetRequest[0]/Tributos/Tributo[0]/Importe' => 7.8
         ).returns(:autorizacion_1_cbte)
         rta = ws.autorizar_comprobantes(:cbte_tipo => 1, :pto_vta => 2, :comprobantes => [{:cbte_nro => 1, :concepto => 1, 
           :doc_nro => 30521189203, :doc_tipo => 80, :cbte_fch => Date.new(2011,01,13), 
           :imp_total => 1270.48, :imp_neto => 1049.98, :imp_iva => 220.50, :mon_id => 'PES', :mon_cotiz => 1,
-          :iva => { :alic_iva => [{ :id => 5, :base_imp => 1049.98, :importe => 220.50 }]}
+          :iva => { :alic_iva => [{ :id => 5, :base_imp => 1049.98, :importe => 220.50 }]},
+          :tributos => { :tributo => [{ :id => 0, :base_imp => 150, :alic => 5.2, :importe => 7.8 }] }
         }])
         rta[0].should have_entries :cae => '61023008595705', :cae_fch_vto => Date.new(2011,01,23), :cbte_nro => 1, 
           :resultado => 'A', :observaciones => []

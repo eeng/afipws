@@ -60,13 +60,7 @@ module Afipws
       comprobantes = opciones[:comprobantes]
       request = { 'FeCAEReq' => {
         'FeCabReq' => opciones.select_keys(:cbte_tipo, :pto_vta).merge(:cant_reg => comprobantes.size),
-        'FeDetReq' => { 
-          'FECAEDetRequest' => comprobantes.map do |comprobante|
-            comprobante.merge(:cbte_desde => comprobante[:cbte_nro], :cbte_hasta => comprobante[:cbte_nro]).
-              select_keys(:concepto, :doc_tipo, :doc_nro, :cbte_desde, 
-              :cbte_hasta, :cbte_fch, :imp_total, :imp_tot_conc, :imp_neto, :imp_op_ex, :imp_trib, 
-              :mon_id, :mon_cotiz, :iva).merge({ 'ImpIVA' => comprobante[:imp_iva] })
-          end
+        'FeDetReq' => { 'FECAEDetRequest' => comprobantes.map { |comprobante|  comprobante_to_request comprobante }
       }}}
       r = @client.fecae_solicitar auth.merge r2x(request, :cbte_fch => :date)
       r = Array.wrap(r[:fe_det_resp][:fecae_det_response]).map do |h| 
@@ -74,6 +68,13 @@ module Afipws
         h.select_keys(:cae, :cae_fch_vto, :resultado).merge(:cbte_nro => h[:cbte_desde], :observaciones => obs)
       end
       x2r r, :cae_fch_vto => :date, :cbte_nro => :integer, :code => :integer
+    end
+    
+    def comprobante_to_request comprobante
+      comprobante.merge(:cbte_desde => comprobante[:cbte_nro], :cbte_hasta => comprobante[:cbte_nro]).
+        select_keys(:concepto, :doc_tipo, :doc_nro, :cbte_desde, 
+        :cbte_hasta, :cbte_fch, :imp_total, :imp_tot_conc, :imp_neto, :imp_op_ex, :imp_trib, 
+        :mon_id, :mon_cotiz, :iva, :tributos).merge({ 'ImpIVA' => comprobante[:imp_iva] })
     end
     
     def solicitar_caea
@@ -94,12 +95,8 @@ module Afipws
       comprobantes = opciones[:comprobantes]
       request = { 'FeCAEARegInfReq' => {
         'FeCabReq' => opciones.select_keys(:cbte_tipo, :pto_vta).merge(:cant_reg => comprobantes.size),
-        'FeDetReq' => { 
-          'FECAEADetRequest' => comprobantes.map do |comprobante|
-            comprobante.merge(:cbte_desde => comprobante[:cbte_nro], :cbte_hasta => comprobante[:cbte_nro]).
-              select_keys(:concepto, :doc_tipo, :doc_nro, :cbte_desde, 
-              :cbte_hasta, :cbte_fch, :imp_total, :imp_tot_conc, :imp_neto, :imp_op_ex, :imp_trib, 
-              :mon_id, :mon_cotiz, :iva).merge({ 'ImpIVA' => comprobante[:imp_iva], 'CAEA' => comprobante[:caea] })
+        'FeDetReq' => { 'FECAEADetRequest' => comprobantes.map do |comprobante|
+            comprobante_to_request(comprobante).merge('CAEA' => comprobante[:caea])
           end
       }}}
       r = @client.fecaea_reg_informativo auth.merge r2x(request, :cbte_fch => :date)

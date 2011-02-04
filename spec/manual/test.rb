@@ -1,11 +1,8 @@
-$LOAD_PATH.unshift(File.expand_path(File.join(File.dirname(__FILE__), '../../lib')))
-require 'afipws'
+$LOAD_PATH.unshift(File.expand_path('lib')); require 'afipws'
 
 Savon.configure { |config| config.log = true }
 
-ws = Afipws::WSFE.new :env => :development, :cuit => '20300032673', 
-  :cert => File.read(File.dirname(__FILE__) + '/test.crt'), 
-  :key => File.read(File.dirname(__FILE__) + '/test.key') 
+ws = Afipws::WSFE.new :env => :development, :cuit => '20300032673', :cert => File.read('spec/manual/test.crt'), :key => File.read('spec/manual/test.key') 
 
 def obtener_ta ws
   ws.cotizacion 'DOL'
