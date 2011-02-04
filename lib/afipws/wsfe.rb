@@ -71,10 +71,9 @@ module Afipws
     end
     
     def comprobante_to_request comprobante
-      comprobante.merge(:cbte_desde => comprobante[:cbte_nro], :cbte_hasta => comprobante[:cbte_nro]).
-        select_keys(:concepto, :doc_tipo, :doc_nro, :cbte_desde, 
-        :cbte_hasta, :cbte_fch, :imp_total, :imp_tot_conc, :imp_neto, :imp_op_ex, :imp_trib, 
-        :mon_id, :mon_cotiz, :iva, :tributos).merge({ 'ImpIVA' => comprobante[:imp_iva] })
+      nro = comprobante.delete :cbte_nro
+      iva = comprobante.delete :imp_iva
+      comprobante.merge :cbte_desde => nro, :cbte_hasta => nro, 'ImpIVA' => iva
     end
     
     def solicitar_caea
@@ -96,7 +95,7 @@ module Afipws
       request = { 'FeCAEARegInfReq' => {
         'FeCabReq' => opciones.select_keys(:cbte_tipo, :pto_vta).merge(:cant_reg => comprobantes.size),
         'FeDetReq' => { 'FECAEADetRequest' => comprobantes.map do |comprobante|
-            comprobante_to_request(comprobante).merge('CAEA' => comprobante[:caea])
+            comprobante_to_request comprobante.merge('CAEA' => comprobante.delete(:caea))
           end
       }}}
       r = @client.fecaea_reg_informativo auth.merge r2x(request, :cbte_fch => :date)
