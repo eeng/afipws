@@ -3,3 +3,4 @@ pkg/*
 .bundle
 spec/manual/*.key
 spec/manual/*.crt
+.DS_Store
