@@ -46,7 +46,6 @@ module Afipws
       x2r get_array(r, :tributo_tipo), :id => :integer, :fch_desde => :date, :fch_hasta => :date      
     end
 
-    # TODO probar una vez q habiliten algunos ptos de venta
     def puntos_venta
       r = @client.fe_param_get_ptos_venta auth
       x2r get_array(r, :pto_venta), :nro => :integer, :fch_baja => :date, :bloqueado => :boolean
@@ -73,6 +72,7 @@ module Afipws
     def comprobante_to_request comprobante
       nro = comprobante.delete :cbte_nro
       iva = comprobante.delete :imp_iva
+      comprobante.delete :tributos if comprobante[:imp_trib] == 0
       comprobante.merge :cbte_desde => nro, :cbte_hasta => nro, 'ImpIVA' => iva
     end
     
