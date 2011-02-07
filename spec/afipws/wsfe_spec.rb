@@ -215,7 +215,8 @@ describe Afipws::WSFE do
     end
     
     it "consultar_comprobante" do
-      savon.expects('FECompConsultar').with(has_entries 'wsdl:PtoVta' => 1, 'wsdl:CbteTipo' => 2, 'wsdl:CbteNro' => 3).returns(:success)
+      savon.expects('FECompConsultar').with(has_path '/Auth/Token' => 't', 
+        '/FeCompConsReq/PtoVta' => 1, '/FeCompConsReq/CbteTipo' => 2, '/FeCompConsReq/CbteNro' => 3).returns(:success)
       rta = ws.consultar_comprobante(:pto_vta => 1, :cbte_tipo => 2, :cbte_nro => 3)
       rta[:cod_autorizacion].should == '61023008595705'
       rta[:emision_tipo].should == 'CAE'

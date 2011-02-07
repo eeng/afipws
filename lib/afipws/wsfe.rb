@@ -115,7 +115,7 @@ module Afipws
     end
 
     def consultar_comprobante opciones
-      @client.fe_comp_consultar(auth.merge(opciones))[:result_get]
+      @client.fe_comp_consultar(auth.merge(:fe_comp_cons_req => opciones))[:result_get]
     end
     
     def cant_max_registros_x_lote
