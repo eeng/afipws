@@ -237,15 +237,16 @@ describe Afipws::WSFE do
   
   context "entorno" do
     it "debería usar las url para development cuando el env es development" do
-      Afipws::Client.expects(:new).with("https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl")
-      Afipws::Client.expects(:new).with("https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL")
+      Afipws::Client.expects(:new).with("https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl", :development)
+      Afipws::Client.expects(:new).with("https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL", :development)
       wsfe = Afipws::WSFE.new :env => :development
       wsfe.env.should == :development
     end
 
     it "debería usar las url para production cuando el env es production" do
-      Afipws::Client.expects(:new).with("https://wsaa.afip.gov.ar/ws/services/LoginCms?wsdl")
-      Afipws::Client.expects(:new).with("https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL")
+      Afipws::Client.expects(:new).with("https://wsaa.afip.gov.ar/ws/services/LoginCms?wsdl", :production)
+      # Afipws::Client.expects(:new).with("https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL", :production)
+      Afipws::Client.expects(:new).with(File.expand_path(File.dirname(__FILE__) + '/../../') + "/lib/afipws/wsfev1.wsdl", :production)
       wsfe = Afipws::WSFE.new :env => 'production'
       wsfe.env.should == :production
     end

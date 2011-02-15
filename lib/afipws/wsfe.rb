@@ -7,14 +7,15 @@ module Afipws
 
     WSDL = {
       :development => "https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL",
-      :production => "https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL",
+      # :production => "https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL",
+      :production => Root + "/lib/afipws/wsfev1.wsdl",
       :test => Root + "/spec/fixtures/wsfe.wsdl"
     }
     
     def initialize options = {}
       @env = (options[:env] || :test).to_sym
       @wsaa = options[:wsaa] || WSAA.new(options.merge(:service => 'wsfe'))
-      @client = Client.new WSDL[@env]
+      @client = Client.new WSDL[@env], @env
     end
     
     def dummy

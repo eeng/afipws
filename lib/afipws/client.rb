@@ -1,7 +1,10 @@
 module Afipws
   class Client
-    def initialize wsdl_url
-      @client = Savon::Client.new { wsdl.document = wsdl_url }
+    def initialize wsdl_url, env
+      @client = Savon::Client.new do
+        wsdl.document = wsdl_url
+        http.auth.ssl.verify_mode = :none if env == :development # esto está porque el certificado del WSAA había vencido durante las pruebas
+      end
     end
     
     def request action, body = nil

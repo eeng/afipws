@@ -15,7 +15,7 @@ module Afipws
       @service = options[:service] || 'wsfe'
       @ttl = options[:ttl] || 2400
       @cuit = options[:cuit]
-      @client = Client.new WSDL[@env]
+      @client = Client.new WSDL[@env], @env
     end
     
     def generar_tra service, ttl
