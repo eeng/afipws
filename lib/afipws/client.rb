@@ -30,6 +30,7 @@ module Afipws
     end
     
     private
+    
     def add_ns_to_keys body
       case body
       when Hash
