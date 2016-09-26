@@ -28,4 +28,5 @@ Gem::Specification.new do |s|
   s.add_dependency "activesupport"
   s.add_dependency "i18n"
   s.add_dependency "httpclient"
+  s.add_dependency "httpi", '>= 2.4.2'
 end

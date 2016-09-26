@@ -3,7 +3,8 @@ module Afipws
     def initialize wsdl_url, env
       @client = Savon::Client.new do
         wsdl.document = wsdl_url
-        http.auth.ssl.verify_mode = :none if env == :development # esto está porque el certificado del WSAA había vencido durante las pruebas
+        http.auth.ssl.verify_mode = :none if env == :development # Esto está porque el certificado del WSAA había vencido durante las pruebas
+        http.auth.ssl.ssl_version = :SSLv3 if env == :development || Date.today >= Date.new(2016,11,1) # Esto es porque la afip cambió el algoritmo de cifrado de los certificados y sin esto no conectaba al WSFE. En el entorno de homologación ya está realizado el cambio pero en production recién el 1/11/2016.
       end
     end
     

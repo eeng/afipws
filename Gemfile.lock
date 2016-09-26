@@ -5,6 +5,7 @@ PATH
       activesupport
       builder
       httpclient
+      httpi (>= 2.4.2)
       i18n
       nokogiri
       savon
@@ -12,24 +13,31 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
-    activesupport (3.0.3)
+    activesupport (5.0.0.1)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (~> 0.7)
+      minitest (~> 5.1)
+      tzinfo (~> 1.1)
     builder (3.0.0)
+    concurrent-ruby (1.0.2)
     crack (0.1.8)
     diff-lcs (1.1.2)
     gyoku (0.2.0)
       builder (>= 2.1.2)
     httpclient (2.8.2.4)
-    httpi (0.7.8)
+    httpi (2.4.2)
       rack
-    i18n (0.5.0)
+      socksify
+    i18n (0.7.0)
     mini_portile2 (2.1.0)
+    minitest (5.9.1)
     mocha (0.9.10)
       rake
     nokogiri (1.6.8)
       mini_portile2 (~> 2.1.0)
       pkg-config (~> 1.1.7)
     pkg-config (1.1.7)
-    rack (1.2.1)
+    rack (2.0.1)
     rake (10.4.2)
     rspec (2.4.0)
       rspec-core (~> 2.4.0)
@@ -48,6 +56,10 @@ GEM
       mocha (>= 0.9.8)
       rspec (>= 2.0.0)
       savon (~> 0.8.0)
+    socksify (1.7.0)
+    thread_safe (0.3.5)
+    tzinfo (1.2.2)
+      thread_safe (~> 0.1)
 
 PLATFORMS
   ruby
