@@ -2,11 +2,13 @@ require 'rspec'
 require 'afipws'
 require 'savon/mock/spec_helper'
 require 'mocha'
+require 'pry-byebug'
 
 Dir[File.dirname(__FILE__) + "/support/**/*.rb"].each { |f| require f }
 
 RSpec.configure do |config|
   config.include Savon::SpecHelper
+
   config.mock_with :mocha
   config.expect_with(:rspec) { |c| c.syntax = :should }
   config.alias_example_to :fit, focused: true
@@ -15,4 +17,8 @@ RSpec.configure do |config|
 
   config.before(:all) { savon.mock!   }
   config.after(:all)  { savon.unmock! }
+end
+
+def fixture file
+  File.read("#{Afipws::Root}/spec/fixtures/#{file}.xml")
 end

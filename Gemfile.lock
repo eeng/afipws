@@ -21,8 +21,13 @@ GEM
       gyoku (>= 0.4.0)
       nokogiri
     builder (3.2.2)
+    byebug (1.1.1)
+      columnize (~> 0.3.6)
+      debugger-linecache (~> 1.2.0)
     coderay (1.1.1)
+    columnize (0.3.6)
     concurrent-ruby (1.0.2)
+    debugger-linecache (1.2.0)
     diff-lcs (1.2.5)
     ffi (1.9.14)
     formatador (0.2.5)
@@ -68,6 +73,9 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
+    pry-byebug (1.0.1)
+      byebug (~> 1.1.1)
+      pry (>= 0.9.10)
     rack (2.0.1)
     rake (10.4.2)
     rb-fsevent (0.9.7)
@@ -108,6 +116,7 @@ DEPENDENCIES
   afipws!
   guard-rspec (~> 4.3.1)
   mocha (~> 0.9.10)
+  pry-byebug
   rake (~> 10.4.2)
   rspec (~> 2.14.1)
 

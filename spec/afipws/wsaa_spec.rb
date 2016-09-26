@@ -31,7 +31,7 @@ describe Afipws::WSAA do
     it "debería mandar el TRA al WS y obtener el TA" do
       ws = Afipws::WSAA.new key: 'key', cert: 'cert'
       ws.expects(:tra).with('key', 'cert', 'wsfe', 2400).returns('tra')
-      savon.expects(:login_cms).with(message: {in0: 'tra'}).returns(File.read("#{Afipws::Root}/spec/fixtures/login_cms/success.xml"))
+      savon.expects(:login_cms).with(message: {in0: 'tra'}).returns(fixture('login_cms/success'))
       ta = ws.login
       ta[:token].should == 'PD94='
       ta[:sign].should == 'i9xDN='
@@ -41,7 +41,7 @@ describe Afipws::WSAA do
     
     it "debería encapsular SOAP Faults" do
       subject.stubs(:tra).returns('')
-      savon.expects(:login_cms).with(message: :any).returns(File.read("#{Afipws::Root}/spec/fixtures/login_cms/fault.xml"))
+      savon.expects(:login_cms).with(message: :any).returns(fixture('login_cms/fault'))
       lambda { subject.login }.should raise_error Afipws::WSError, /CMS no es valido/
     end
   end

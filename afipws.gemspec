@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rake', '~> 10.4.2'
   s.add_development_dependency 'mocha', '~> 0.9.10'
   s.add_development_dependency 'guard-rspec', '~> 4.3.1'
+  s.add_development_dependency 'pry-byebug'
   s.add_dependency "builder"
   s.add_dependency "savon", '~> 2.11.0'
   s.add_dependency "nokogiri"
