@@ -1,5 +1,4 @@
-# coding: utf-8
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
 describe Afipws::WSAA do
   context "generación documento tra" do
@@ -30,9 +29,9 @@ describe Afipws::WSAA do
   
   context "login" do
     it "debería mandar el TRA al WS y obtener el TA" do
-      ws = Afipws::WSAA.new :key => 'key', :cert => 'cert'
+      ws = Afipws::WSAA.new key: 'key', cert: 'cert'
       ws.expects(:tra).with('key', 'cert', 'wsfe', 2400).returns('tra')
-      savon.expects('loginCms').with('wsdl:in0' => 'tra').returns(:success)
+      savon.expects(:login_cms).with(message: {in0: 'tra'}).returns(File.read("#{Afipws::Root}/spec/fixtures/login_cms/success.xml"))
       ta = ws.login
       ta[:token].should == 'PD94='
       ta[:sign].should == 'i9xDN='
@@ -42,8 +41,8 @@ describe Afipws::WSAA do
     
     it "debería encapsular SOAP Faults" do
       subject.stubs(:tra).returns('')
-      savon.stubs('loginCms').returns(:fault)
-      expect { subject.login }.to raise_error Afipws::WSError, /CMS no es valido/
+      savon.expects(:login_cms).with(message: :any).returns(File.read("#{Afipws::Root}/spec/fixtures/login_cms/fault.xml"))
+      lambda { subject.login }.should raise_error Afipws::WSError, /CMS no es valido/
     end
   end
   

@@ -15,8 +15,3 @@ require 'afipws/type_conversions'
 require 'afipws/client'
 require 'afipws/wsaa'
 require 'afipws/wsfe'
-
-Savon.configure do |config|
-  config.soap_version = 2
-  config.log = false
-end

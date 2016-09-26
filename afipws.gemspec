@@ -18,14 +18,14 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
   
-  s.add_development_dependency "rspec"
-  s.add_development_dependency "savon_spec"
-  s.add_development_dependency "rake", '~> 10.4.2'
+  s.add_development_dependency 'rspec', '~> 2.14.1'
+  s.add_development_dependency 'rake', '~> 10.4.2'
+  s.add_development_dependency 'mocha', '~> 0.9.10'
+  s.add_development_dependency 'guard-rspec', '~> 4.3.1'
   s.add_dependency "builder"
-  s.add_dependency "savon"
+  s.add_dependency "savon", '~> 2.11.0'
   s.add_dependency "nokogiri"
   s.add_dependency "activesupport"
   s.add_dependency "i18n"
   s.add_dependency "httpclient"
-  s.add_dependency "httpi", '>= 2.4.2'
 end

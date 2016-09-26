@@ -47,12 +47,12 @@ module Afipws
     end
     
     def login
-      response = @client.raw_request :login_cms, 'in0' => tra(@key, @cert, @service, @ttl)
+      response = @client.raw_request :login_cms, in0: tra(@key, @cert, @service, @ttl)
       ta = Nokogiri::XML(Nokogiri::XML(response.to_xml).text)
       { token: ta.css('token').text, sign: ta.css('sign').text, 
         generation_time: from_xsd_datetime(ta.css('generationTime').text),
         expiration_time: from_xsd_datetime(ta.css('expirationTime').text) }
-    rescue Savon::SOAP::Fault => f
+    rescue Savon::SOAPFault => f
       raise WSError, f.message
     end
     
