@@ -1,13 +1,7 @@
 module Afipws
   class Client
-    def initialize wsdl_url, env
-      @client = Savon.client do
-        wsdl wsdl_url
-        ssl_verify_mode :none if env == :development # Esto está porque el certificado del WSAA había vencido durante las pruebas
-        ssl_version :SSLv3 if env == :development || Date.today >= Date.new(2016,11,1) # Esto es porque la afip cambió el algoritmo de cifrado de los certificados y sin esto no conectaba al WSFE. En el entorno de homologación ya está realizado el cambio pero en production recién el 1/11/2016.
-        log true
-        log_level :debug
-      end
+    def initialize savon_options
+      @client = Savon.client savon_options.reverse_merge(soap_version: 2)
     end
     
     def request action, body = nil
@@ -23,8 +17,8 @@ module Afipws
       @client.call action, message: body
     end
     
-    def soap_actions
-      @client.wsdl.soap_actions
+    def operations
+      @client.operations
     end
     
     def method_missing method_sym, *args

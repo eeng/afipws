@@ -1,6 +1,6 @@
 $LOAD_PATH.unshift(File.expand_path('lib')); require 'afipws'
 
-ws = Afipws::WSFE.new env: :development, cuit: '20300032673', cert: File.read('spec/manual/test.crt'), key: File.read('spec/manual/test.key') 
+ws = Afipws::WSFE.new env: :development, cuit: '20300032673', cert: File.read('spec/manual/test.crt'), key: File.read('spec/manual/test.key'), savon: {log: true}
 
 def obtener_ta ws
   ws.cotizacion 'DOL'
@@ -30,10 +30,6 @@ end
 
 def consultar_caea ws
   ws.consultar_caea Date.new(2011,2,3)
-end
-
-def soap_actions ws
-  ws.client.soap_actions
 end
 
 obtener_ta ws
