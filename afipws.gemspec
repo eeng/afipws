@@ -20,8 +20,8 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   
   s.add_development_dependency "rspec"
-  s.add_development_dependency "ruby-debug19"
   s.add_development_dependency "savon_spec"
+  s.add_development_dependency "rake", '~> 10.4.2'
   s.add_dependency "builder"
   s.add_dependency "savon"
   s.add_dependency "nokogiri"

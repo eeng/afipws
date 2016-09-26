@@ -24,7 +24,7 @@ describe Afipws::WSAA do
   
   context "codificación del tra" do
     it "debería quitarle el header y footer" do
-      subject.codificar_tra(OpenSSL::PKCS7.new).should == "MAMGAQA=\n"
+      subject.codificar_tra(OpenSSL::PKCS7.new).should == "MAIGAA==\n"
     end
   end
   

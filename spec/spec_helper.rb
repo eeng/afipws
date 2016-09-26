@@ -1,5 +1,4 @@
 require 'rspec'
-require 'ruby-debug'
 require 'afipws'
 require 'savon_spec'
 
