@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Emmanuel Nicolau"]
   s.email       = ["emmanicolau@gmail.com"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/eeng/afipws"
   s.summary     = %q{Ruby client para los web services de la AFIP}
   s.description = ""
 
