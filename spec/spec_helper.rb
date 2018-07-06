@@ -2,7 +2,6 @@ require 'rspec'
 require 'afipws'
 require 'savon/mock/spec_helper'
 require 'mocha'
-require 'pry-byebug'
 
 Dir[File.dirname(__FILE__) + "/support/**/*.rb"].each { |f| require f }
 

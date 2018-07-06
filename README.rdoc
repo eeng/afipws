@@ -1,20 +1,20 @@
 = Afipws
 
-== Uso 
+== Uso
 
 Primero hay que crear la clave privada y obtener el certificado correspondiente según los pasos indicados {aquí}[http://www.afip.gov.ar/ws/WSAA/cert-req-howto.txt].
 
 Luego hay que instalar la librería:
 
   gem install afipws
-  
+
 Y por último usamos el web service de esta forma:
-  
+
   require 'afipws'
   ws = Afipws::WSFE.new :env => :development, :cuit => '...', :key => File.read('test.key') , :cert => File.read('test.crt')
   puts ws.cotizacion 'DOL'
 
-De momento sólo están soportados los servicios WSAA y WSFEv1. 
+De momento sólo están soportados los servicios WSAA y WSFEv1.
 Ver specs para más ejemplos.
 
 == Testing
@@ -25,7 +25,7 @@ Ver specs para más ejemplos.
   rake
 
 == Note on Patches/Pull Requests
- 
+
 * Fork the project.
 * Make your feature addition or bug fix.
 * Add tests for it. This is important so I don't break it in a
