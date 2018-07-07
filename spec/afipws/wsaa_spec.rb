@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Afipws::WSAA do
   context "generación documento tra" do
     it "debería generar xml" do
-      Time.stubs(:now).returns Time.local(2001, 12, 31, 12, 00)
+      Time.stubs(:now).returns Time.new(2001, 12, 31, 12, 0, 0, '-03:00')
       xml = subject.generar_tra 'wsfe', 2400
       xml.should match_xpath "/loginTicketRequest/header/uniqueId", Time.now.to_i.to_s
       xml.should match_xpath "/loginTicketRequest/header/generationTime", "2001-12-31T11:20:00-03:00"
@@ -11,7 +11,7 @@ describe Afipws::WSAA do
       xml.should match_xpath "/loginTicketRequest/service", "wsfe"
     end
   end
-  
+
   context "firmado del tra" do
     it "debería firmar el tra usando el certificado y la clave privada" do
       key = File.read(File.dirname(__FILE__) + '/test.key')
@@ -20,13 +20,13 @@ describe Afipws::WSAA do
       subject.firmar_tra(tra, key, crt).to_s.should =~ /BEGIN PKCS7/
     end
   end
-  
+
   context "codificación del tra" do
     it "debería quitarle el header y footer" do
-      subject.codificar_tra(OpenSSL::PKCS7.new).should == "MAIGAA==\n"
+      subject.codificar_tra(OpenSSL::PKCS7.new).should_not include 'BEGIN', 'END'
     end
   end
-  
+
   context "login" do
     it "debería mandar el TRA al WS y obtener el TA" do
       ws = Afipws::WSAA.new key: 'key', cert: 'cert'
@@ -35,27 +35,27 @@ describe Afipws::WSAA do
       ta = ws.login
       ta[:token].should == 'PD94='
       ta[:sign].should == 'i9xDN='
-      ta[:generation_time].should == Time.local(2011,01,12,18,57,04)
-      ta[:expiration_time].should == Time.local(2011,01,13,06,57,04)
+      ta[:generation_time].should == Time.new(2011, 1, 12, 18, 57, 4, '-03:00')
+      ta[:expiration_time].should == Time.new(2011, 1, 13, 6, 57, 4, '-03:00')
     end
-    
+
     it "debería encapsular SOAP Faults" do
       subject.stubs(:tra).returns('')
       savon.expects(:login_cms).with(message: :any).returns(fixture('login_cms/fault'))
       lambda { subject.login }.should raise_error Afipws::WSError, /CMS no es valido/
     end
   end
-  
+
   context "auth" do
     before { Time.stubs(:now).returns(now = Time.local(2010,1,1)) }
-    
+
     it "debería cachear TA" do
       subject.expects(:login).once.returns(ta = {token: 'token', sign: 'sign', expiration_time: Time.now + 60})
       subject.auth
       subject.auth
       subject.ta.should equal ta
     end
-    
+
     it "si el TA expiró debería ejecutar solicitar uno nuevo" do
       subject.expects(:login).twice.returns(token: 't1', expiration_time: Time.now - 2).then.returns(token: 't2')
       subject.auth
