@@ -15,7 +15,7 @@ module Afipws
     def initialize options = {}
       @env = (options[:env] || :test).to_sym
       @wsaa = options[:wsaa] || WSAA.new(options.merge(service: 'wsfe'))
-      ssl_version = env == :development || Date.today >= Date.new(2016,11,1) ? :SSLv3 : :TLSv1
+      ssl_version = :TLSv1
       @client = Client.new Hash(options[:savon]).reverse_merge(wsdl: WSDL[@env], ssl_version: ssl_version, convert_request_keys_to: :camelcase)
     end
 
