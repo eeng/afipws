@@ -50,9 +50,11 @@ module Afipws
     def login
       response = @client.raw_request :login_cms, in0: tra(@key, @cert, @service, @ttl)
       ta = Nokogiri::XML(Nokogiri::XML(response.to_xml).text)
-      { token: ta.css('token').text, sign: ta.css('sign').text,
+      ta = { token: ta.css('token').text, sign: ta.css('sign').text,
         generation_time: from_xsd_datetime(ta.css('generationTime').text),
         expiration_time: from_xsd_datetime(ta.css('expirationTime').text) }
+      File.open("storage/#{@cuit}-#{@env}-ta.dump", "wb") { |f| f.write(Marshal.dump(ta)) } rescue nil
+      ta
     rescue Savon::SOAPFault => f
       raise WSError, f.message
     end
@@ -61,7 +63,6 @@ module Afipws
     # en los otros WS.
     def auth
       @ta = login if ta_expirado?
-      File.open("storage/#{@cuit}-#{@env}-ta.dump", "wb") { |f| f.write(Marshal.dump(@ta)) } rescue nil
       { auth: { token: @ta[:token], sign: @ta[:sign], cuit: @cuit } }
     end
 
