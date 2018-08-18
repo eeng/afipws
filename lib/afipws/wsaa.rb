@@ -16,6 +16,9 @@ module Afipws
       @ttl = options[:ttl] || 2400
       @cuit = options[:cuit]
       @client = Client.new Hash(options[:savon]).reverse_merge(wsdl: WSDL[@env])
+      @ta_path = File.join(Dir.pwd, 'storage', "#{@cuit}-#{@env}-ta.dump")
+
+      restore_ta
     end
 
     def generar_tra service, ttl
@@ -49,9 +52,11 @@ module Afipws
     def login
       response = @client.raw_request :login_cms, in0: tra(@key, @cert, @service, @ttl)
       ta = Nokogiri::XML(Nokogiri::XML(response.to_xml).text)
-      { token: ta.css('token').text, sign: ta.css('sign').text,
+      ta = { token: ta.css('token').text, sign: ta.css('sign').text,
         generation_time: from_xsd_datetime(ta.css('generationTime').text),
         expiration_time: from_xsd_datetime(ta.css('expirationTime').text) }
+      persist_ta(ta)
+      ta
     rescue Savon::SOAPFault => f
       raise WSError, f.message
     end
@@ -74,6 +79,18 @@ module Afipws
 
     def from_xsd_datetime str
       Time.parse(str) rescue nil
+    end
+
+    def restore_ta
+      @ta = Marshal.load(File.read(@ta_path)) if File.exists?(@ta_path)
+    end
+
+    def persist_ta(ta)
+      dirname = File.dirname(@ta_path)
+      unless File.directory?(dirname)
+        FileUtils.mkdir_p(dirname)
+      end
+      File.open(@ta_path, "wb") { |f| f.write(Marshal.dump(ta)) }
     end
   end
 end
