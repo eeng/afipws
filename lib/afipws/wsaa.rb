@@ -16,7 +16,8 @@ module Afipws
       @ttl = options[:ttl] || 2400
       @cuit = options[:cuit]
       @client = Client.new Hash(options[:savon]).reverse_merge(wsdl: WSDL[@env])
-      @ta = Marshal.load(File.read("storage/#{@cuit}-#{@env}-ta.dump")) rescue nil
+      @ta_path = "storage/#{@cuit}-#{@env}-ta.dump"
+      @ta = Marshal.load(File.read(@ta_path)) rescue nil
     end
 
     def generar_tra service, ttl
@@ -53,7 +54,7 @@ module Afipws
       ta = { token: ta.css('token').text, sign: ta.css('sign').text,
         generation_time: from_xsd_datetime(ta.css('generationTime').text),
         expiration_time: from_xsd_datetime(ta.css('expirationTime').text) }
-      File.open("storage/#{@cuit}-#{@env}-ta.dump", "wb") { |f| f.write(Marshal.dump(ta)) } rescue nil
+      File.open(@ta_path, "wb") { |f| f.write(Marshal.dump(ta)) } rescue nil
       ta
     rescue Savon::SOAPFault => f
       raise WSError, f.message
