@@ -16,7 +16,7 @@ module Afipws
       @ttl = options[:ttl] || 2400
       @cuit = options[:cuit]
       @client = Client.new Hash(options[:savon]).reverse_merge(wsdl: WSDL[@env])
-      @ta = Marshal.load(File.read("storage/#{@cuit}-ta.dump")) rescue nil
+      @ta = Marshal.load(File.read("storage/#{@cuit}-#{@env}-ta.dump")) rescue nil
     end
 
     def generar_tra service, ttl
@@ -61,7 +61,7 @@ module Afipws
     # en los otros WS.
     def auth
       @ta = login if ta_expirado?
-      File.open("storage/#{@cuit}-ta.dump", "wb") { |f| f.write(Marshal.dump(@ta)) } rescue nil
+      File.open("storage/#{@cuit}-#{@env}-ta.dump", "wb") { |f| f.write(Marshal.dump(@ta)) } rescue nil
       { auth: { token: @ta[:token], sign: @ta[:sign], cuit: @cuit } }
     end
 
@@ -79,4 +79,3 @@ module Afipws
     end
   end
 end
-
