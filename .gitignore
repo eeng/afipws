@@ -4,3 +4,4 @@ pkg/*
 spec/manual/*.key
 spec/manual/*.crt
 .DS_Store
+tmp
