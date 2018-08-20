@@ -47,13 +47,21 @@ describe Afipws::WSAA do
   end
 
   context "auth" do
-    before { Time.stubs(:now).returns(now = Time.local(2010,1,1)) }
+    before do
+      FileUtils.rm_rf Dir.glob('tmp/*ta.dump')
+      Time.stubs(:now).returns(Time.local(2010, 1, 1))
+    end
 
-    it "debería cachear TA" do
-      subject.expects(:login).once.returns(ta = {token: 'token', sign: 'sign', expiration_time: Time.now + 60})
-      subject.auth
-      subject.auth
-      subject.ta.should equal ta
+    it "debería cachear TA en la instancia y disco" do
+      ws = Afipws::WSAA.new
+      ws.expects(:login).once.returns(ta = {token: 'token', sign: 'sign', expiration_time: Time.now + 60})
+      ws.auth
+      ws.auth
+      ws.ta.should equal ta
+
+      ws = Afipws::WSAA.new
+      ws.auth
+      ws.ta.should == ta
     end
 
     it "si el TA expiró debería ejecutar solicitar uno nuevo" do

@@ -16,9 +16,7 @@ module Afipws
       @ttl = options[:ttl] || 2400
       @cuit = options[:cuit]
       @client = Client.new Hash(options[:savon]).reverse_merge(wsdl: WSDL[@env])
-      @ta_path = File.join(Dir.pwd, 'storage', "#{@cuit}-#{@env}-ta.dump")
-
-      restore_ta
+      @ta_path = File.join(Dir.pwd, 'tmp', "#{@cuit}-#{@env}-ta.dump")
     end
 
     def generar_tra service, ttl
@@ -28,7 +26,6 @@ module Afipws
         xml.header do
           xml.uniqueId Time.now.to_i
           xml.generationTime xsd_datetime Time.now - ttl
-          # TODO me parece que no le da mucha bola el WS al expirationTime
           xml.expirationTime xsd_datetime Time.now + ttl
         end
         xml.service service
@@ -52,25 +49,36 @@ module Afipws
     def login
       response = @client.raw_request :login_cms, in0: tra(@key, @cert, @service, @ttl)
       ta = Nokogiri::XML(Nokogiri::XML(response.to_xml).text)
-      ta = { token: ta.css('token').text, sign: ta.css('sign').text,
+      {
+        token: ta.css('token').text,
+        sign: ta.css('sign').text,
         generation_time: from_xsd_datetime(ta.css('generationTime').text),
-        expiration_time: from_xsd_datetime(ta.css('expirationTime').text) }
-      persist_ta(ta)
-      ta
+        expiration_time: from_xsd_datetime(ta.css('expirationTime').text)
+      }
     rescue Savon::SOAPFault => f
       raise WSError, f.message
     end
 
-    # Obtiene un TA, lo cachea hasta que expire, y devuelve el hash Auth listo para pasarle al Client
-    # en los otros WS.
+    # Obtiene un TA, lo cachea hasta que expire, y devuelve el hash Auth listo para pasarle al Client en los otros WS
     def auth
-      @ta = login if ta_expirado?
-      { auth: { token: @ta[:token], sign: @ta[:sign], cuit: @cuit } }
+      ta = obtener_y_cachear_ta
+      {auth: {token: ta[:token], sign: ta[:sign], cuit: @cuit}}
     end
 
     private
-    def ta_expirado?
-      @ta.nil? or @ta[:expiration_time] <= Time.now
+
+    # Previene el error 'El CEE ya posee un TA valido para el acceso al WSN solicitado' que se genera cuando se pide el token varias veces en poco tiempo
+    def obtener_y_cachear_ta
+      @ta ||= restore_ta
+      if ta_expirado? @ta
+        @ta = login
+        persist_ta @ta
+      end
+      @ta
+    end
+
+    def ta_expirado? ta
+      ta.nil? || ta[:expiration_time] <= Time.now
     end
 
     def xsd_datetime time
@@ -82,10 +90,10 @@ module Afipws
     end
 
     def restore_ta
-      @ta = Marshal.load(File.read(@ta_path)) if File.exists?(@ta_path)
+      Marshal.load(File.read(@ta_path)) if File.exists?(@ta_path)
     end
 
-    def persist_ta(ta)
+    def persist_ta ta
       dirname = File.dirname(@ta_path)
       unless File.directory?(dirname)
         FileUtils.mkdir_p(dirname)
