@@ -3,9 +3,9 @@ module Afipws
     attr_reader :key, :cert, :service, :ta, :cuit, :client
 
     WSDL = {
-      development: "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl",
-      production: "https://wsaa.afip.gov.ar/ws/services/LoginCms?wsdl",
-      test: Root + "/spec/fixtures/wsaa.wsdl"
+      development: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl',
+      production: 'https://wsaa.afip.gov.ar/ws/services/LoginCms?wsdl',
+      test: Root + '/spec/fixtures/wsaa.wsdl'
     }
 
     def initialize options = {}
@@ -35,7 +35,7 @@ module Afipws
     def firmar_tra tra, key, crt
       key = OpenSSL::PKey::RSA.new key
       crt = OpenSSL::X509::Certificate.new crt
-      OpenSSL::PKCS7::sign crt, key, tra
+      OpenSSL::PKCS7.sign crt, key, tra
     end
 
     def codificar_tra pkcs7
@@ -90,15 +90,12 @@ module Afipws
     end
 
     def restore_ta
-      Marshal.load(File.read(@ta_path)) if File.exists?(@ta_path)
+      Marshal.load(File.read(@ta_path)) if File.exist?(@ta_path)
     end
 
     def persist_ta ta
-      dirname = File.dirname(@ta_path)
-      unless File.directory?(dirname)
-        FileUtils.mkdir_p(dirname)
-      end
-      File.open(@ta_path, "wb") { |f| f.write(Marshal.dump(ta)) }
+      FileUtils.mkdir_p(File.dirname(@ta_path))
+      File.open(@ta_path, 'wb') { |f| f.write(Marshal.dump(ta)) }
     end
   end
 end

@@ -6,16 +6,17 @@ module Afipws
     def_delegators :wsaa, :ta, :auth, :cuit
 
     WSDL = {
-      development: "https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL",
-      # production: "https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL",
-      production: Root + "/lib/afipws/wsfev1.wsdl",
-      test: Root + "/spec/fixtures/wsfe.wsdl"
-    }
+      development: 'https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL',
+      # production: 'https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL',
+      production: Root + '/lib/afipws/wsfev1.wsdl',
+      test: Root + '/spec/fixtures/wsfe.wsdl'
+    }.freeze
 
     def initialize options = {}
       @env = (options[:env] || :test).to_sym
       @wsaa = options[:wsaa] || WSAA.new(options.merge(service: 'wsfe'))
-      @client = Client.new Hash(options[:savon]).reverse_merge(wsdl: WSDL[@env], ssl_version: :TLSv1, convert_request_keys_to: :camelcase)
+      @client = Client.new Hash(options[:savon])
+        .reverse_merge(wsdl: WSDL[@env], ssl_version: :TLSv1, convert_request_keys_to: :camelcase)
     end
 
     def dummy
@@ -58,10 +59,14 @@ module Afipws
 
     def autorizar_comprobantes opciones
       comprobantes = opciones[:comprobantes]
-      request = { 'FeCAEReq' => {
-        'FeCabReq' => opciones.select_keys(:cbte_tipo, :pto_vta).merge(cant_reg: comprobantes.size),
-        'FeDetReq' => { 'FECAEDetRequest' => comprobantes.map { |comprobante|  comprobante_to_request comprobante }
-      }}}
+      request = {
+        'FeCAEReq' => {
+          'FeCabReq' => opciones.select_keys(:cbte_tipo, :pto_vta).merge(cant_reg: comprobantes.size),
+          'FeDetReq' => {
+            'FECAEDetRequest' => comprobantes.map { |comprobante| comprobante_to_request comprobante }
+          }
+        }
+      }
       r = @client.fecae_solicitar auth.merge r2x(request, cbte_fch: :date)
       r = Array.wrap(r[:fe_det_resp][:fecae_det_response]).map do |h|
         obs = Array.wrap(h[:observaciones] ? h[:observaciones][:obs] : nil)
@@ -93,12 +98,16 @@ module Afipws
 
     def informar_comprobantes_caea opciones
       comprobantes = opciones[:comprobantes]
-      request = { 'FeCAEARegInfReq' => {
-        'FeCabReq' => opciones.select_keys(:cbte_tipo, :pto_vta).merge(cant_reg: comprobantes.size),
-        'FeDetReq' => { 'FECAEADetRequest' => comprobantes.map do |comprobante|
-            comprobante_to_request comprobante.merge('CAEA' => comprobante.delete(:caea))
-          end
-      }}}
+      request = {
+        'FeCAEARegInfReq' => {
+          'FeCabReq' => opciones.select_keys(:cbte_tipo, :pto_vta).merge(cant_reg: comprobantes.size),
+          'FeDetReq' => {
+            'FECAEADetRequest' => comprobantes.map do |comprobante|
+              comprobante_to_request comprobante.merge('CAEA' => comprobante.delete(:caea))
+            end
+          }
+        }
+      }
       r = @client.fecaea_reg_informativo auth.merge r2x(request, cbte_fch: :date)
       r = Array.wrap(r[:fe_det_resp][:fecaea_det_response]).map do |h|
         obs = Array.wrap(h[:observaciones] ? h[:observaciones][:obs] : nil)
@@ -138,6 +147,7 @@ module Afipws
     end
 
     private
+    
     def get_array response, array_element
       Array.wrap response[:result_get][array_element]
     end

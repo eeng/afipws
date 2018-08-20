@@ -1,0 +1,99 @@
+Style/Documentation:
+  Enabled: false
+
+Style/MethodDefParentheses:
+  Enabled: false
+
+Style/ParallelAssignment:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/FormatStringToken:
+  Enabled: false
+
+Style/EmptyMethod:
+  Enabled: false
+
+Style/GuardClause:
+  Enabled: false
+
+Style/CommentAnnotation:
+  Enabled: false
+
+Style/StabbyLambdaParentheses:
+  EnforcedStyle: require_no_parentheses
+
+Style/MultilineIfModifier:
+  Enabled: false
+
+Style/SafeNavigation:
+  Enabled: false
+
+Style/FormatString:
+  Enabled: false
+
+Style/AndOr:
+  Enabled: false
+
+Layout/SpaceInsideHashLiteralBraces:
+  Enabled: false
+
+Layout/MultilineMethodCallIndentation:
+  Enabled: false
+
+Layout/TrailingBlankLines:
+  Enabled: false
+
+Layout/IndentArray:
+  EnforcedStyle: consistent
+
+Layout/AlignParameters:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/SpaceInLambdaLiteral:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 120
+
+Metrics/BlockLength:
+  Enabled: false
+
+Rails:
+  Enabled: true
+
+Rails/Date:
+  Enabled: false
+
+Rails/CreateTableWithTimestamps:
+  Enabled: false
+
+Rails/TimeZone:
+  Enabled: false
+
+Bundler:
+  Enabled: false
+
+Lint/Void:
+  Exclude:
+    - spec/**/*.rb
+
+Lint/AssignmentInCondition:
+  Enabled: false
+
+Lint/ShadowingOuterLocalVariable:
+  Enabled: false
+
+Lint/AmbiguousRegexpLiteral:
+  Enabled: false
+
+Lint/AmbiguousOperator:
+  Enabled: false
+
+Lint/AmbiguousBlockAssociation:
+  Enabled: false
+
+Metrics/AbcSize:
+  Max: 18

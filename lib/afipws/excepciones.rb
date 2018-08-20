@@ -9,5 +9,5 @@ module Afipws
         super
       end
     end
-  end  
+  end
 end
