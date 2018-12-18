@@ -62,7 +62,7 @@ module Afipws
     # Obtiene un TA, lo cachea hasta que expire, y devuelve el hash Auth listo para pasarle al Client en los otros WS
     def auth
       ta = obtener_y_cachear_ta
-      {auth: {token: ta[:token], sign: ta[:sign], cuit: @cuit}}
+      {token: ta[:token], sign: ta[:sign], cuit: @cuit}
     end
 
     private

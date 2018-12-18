@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe Afipws::WSFE do
-  let(:auth) { {auth: {token: 't', sign: 's', expiration_time: 12.hours.from_now}} }
-  let(:ws) { Afipws::WSFE.new cuit: '1', wsaa: Afipws::WSAA.new.tap { |wsaa| wsaa.stubs auth: auth } }
+  let(:auth) { { auth: {token: 't', sign: 's', expiration_time: 12.hours.from_now} } }
+  let(:ws) { Afipws::WSFE.new(cuit: '1', wsaa: Afipws::WSAA.new).tap { |wsfe| wsfe.stubs auth: auth } }
 
   context 'Métodos de negocio' do
     it 'dummy' do
