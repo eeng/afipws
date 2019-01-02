@@ -23,6 +23,12 @@ describe Afipws::WSFE do
       ws.tipos_documentos.should == [{ id: 80, desc: 'CUIT', fch_desde: Date.new(2008, 7, 25), fch_hasta: nil }]
     end
 
+
+    it 'tipos_concepto' do
+      savon.expects(:fe_param_get_tipos_concepto).with(message: auth).returns(fixture('fe_param_get_tipos_concepto/success'))
+      ws.tipos_concepto.should == [{ id: 1, desc: "Producto", fch_desde: Date.new(2008,7,25), fch_hasta: nil }]
+    end
+
     it 'tipos_monedas' do
       savon.expects(:fe_param_get_tipos_monedas).with(message: auth).returns(fixture('fe_param_get_tipos_monedas/success'))
       ws.tipos_monedas.should == [
@@ -39,6 +45,11 @@ describe Afipws::WSFE do
     it 'tipos_tributos' do
       savon.expects(:fe_param_get_tipos_tributos).with(message: auth).returns(fixture('fe_param_get_tipos_tributos/success'))
       ws.tipos_tributos.should == [{ id: 2, desc: 'Impuestos provinciales', fch_desde: Date.new(2010, 9, 17), fch_hasta: nil }]
+    end
+
+    it 'tipos_opcional' do
+      savon.expects(:fe_param_get_tipos_opcional).with(message: auth).returns(fixture('fe_param_get_tipos_opcional/success'))
+      ws.tipos_opcional.should == []
     end
 
     it 'puntos_venta' do
@@ -255,6 +266,7 @@ describe Afipws::WSFE do
     it 'debería usar las url para production cuando el env es production' do
       Afipws::Client.expects(:new).with(wsdl: 'https://wsaa.afip.gov.ar/ws/services/LoginCms?wsdl')
       Afipws::Client.expects(:new).with(has_entries(wsdl: File.expand_path(File.dirname(__FILE__) + '/../../') + '/lib/afipws/wsfev1.wsdl'))
+      #Afipws::Client.expects(:new).with(has_entries wsdl: 'https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL')
       wsfe = Afipws::WSFE.new env: 'production'
       wsfe.env.should == :production
     end

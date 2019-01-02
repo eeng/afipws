@@ -1,0 +1,16 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <soap:Body>
+      <FEParamGetTiposOpcionalResponse xmlns="http://ar.gov.afip.dif.FEV1/">
+         <FEParamGetTiposOpcionalResult>
+            <ResultGet>
+               <OpcionalTipo>
+                  <Id>1</Id>
+                  <Desc>Producto</Desc>
+                  <FchDesde>20080725</FchDesde>
+                  <FchHasta>NULL</FchHasta>
+               </OpcionalTipo>
+            </ResultGet>
+         </FEParamGetTiposOpcionalResult>
+      </FEParamGetTiposOpcionalResponse>
+   </soap:Body>
+</soap:Envelope>

@@ -7,8 +7,8 @@ module Afipws
 
     WSDL = {
       development: 'https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL',
-      # production: 'https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL',
-      production: Root + '/lib/afipws/wsfev1.wsdl',
+      production: 'https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL',
+      #production: Root + '/lib/afipws/wsfev1.wsdl',
       test: Root + '/spec/fixtures/wsfe.wsdl'
     }.freeze
 
@@ -28,9 +28,19 @@ module Afipws
       x2r get_array(r, :cbte_tipo), id: :integer, fch_desde: :date, fch_hasta: :date
     end
 
+    def tipos_opcional
+      r = @client.fe_param_get_tipos_opcional auth
+      x2r get_array(r, :tipos_opcional), id: :integer, fch_desde: :date, fch_hasta: :date
+    end
+
     def tipos_documentos
       r = @client.fe_param_get_tipos_doc auth
       x2r get_array(r, :doc_tipo), id: :integer, fch_desde: :date, fch_hasta: :date
+    end
+
+    def tipos_concepto
+      r = @client.fe_param_get_tipos_concepto auth
+      x2r get_array(r, :concepto_tipo), id: :integer, fch_desde: :date, fch_hasta: :date
     end
 
     def tipos_monedas
@@ -67,12 +77,12 @@ module Afipws
           }
         }
       }
-      r = @client.fecae_solicitar auth.merge r2x(request, cbte_fch: :date)
+      r = @client.fecae_solicitar auth.merge r2x(request, cbte_fch: :date, fch_serv_desde: :date, fch_serv_hasta: :date, fch_vto_pago: :date)
       r = Array.wrap(r[:fe_det_resp][:fecae_det_response]).map do |h|
         obs = Array.wrap(h[:observaciones] ? h[:observaciones][:obs] : nil)
         h.select_keys(:cae, :cae_fch_vto, :resultado).merge(cbte_nro: h[:cbte_desde], observaciones: obs)
       end
-      x2r r, cae_fch_vto: :date, cbte_nro: :integer, code: :integer
+      x2r r, cae_fch_vto: :date, fch_serv_desde: :date, fch_serv_hasta: :date, fch_vto_pago: :date, cbte_nro: :integer, code: :integer
     end
 
     def comprobante_to_request comprobante

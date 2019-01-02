@@ -4,13 +4,22 @@ module Afipws
       @client = Savon.client savon_options.reverse_merge(soap_version: 2)
     end
 
+
     def request action, body = nil
-      response = raw_request(action, body).to_hash[:"#{action}_response"][:"#{action}_result"]
-      if response[:errors]
-        raise WSError, Array.wrap(response[:errors][:err])
+      response = raw_request(action, body).to_hash[:"#{action}_response"]
+      if response[:"#{action}_result"].present?
+        #wsfe
+        response = response[:"#{action}_result"]
+        if response[:errors]
+          raise WSError, Array.wrap(response[:errors][:err])
+        else
+          response
+        end
       else
+        #idenfitfy errors?
         response
       end
+        
     end
 
     def raw_request action, body = nil
