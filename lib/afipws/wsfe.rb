@@ -59,7 +59,7 @@ module Afipws
 
     def autorizar_comprobantes opciones
       comprobantes = opciones[:comprobantes]
-      requerimiento = {
+      mensaje = {
         'FeCAEReq' => {
           'FeCabReq' => opciones.select_keys(:cbte_tipo, :pto_vta).merge(cant_reg: comprobantes.size),
           'FeDetReq' => {
@@ -67,7 +67,7 @@ module Afipws
           }
         }
       }
-      r = request :fecae_solicitar, auth.merge(r2x(requerimiento, cbte_fch: :date))
+      r = request :fecae_solicitar, auth.merge(r2x(mensaje, cbte_fch: :date))
       r = Array.wrap(r[:fe_det_resp][:fecae_det_response]).map do |h|
         obs = Array.wrap(h[:observaciones] ? h[:observaciones][:obs] : nil)
         h.select_keys(:cae, :cae_fch_vto, :resultado).merge(cbte_nro: h[:cbte_desde], observaciones: obs)
@@ -98,7 +98,7 @@ module Afipws
 
     def informar_comprobantes_caea opciones
       comprobantes = opciones[:comprobantes]
-      requerimiento = {
+      mensaje = {
         'FeCAEARegInfReq' => {
           'FeCabReq' => opciones.select_keys(:cbte_tipo, :pto_vta).merge(cant_reg: comprobantes.size),
           'FeDetReq' => {
@@ -108,7 +108,7 @@ module Afipws
           }
         }
       }
-      r = request :fecaea_reg_informativo, auth.merge(r2x(requerimiento, cbte_fch: :date))
+      r = request :fecaea_reg_informativo, auth.merge(r2x(mensaje, cbte_fch: :date))
       r = Array.wrap(r[:fe_det_resp][:fecaea_det_response]).map do |h|
         obs = Array.wrap(h[:observaciones] ? h[:observaciones][:obs] : nil)
         h.select_keys(:caea, :resultado).merge(cbte_nro: h[:cbte_desde], observaciones: obs)
