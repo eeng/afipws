@@ -47,7 +47,7 @@ module Afipws
     end
 
     def login
-      response = @client.raw_request :login_cms, in0: tra(@key, @cert, @service, @ttl)
+      response = @client.request :login_cms, in0: tra(@key, @cert, @service, @ttl)
       ta = Nokogiri::XML(Nokogiri::XML(response.to_xml).text)
       {
         token: ta.css('token').text,
@@ -62,7 +62,7 @@ module Afipws
     # Obtiene un TA, lo cachea hasta que expire, y devuelve el hash Auth listo para pasarle al Client en los otros WS
     def auth
       ta = obtener_y_cachear_ta
-      {token: ta[:token], sign: ta[:sign], cuit: @cuit}
+      {token: ta[:token], sign: ta[:sign]}
     end
 
     private

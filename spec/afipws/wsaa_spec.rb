@@ -52,10 +52,10 @@ describe Afipws::WSAA do
       Time.stubs(:now).returns(Time.local(2010, 1, 1))
     end
 
-    it 'debería devolver hash con token, sign y cuit' do
-      ws = Afipws::WSAA.new cuit: '2012345679'
+    it 'debería devolver hash con token y sign' do
+      ws = Afipws::WSAA.new
       ws.expects(:login).once.returns({token: 'token', sign: 'sign', expiration_time: Time.now + 60})
-      ws.auth.should == { token: 'token', sign: 'sign', cuit: '2012345679' }
+      ws.auth.should == { token: 'token', sign: 'sign' }
     end
 
     it 'debería cachear TA en la instancia y disco' do
