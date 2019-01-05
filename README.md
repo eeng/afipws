@@ -4,13 +4,19 @@ Ruby client para los web services de la AFIP.
 
 [![Build Status](https://travis-ci.org/eeng/afipws.svg?branch=master)](https://travis-ci.org/eeng/afipws)
 
+## Servicios Disponibles
+
+* WSAA
+* WSFE
+* WSConstanciaInscripcion (ws_sr_constancia_inscripcion)
+
 ## Uso
 
 Primero hay que crear la clave privada y obtener el certificado correspondiente según los pasos indicados [aquí](http://www.afip.gov.ar/ws/WSAA/cert-req-howto.txt).
 
 Luego hay que instalar la librería:
 
-```ruby
+```
 gem install afipws
 ```
 
@@ -22,7 +28,6 @@ ws = Afipws::WSFE.new env: :development, cuit: '...', key: File.read('test.key')
 puts ws.cotizacion 'DOL'
 ```
 
-De momento sólo están soportados los servicios WSAA y WSFEv1.
 Ver specs para más ejemplos.
 
 ## Contributing

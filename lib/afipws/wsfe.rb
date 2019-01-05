@@ -1,22 +1,19 @@
 module Afipws
-  class WSFE
-    extend Forwardable
+  class WSFE < WSBase
     include TypeConversions
-    attr_reader :wsaa, :client, :env
-    def_delegators :wsaa, :ta, :cuit
 
     WSDL = {
       development: 'https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL',
       # production: 'https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL',
-      production: Root + '/lib/afipws/wsfev1.wsdl',
+      production: Root + '/lib/afipws/wsdl/wsfev1.wsdl',
       test: Root + '/spec/fixtures/wsfe.wsdl'
     }.freeze
 
     def initialize options = {}
-      @env = (options[:env] || :test).to_sym
-      @wsaa = options[:wsaa] || WSAA.new(options.merge(service: 'wsfe'))
+      super
+      @wsaa = WSAA.new options.merge(service: 'wsfe')
       @client = Client.new Hash(options[:savon])
-        .reverse_merge(wsdl: WSDL[@env], ssl_version: :TLSv1, convert_request_keys_to: :camelcase)
+        .reverse_merge(wsdl: WSDL[env], ssl_version: :TLSv1, convert_request_keys_to: :camelcase)
     end
 
     def dummy
@@ -146,6 +143,10 @@ module Afipws
       hoy.day <= 15 ? hoy.change(day: 16) : hoy.next_month.change(day: 1)
     end
 
+    def auth
+      {auth: wsaa.auth.merge(cuit: cuit)}
+    end
+
     private
 
     def request action, body = nil
@@ -155,10 +156,6 @@ module Afipws
       else
         response
       end
-    end
-
-    def auth
-      { auth: wsaa.auth.merge(cuit: cuit) }
     end
 
     def get_array response, array_element

@@ -59,7 +59,6 @@ module Afipws
       raise WSError, f.message
     end
 
-    # Obtiene un TA, lo cachea hasta que expire, y devuelve el hash Auth listo para pasarle al Client en los otros WS
     def auth
       ta = obtener_y_cachear_ta
       {token: ta[:token], sign: ta[:sign]}
