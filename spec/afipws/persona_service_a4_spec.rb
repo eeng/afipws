@@ -4,7 +4,7 @@ module Afipws
   describe PersonaServiceA4 do
     let(:ta) { {token: 't', sign: 's'} }
     let(:ws) { PersonaServiceA4.new(cuit: '12345678912').tap { |ws| ws.wsaa.stubs auth: ta } }
-    let(:auth) { ta.merge cuitRepresentada: '12345678912' }
+    let(:message) { ta.merge cuitRepresentada: '12345678912' }
 
     context 'métodos API' do
       it 'dummy' do
@@ -13,7 +13,9 @@ module Afipws
       end
 
       it 'get_persona' do
-        savon.expects(:get_persona).with(message: auth.merge(idPersona: '98765432198')).returns(fixture('ws_sr_padron_a4/get_persona/success'))
+        savon.expects(:get_persona)
+          .with(message: message.merge(idPersona: '98765432198'))
+          .returns(fixture('ws_sr_padron_a4/get_persona/success'))
         ws.get_persona('98765432198').should have_entries apellido: 'ERNESTO DANIEL'
       end
     end

@@ -4,7 +4,7 @@ module Afipws
   describe WSConstanciaInscripcion do
     let(:ta) { {token: 't', sign: 's'} }
     let(:ws) { WSConstanciaInscripcion.new(cuit: '1').tap { |ws| ws.wsaa.stubs auth: ta } }
-    let(:auth) { ta.merge cuit_representada: '1' }
+    let(:message) { ta.merge cuit_representada: '1' }
 
     context 'métodos API' do
       it 'dummy' do
@@ -14,7 +14,7 @@ module Afipws
 
       it 'debería devolver un hash con los datos generales y regímenes impositivos' do
         savon.expects(:get_persona)
-          .with(message: auth.merge(id_persona: '20294834487'))
+          .with(message: message.merge(id_persona: '20294834487'))
           .returns(fixture('constancia_inscripcion_get_persona/success'))
         r = ws.get_persona '20294834487'
         r[:datos_generales].should have_entries(
@@ -37,12 +37,21 @@ module Afipws
       end
 
       it 'cuando hay errores en la constancia sigue la misma lógica' do
-        savon.expects(:get_persona).with(message: auth).returns(fixture('constancia_inscripcion_get_persona/failure'))
-        r = ws.get_persona '20294834487'
+        savon.expects(:get_persona)
+          .with(message: message.merge(id_persona: '20294834489'))
+          .returns(fixture('constancia_inscripcion_get_persona/failure'))
+        r = ws.get_persona '20294834489'
         r[:error_regimen_general].should have_entries(
           error: 'El contribuyente cuenta con impuestos con baja de oficio por Decreto 1299/98',
           mensaje: 'No cumple con las condiciones para enviar datos del regimen general'
         )
+      end
+
+      it 'cuando no existe la persona' do
+        savon.expects(:get_persona)
+          .with(message: message.merge(id_persona: '123'))
+          .returns(fixture('constancia_inscripcion_get_persona/fault'))
+        -> { ws.get_persona '123' }.should raise_error WSError, /No existe persona con ese Id/
       end
     end
 
