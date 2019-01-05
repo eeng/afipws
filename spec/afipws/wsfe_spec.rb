@@ -253,7 +253,7 @@ module Afipws
     context 'entorno' do
       it 'debería usar las url para development cuando el env es development' do
         Client.expects(:new).with(wsdl: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl')
-        Client.expects(:new).with(wsdl: 'https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL', ssl_version: :TLSv1, convert_request_keys_to: :camelcase)
+        Client.expects(:new).with(wsdl: 'https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL', convert_request_keys_to: :camelcase)
         wsfe = WSFE.new env: :development
         wsfe.env.should == :development
       end
