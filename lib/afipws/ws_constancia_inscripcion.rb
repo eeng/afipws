@@ -17,17 +17,8 @@ module Afipws
     end
 
     def get_persona id
-      request(:get_persona, auth.merge(id_persona: id))[:persona_return]
-    end
-
-    def auth
-      wsaa.auth.merge(cuit_representada: cuit)
-    end
-
-    private
-
-    def request action, body = nil
-      @client.request(action, body).to_hash[:"#{action}_response"]
+      message = auth.merge(cuit_representada: cuit, id_persona: id)
+      request(:get_persona, message)[:persona_return]
     end
   end
 end

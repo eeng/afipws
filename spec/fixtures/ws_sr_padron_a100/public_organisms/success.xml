@@ -1,0 +1,23 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   <soap:Body>
+      <ns2:getParameterCollectionByNameResponse xmlns:ns2="http://a100.soap.ws.server.pucParam.sr/">
+         <parameterCollectionReturn>
+            <metadata>
+               <fechaHora>2017-05-05T10:54:45.034-03:00</fechaHora>
+               <servidor>awshomo.afip.gov.ar</servidor>
+            </metadata>
+            <parameterCollection>
+               <name>SUPA.E_ORGANISMO_INFORMANTE</name>
+               <parameterList>
+                  <attributeList>
+                     <name>NOMBRE</name>
+                     <value>VALOR</value>
+                  </attributeList>
+                  <decription>ALGO</decription>
+                  <id>1</id>
+               </parameterList>
+            </parameterCollection>
+         </parameterCollectionReturn>
+      </ns2:getParameterCollectionByNameResponse>
+   </soap:Body>
+</soap:Envelope>

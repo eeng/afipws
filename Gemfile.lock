@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    afipws (1.0.4)
+    afipws (1.1.0)
       activesupport
       builder
       nokogiri
@@ -73,7 +73,7 @@ GEM
       method_source (~> 0.9.0)
     rack (2.0.6)
     rainbow (3.0.0)
-    rake (12.3.2)
+    rake (10.4.2)
     rb-fsevent (0.10.3)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
@@ -126,7 +126,7 @@ DEPENDENCIES
   afipws!
   guard-rspec
   mocha
-  rake
+  pry
   rspec
   rubocop
 

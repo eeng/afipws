@@ -6,9 +6,11 @@ Ruby client para los web services de la AFIP.
 
 ## Servicios Disponibles
 
-* WSAA
-* WSFE
-* WSConstanciaInscripcion (ws_sr_constancia_inscripcion)
+* wsaa (WSAA)
+* wsfe (WSFE)
+* ws_sr_constancia_inscripcion (WSConstanciaInscripcion)
+* ws_sr_padron_a100 (PersonaServiceA100)
+* ws_sr_padron_a4 (PersonaServiceA4)
 
 ## Uso
 

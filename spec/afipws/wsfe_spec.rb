@@ -25,12 +25,22 @@ module Afipws
         ws.tipos_documentos.should == [{ id: 80, desc: 'CUIT', fch_desde: Date.new(2008, 7, 25), fch_hasta: nil }]
       end
 
+      it 'tipos_concepto' do
+        savon.expects(:fe_param_get_tipos_concepto).with(message: auth).returns(fixture('fe_param_get_tipos_concepto/success'))
+        ws.tipos_concepto.should == [{ id: 1, desc: "Producto", fch_desde: Date.new(2008,7,25), fch_hasta: nil }]
+      end
+
       it 'tipos_monedas' do
         savon.expects(:fe_param_get_tipos_monedas).with(message: auth).returns(fixture('fe_param_get_tipos_monedas/success'))
         ws.tipos_monedas.should == [
           { id: 'PES', desc: 'Pesos Argentinos', fch_desde: Date.new(2009, 4, 3), fch_hasta: nil },
           { id: '002', desc: 'Dólar Libre EEUU', fch_desde: Date.new(2009, 4, 16), fch_hasta: nil }
         ]
+      end
+
+      it 'tipos_opcional' do
+        savon.expects(:fe_param_get_tipos_opcional).with(message: auth).returns(fixture('fe_param_get_tipos_opcional/success'))
+        ws.tipos_opcional.should == []
       end
 
       it 'tipos_iva' do
@@ -235,7 +245,7 @@ module Afipws
     end
 
     context 'autenticacion' do
-      before { FileUtils.rm_rf Dir.glob('tmp/*ta.dump') }
+      before { FileUtils.rm_rf Dir.glob('tmp/*-test-*-ta.dump') }
 
       it 'debería autenticarse usando el WSAA' do
         wsfe = WSFE.new cuit: '1', cert: 'cert', key: 'key'
@@ -260,7 +270,7 @@ module Afipws
 
       it 'debería usar las url para production cuando el env es production' do
         Client.expects(:new).with(wsdl: 'https://wsaa.afip.gov.ar/ws/services/LoginCms?wsdl')
-        Client.expects(:new).with(has_entries(wsdl: File.expand_path(__dir__ + '/../../') + '/lib/afipws/wsdl/wsfev1.wsdl'))
+        Client.expects(:new).with(wsdl: 'https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL', convert_request_keys_to: :camelcase)
         wsfe = WSFE.new env: 'production'
         wsfe.env.should == :production
       end

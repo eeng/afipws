@@ -4,7 +4,7 @@ module Afipws
   describe WSConstanciaInscripcion do
     let(:ta) { {token: 't', sign: 's'} }
     let(:ws) { WSConstanciaInscripcion.new(cuit: '1').tap { |ws| ws.wsaa.stubs auth: ta } }
-    let(:auth) { ta.merge(cuit_representada: '1') }
+    let(:auth) { ta.merge cuit_representada: '1' }
 
     context 'métodos API' do
       it 'dummy' do

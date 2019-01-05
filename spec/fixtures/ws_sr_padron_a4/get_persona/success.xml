@@ -1,0 +1,133 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   <soap:Body>
+      <ns2:getPersonaResponse xmlns:ns2="http://a4.soap.ws.server.puc.sr/">
+         <personaReturn>
+            <metadata>
+               <fechaHora>2016-12-02T11:12:37.087-03:00</fechaHora>
+               <servidor>setiwebhomoext.afip.gob.ar</servidor>
+            </metadata>
+            <persona>
+               <actividad>
+                  <descripcionActividad>CONSTRUCCIÓN, REFORMA Y REPARACIÓN DE EDIFICIOS RESIDENCIALES</descripcionActividad>
+                  <idActividad>410011</idActividad>
+                  <nomenclador>883</nomenclador>
+                  <orden>1</orden>
+                  <periodo>201311</periodo>
+               </actividad>
+               <apellido>ERNESTO DANIEL</apellido>
+               <dependencia>
+                  <descripcionDependencia>DISTRITO ZAPALA</descripcionDependencia>
+                  <idDependencia>702</idDependencia>
+               </dependencia>
+               <domicilio>
+                  <codPostal>8371</codPostal>
+                  <datoAdicional>N/A PATRICIA ANDREA</datoAdicional>
+                  <descripcionProvincia>NEUQUEN</descripcionProvincia>
+                  <direccion>LAGUNA LOS SAUCES 2</direccion>
+                  <idProvincia>20</idProvincia>
+                  <localidad>JUNIN DE LOS ANDES</localidad>
+                  <tipoDatoAdicional>NO DETERMINADO</tipoDatoAdicional>
+                  <tipoDomicilio>FISCAL</tipoDomicilio>
+               </domicilio>
+               <domicilio>
+                  <codPostal>1425</codPostal>
+                  <descripcionProvincia>CIUDAD AUTONOMA BUENOS AIRES</descripcionProvincia>
+                  <direccion>ARAOZ 1901</direccion>
+                  <idProvincia>0</idProvincia>
+                  <tipoDomicilio>LEGAL/REAL</tipoDomicilio>
+               </domicilio>
+               <estadoClave>ACTIVO</estadoClave>
+               <fechaInscripcion>2010-10-30T12:00:00-03:00</fechaInscripcion>
+               <fechaNacimiento>1891-01-01T12:00:00-03:00</fechaNacimiento>
+               <idPersona>20000000516</idPersona>
+               <impuesto>
+                 <descripcionImpuesto>GANANCIAS PERSONAS FISICAS</descripcionImpuesto>
+                  <diaPeriodo>30</diaPeriodo>
+                  <estado>BAJA DEFINITIVA</estado>
+                  <ffInscripcion>2002-04-05T12:00:00-03:00</ffInscripcion>
+                  <idImpuesto>11</idImpuesto>
+                  <periodo>200611</periodo>
+               </impuesto>
+               <impuesto>
+                  <descripcionImpuesto>MONOTRIBUTO</descripcionImpuesto>
+                  <diaPeriodo>30</diaPeriodo>
+                  <estado>BAJA DEFINITIVA</estado>
+                  <ffInscripcion>2000-03-11T12:00:00-03:00</ffInscripcion>
+                  <idImpuesto>20</idImpuesto>
+                  <periodo>200406</periodo>
+               </impuesto>
+               <impuesto>
+                  <descripcionImpuesto>MONOTRIBUTO AUTONOMO</descripcionImpuesto>
+                  <diaPeriodo>30</diaPeriodo>
+                  <estado>BAJA DEFINITIVA</estado>
+                  <ffInscripcion>2000-03-11T12:00:00-03:00</ffInscripcion>
+                  <idImpuesto>21</idImpuesto>
+                  <periodo>200406</periodo>
+               </impuesto>
+               <impuesto>
+                <descripcionImpuesto>GANANCIA MINIMA PRESUNTA</descripcionImpuesto>
+                  <diaPeriodo>30</diaPeriodo>
+                  <estado>BAJA DEFINITIVA</estado>
+                  <ffInscripcion>2005-03-15T12:00:00-03:00</ffInscripcion>
+                  <idImpuesto>25</idImpuesto>
+                  <periodo>200611</periodo>
+               </impuesto>
+               <impuesto>
+                  <descripcionImpuesto>SICORE-IMPTO.EMERG.AUTOMOTORES</descripcionImpuesto>
+                  <diaPeriodo>31</diaPeriodo>
+                  <estado>BAJA DEFINITIVA</estado>
+                  <ffInscripcion>2008-01-29T12:00:00-02:00</ffInscripcion>
+                  <idImpuesto>64</idImpuesto>
+                  <periodo>200708</periodo>
+               </impuesto>
+               <impuesto>
+                <descripcionImpuesto>EMPLEADOR-APORTES   SEG.SOCIAL</descripcionImpuesto>
+                <diaPeriodo>15</diaPeriodo>
+                <estado>ACTIVO</estado>
+                <ffInscripcion>2005-03-15T12:00:00-03:00</ffInscripcion>
+                <idImpuesto>301</idImpuesto>
+                <periodo>200503</periodo>
+               </impuesto>
+               <impuesto>
+                 <descripcionImpuesto>APORTES   SEG.SOCIAL AUTONOMOS</descripcionImpuesto>
+                  <diaPeriodo>10</diaPeriodo>
+                  <estado>BAJA DEFINITIVA</estado>
+                  <ffInscripcion>2008-01-25T12:00:00-02:00</ffInscripcion>
+                  <idImpuesto>308</idImpuesto>
+                  <periodo>200804</periodo>
+               </impuesto>
+               <impuesto>
+                  <descripcionImpuesto>INTERNOS-SEGUROS</descripcionImpuesto>
+                  <diaPeriodo>30</diaPeriodo>
+                  <estado>BAJA DEFINITIVA</estado>
+                  <ffInscripcion>2005-09-12T12:00:00-03:00</ffInscripcion>
+                  <idImpuesto>365</idImpuesto>
+                  <periodo>200611</periodo>
+               </impuesto>
+               <impuesto>
+                  <descripcionImpuesto>ADICIONAL EMERG.CIGARRILLOS</descripcionImpuesto>
+                  <diaPeriodo>1</diaPeriodo>
+                  <estado>ACTIVO</estado>
+                  <ffInscripcion>2008-01-28T12:00:00-02:00</ffInscripcion>
+                  <idImpuesto>366</idImpuesto>
+                  <periodo>200708</periodo>
+               </impuesto>
+               <mesCierre>12</mesCierre>
+               <nombre>MARCELO NICOLAS</nombre>
+               <numeroDocumento>51</numeroDocumento>
+               <regimen>
+                <descripcionRegimen>REG.PER. IMPUESTO DE EMERGENCIA A LOS AUTOMOTORES Y OTROS - FONDO NACIONAL DE INCENTIVO DOCENTE.</descripcionRegimen>
+                  <estado>BAJA DEFINITIVA</estado>
+                  <idImpuesto>64</idImpuesto>
+                  <idRegimen>715</idRegimen>
+                  <periodo>200708</periodo>
+                  <tipoRegimen>PERCEPCION</tipoRegimen>
+               </regimen>
+               <sexo>MASCULINO</sexo>
+               <tipoClave>CUIT</tipoClave>
+               <tipoPersona>FISICA</tipoPersona>
+            </persona>
+         </personaReturn>
+      </ns2:getPersonaResponse>
+   </soap:Body>
+</soap:Envelope>

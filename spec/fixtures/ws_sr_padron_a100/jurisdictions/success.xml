@@ -1,0 +1,31 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   <soap:Body>
+      <ns2:getParameterCollectionByNameResponse xmlns:ns2="http://a100.soap.ws.server.pucParam.sr/">
+         <parameterCollectionReturn>
+            <metadata>
+               <fechaHora>2017-05-05T10:54:45.034-03:00</fechaHora>
+               <servidor>awshomo.afip.gov.ar</servidor>
+            </metadata>
+            <parameterCollection>
+               <name>SUPA.E_PROVINCIA</name>
+               <parameterList>
+                  <attributeList>
+                     <name>NOMBRE_PROVINCIA</name>
+                     <value>MISIONES</value>
+                  </attributeList>
+                  <attributeList>
+                     <name>COD_PROVINCIA</name>
+                     <value>19</value>
+                  </attributeList>
+                  <attributeList>
+                     <name>CODIGO_SIM_PROVINCIA</name>
+                     <value>MI</value>
+                  </attributeList>
+                  <decription>MISIONES</decription>
+                  <id>19</id>
+               </parameterList>
+            </parameterCollection>
+         </parameterCollectionReturn>
+      </ns2:getParameterCollectionByNameResponse>
+   </soap:Body>
+</soap:Envelope>

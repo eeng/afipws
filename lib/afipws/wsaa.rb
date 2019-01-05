@@ -16,7 +16,7 @@ module Afipws
       @ttl = options[:ttl] || 2400
       @cuit = options[:cuit]
       @client = Client.new Hash(options[:savon]).reverse_merge(wsdl: WSDL[@env])
-      @ta_path = File.join(Dir.pwd, 'tmp', "#{@cuit}-#{@env}-ta.dump")
+      @ta_path = File.join(Dir.pwd, 'tmp', "#{@cuit}-#{@env}-#{@service}-ta.dump")
     end
 
     def generar_tra service, ttl
