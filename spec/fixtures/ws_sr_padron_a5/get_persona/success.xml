@@ -1,0 +1,62 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   <soap:Body>
+      <ns2:getPersonaResponse xmlns:ns2="http://a5.soap.ws.server.puc.sr/">
+         <personaReturn>
+            <datosGenerales>
+               <apellido>ALEXA</apellido>
+               <dependencia>
+                  <codPostal>5000</codPostal>
+                  <descripcionDependencia>AGENCIA-SEDE N.1 CORDOBA</descripcionDependencia>
+                  <descripcionProvincia>CORDOBA</descripcionProvincia>
+                  <direccion>BOULEVARD SAN JUAN 325 PB</direccion>
+                  <idDependencia>272</idDependencia>
+                  <idProvincia>3</idProvincia>
+                  <localidad>CORDOBA</localidad>
+               </dependencia>
+               <domicilioFiscal>
+                  <codPostal>5152</codPostal>
+                  <descripcionProvincia>CORDOBA</descripcionProvincia>
+                  <direccion>SAN MARTIN 256</direccion>
+                  <idProvincia>3</idProvincia>
+                  <localidad>VILLA CARLOS PAZ</localidad>
+                  <tipoDomicilio>FISCAL</tipoDomicilio>
+               </domicilioFiscal>
+               <estadoClave>ACTIVO</estadoClave>
+               <idPersona>27255820422</idPersona>
+               <mesCierre>12</mesCierre>
+               <nombre>HILARY</nombre>
+               <tipoClave>CUIT</tipoClave>
+               <tipoPersona>FISICA</tipoPersona>
+            </datosGenerales>
+            <datosMonotributo>
+               <actividadMonotributista>
+                  <descripcionActividad>VENTAS</descripcionActividad>
+                  <idActividad>10</idActividad>
+                  <nomenclador>1</nomenclador>
+                  <orden>0</orden>
+                  <periodo>201007</periodo>
+               </actividadMonotributista>
+               <categoriaMonotributo>
+                  <descripcionCategoria>C VENTAS DE COSAS MUEBLES</descripcionCategoria>
+                  <idCategoria>45</idCategoria>
+                  <idImpuesto>20</idImpuesto>
+                  <periodo>201007</periodo>
+               </categoriaMonotributo>
+               <componenteDeSociedad>
+                  <ffRelacion>2008-11-25T06:41:21-03:00</ffRelacion>
+                  <idPersonaAsociada>23168373384</idPersonaAsociada>
+                  </componenteDeSociedad>
+               <impuesto>
+                  <descripcionImpuesto>MONOTRIBUTO</descripcionImpuesto>
+                  <idImpuesto>20</idImpuesto>
+                  <periodo>201007</periodo>
+               </impuesto>
+            </datosMonotributo>
+            <metadata>
+               <fechaHora>2017-01-06T11:47:40.464-03:00</fechaHora>
+               <servidor>aws.afip.gob.ar</servidor>
+            </metadata>
+         </personaReturn>
+      </ns2:getPersonaResponse>
+   </soap:Body>
+</soap:Envelope>
