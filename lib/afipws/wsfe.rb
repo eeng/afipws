@@ -3,7 +3,7 @@ module Afipws
     extend Forwardable
     include TypeConversions
     attr_reader :wsaa, :client, :env
-    def_delegators :wsaa, :ta, :auth, :cuit
+    def_delegators :wsaa, :ta, :auth, :cuit, :authorized_cuit
 
     WSDL = {
       development: 'https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL',

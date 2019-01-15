@@ -1,6 +1,6 @@
 module Afipws
   class WSAA
-    attr_reader :key, :cert, :service, :ta, :cuit, :client
+    attr_reader :key, :cert, :service, :ta, :cuit, :authorized_cuit, :client
 
     WSDL = {
       development: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl',
@@ -14,7 +14,8 @@ module Afipws
       @cert = options[:cert]
       @service = options[:service] || 'wsfe'
       @ttl = options[:ttl] || 2400
-      @cuit = options[:cuit]
+      @authorized_cuit = options[:cuit]
+      @cuit = options[:represented_cuit]
       @client = Client.new Hash(options[:savon]).reverse_merge(wsdl: WSDL[@env])
       @ta_path = File.join(Dir.pwd, 'tmp', "#{@cuit}-#{@env}-#{@service}-ta.dump")
     end

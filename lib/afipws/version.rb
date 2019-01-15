@@ -1,3 +1,3 @@
 module Afipws
-  VERSION = '1.0.3.26'
+  VERSION = '1.0.4'
 end

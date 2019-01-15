@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Afipws::WSFE do
   let(:auth) { {auth: {token: 't', sign: 's', expiration_time: 12.hours.from_now}} }
-  let(:ws) { Afipws::WSFE.new cuit: '1', wsaa: Afipws::WSAA.new.tap { |wsaa| wsaa.stubs auth: auth } }
+  let(:ws) { Afipws::WSFE.new cuit: '1', represented_cuit: '1', wsaa: Afipws::WSAA.new.tap { |wsaa| wsaa.stubs auth: auth } }
 
   context 'Métodos de negocio' do
     it 'dummy' do
@@ -243,7 +243,7 @@ describe Afipws::WSFE do
     before { FileUtils.rm_rf Dir.glob('tmp/*ta.dump') }
 
     it 'debería autenticarse usando el WSAA' do
-      wsfe = Afipws::WSFE.new cuit: '1', cert: 'cert', key: 'key'
+      wsfe = Afipws::WSFE.new cuit: '1', represented_cuit: '1', cert: 'cert', key: 'key'
       wsfe.wsaa.cert.should == 'cert'
       wsfe.wsaa.key.should == 'key'
       wsfe.wsaa.service.should == 'wsfe'
@@ -267,7 +267,7 @@ describe Afipws::WSFE do
       Afipws::Client.expects(:new).with(wsdl: 'https://wsaa.afip.gov.ar/ws/services/LoginCms?wsdl')
       #Afipws::Client.expects(:new).with(has_entries(wsdl: File.expand_path(File.dirname(__FILE__) + '/../../') + '/lib/afipws/wsfev1.wsdl'))
       Afipws::Client.expects(:new).with(has_entries wsdl: 'https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL')
-      wsfe = Afipws::WSFE.new env: 'production'
+      wsfe = Afipws::WSFE.new env: :production
       wsfe.env.should == :production
     end
   end
