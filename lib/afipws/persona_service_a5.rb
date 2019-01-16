@@ -31,7 +31,7 @@ module Afipws
           'cuitRepresentada' => auth[:auth][:cuit],
           'idPersona' => tin          
       }
-      @client.get_persona(request)[:persona_return][:datos_generales]
+      @client.get_persona(request)[:persona_return]
     end
 
 
