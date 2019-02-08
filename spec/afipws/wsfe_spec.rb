@@ -240,7 +240,7 @@ describe Afipws::WSFE do
   end
 
   context 'autenticacion' do
-    before { FileUtils.rm_rf Dir.glob('tmp/*ta.dump') }
+    before { FileUtils.rm_rf Dir.glob('afip_cert/*ta.dump') }
 
     it 'debería autenticarse usando el WSAA' do
       wsfe = Afipws::WSFE.new cuit: '1', represented_cuit: '1', cert: 'cert', key: 'key'

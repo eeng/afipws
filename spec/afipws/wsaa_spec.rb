@@ -48,7 +48,7 @@ describe Afipws::WSAA do
 
   context 'auth' do
     before do
-      FileUtils.rm_rf Dir.glob('tmp/*ta.dump')
+      FileUtils.rm_rf Dir.glob('afip_cert/*ta.dump')
       Time.stubs(:now).returns(Time.local(2010, 1, 1))
     end
 
