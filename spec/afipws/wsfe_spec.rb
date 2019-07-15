@@ -27,7 +27,7 @@ module Afipws
 
       it 'tipos_concepto' do
         savon.expects(:fe_param_get_tipos_concepto).with(message: auth).returns(fixture('fe_param_get_tipos_concepto/success'))
-        ws.tipos_concepto.should == [{ id: 1, desc: "Producto", fch_desde: Date.new(2008,7,25), fch_hasta: nil }]
+        ws.tipos_concepto.should == [{ id: 1, desc: 'Producto', fch_desde: Date.new(2008,7,25), fch_hasta: nil }]
       end
 
       it 'tipos_monedas' do

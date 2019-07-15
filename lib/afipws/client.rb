@@ -4,7 +4,6 @@ module Afipws
       @client = Savon.client savon_options.reverse_merge(soap_version: 2, ssl_version: :TLSv1)
     end
 
-
     def request action, body = nil
       @client.call action, message: body
     end
