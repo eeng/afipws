@@ -8,12 +8,12 @@ module Afipws
 
     context 'métodos de negocio' do
       it 'dummy' do
-        savon.expects(:fe_dummy).returns(fixture('fe_dummy/success'))
+        savon.expects(:fe_dummy).returns(fixture('wsfe/fe_dummy/success'))
         ws.dummy.should == { app_server: 'OK', db_server: 'OK', auth_server: 'OK' }
       end
 
       it 'tipos_comprobantes' do
-        savon.expects(:fe_param_get_tipos_cbte).with(message: auth).returns(fixture('fe_param_get_tipos_cbte/success'))
+        savon.expects(:fe_param_get_tipos_cbte).with(message: auth).returns(fixture('wsfe/fe_param_get_tipos_cbte/success'))
         ws.tipos_comprobantes.should == [
           { id: 1, desc: 'Factura A', fch_desde: Date.new(2010, 9, 17), fch_hasta: nil },
           { id: 2, desc: 'Nota de Débito A', fch_desde: Date.new(2010, 9, 18), fch_hasta: Date.new(2011, 9, 18) }
@@ -21,17 +21,17 @@ module Afipws
       end
 
       it 'tipos_documentos' do
-        savon.expects(:fe_param_get_tipos_doc).with(message: auth).returns(fixture('fe_param_get_tipos_doc/success'))
+        savon.expects(:fe_param_get_tipos_doc).with(message: auth).returns(fixture('wsfe/fe_param_get_tipos_doc/success'))
         ws.tipos_documentos.should == [{ id: 80, desc: 'CUIT', fch_desde: Date.new(2008, 7, 25), fch_hasta: nil }]
       end
 
       it 'tipos_concepto' do
-        savon.expects(:fe_param_get_tipos_concepto).with(message: auth).returns(fixture('fe_param_get_tipos_concepto/success'))
-        ws.tipos_concepto.should == [{ id: 1, desc: 'Producto', fch_desde: Date.new(2008,7,25), fch_hasta: nil }]
+        savon.expects(:fe_param_get_tipos_concepto).with(message: auth).returns(fixture('wsfe/fe_param_get_tipos_concepto/success'))
+        ws.tipos_concepto.should == [{ id: 1, desc: 'Producto', fch_desde: Date.new(2008, 7, 25), fch_hasta: nil }]
       end
 
       it 'tipos_monedas' do
-        savon.expects(:fe_param_get_tipos_monedas).with(message: auth).returns(fixture('fe_param_get_tipos_monedas/success'))
+        savon.expects(:fe_param_get_tipos_monedas).with(message: auth).returns(fixture('wsfe/fe_param_get_tipos_monedas/success'))
         ws.tipos_monedas.should == [
           { id: 'PES', desc: 'Pesos Argentinos', fch_desde: Date.new(2009, 4, 3), fch_hasta: nil },
           { id: '002', desc: 'Dólar Libre EEUU', fch_desde: Date.new(2009, 4, 16), fch_hasta: nil }
@@ -39,22 +39,22 @@ module Afipws
       end
 
       it 'tipos_opcional' do
-        savon.expects(:fe_param_get_tipos_opcional).with(message: auth).returns(fixture('fe_param_get_tipos_opcional/success'))
+        savon.expects(:fe_param_get_tipos_opcional).with(message: auth).returns(fixture('wsfe/fe_param_get_tipos_opcional/success'))
         ws.tipos_opcional.should == []
       end
 
       it 'tipos_iva' do
-        savon.expects(:fe_param_get_tipos_iva).with(message: auth).returns(fixture('fe_param_get_tipos_iva/success'))
+        savon.expects(:fe_param_get_tipos_iva).with(message: auth).returns(fixture('wsfe/fe_param_get_tipos_iva/success'))
         ws.tipos_iva.should == [{ id: 5, desc: '21%', fch_desde: Date.new(2009, 2, 20), fch_hasta: nil }]
       end
 
       it 'tipos_tributos' do
-        savon.expects(:fe_param_get_tipos_tributos).with(message: auth).returns(fixture('fe_param_get_tipos_tributos/success'))
+        savon.expects(:fe_param_get_tipos_tributos).with(message: auth).returns(fixture('wsfe/fe_param_get_tipos_tributos/success'))
         ws.tipos_tributos.should == [{ id: 2, desc: 'Impuestos provinciales', fch_desde: Date.new(2010, 9, 17), fch_hasta: nil }]
       end
 
       it 'puntos_venta' do
-        savon.expects(:fe_param_get_ptos_venta).with(message: auth).returns(fixture('fe_param_get_ptos_venta/success'))
+        savon.expects(:fe_param_get_ptos_venta).with(message: auth).returns(fixture('wsfe/fe_param_get_ptos_venta/success'))
         ws.puntos_venta.should == [
           { nro: 1, emision_tipo: 'CAE', bloqueado: false, fch_baja: nil },
           { nro: 2, emision_tipo: 'CAEA', bloqueado: true, fch_baja: Date.new(2011, 1, 31) }
@@ -63,18 +63,18 @@ module Afipws
 
       context 'cotizacion' do
         it 'cuando la moneda solicitada existe' do
-          savon.expects(:fe_param_get_cotizacion).with(message: auth.merge(mon_id: 'DOL')).returns(fixture('fe_param_get_cotizacion/dolar'))
+          savon.expects(:fe_param_get_cotizacion).with(message: auth.merge(mon_id: 'DOL')).returns(fixture('wsfe/fe_param_get_cotizacion/dolar'))
           ws.cotizacion('DOL').should == 3.976
         end
 
         it 'cuando la moneda no existe' do
-          savon.expects(:fe_param_get_cotizacion).with(message: auth.merge(mon_id: 'PES')).returns(fixture('fe_param_get_cotizacion/inexistente'))
+          savon.expects(:fe_param_get_cotizacion).with(message: auth.merge(mon_id: 'PES')).returns(fixture('wsfe/fe_param_get_cotizacion/inexistente'))
           -> { ws.cotizacion('PES') }.should raise_error WSError, /602: Sin Resultados/
         end
       end
 
       it 'cant_max_registros_x_lote' do
-        savon.expects(:fe_comp_tot_x_request).with(message: auth).returns(fixture('fe_comp_tot_x_request/success'))
+        savon.expects(:fe_comp_tot_x_request).with(message: auth).returns(fixture('wsfe/fe_comp_tot_x_request/success'))
         ws.cant_max_registros_x_lote.should == 250
       end
 
@@ -96,7 +96,7 @@ module Afipws
             '//FeCAEReq/FeDetReq/FECAEDetRequest[1]/Tributos/Tributo[1]/BaseImp' => 150,
             '//FeCAEReq/FeDetReq/FECAEDetRequest[1]/Tributos/Tributo[1]/Alic' => 5.2,
             '//FeCAEReq/FeDetReq/FECAEDetRequest[1]/Tributos/Tributo[1]/Importe' => 7.8
-          )).returns(fixture('fecae_solicitar/autorizacion_1_cbte'))
+          )).returns(fixture('wsfe/fecae_solicitar/autorizacion_1_cbte'))
           rta = ws.autorizar_comprobantes(cbte_tipo: 1, pto_vta: 2, comprobantes: [
             {
               cbte_nro: 1, concepto: 1, doc_nro: 30_521_189_203, doc_tipo: 80, cbte_fch: Date.new(2011, 0o1, 13),
@@ -105,8 +105,10 @@ module Afipws
               tributos: { tributo: [{ id: 0, base_imp: 150, alic: 5.2, importe: 7.8 }] }
             }
           ])
-          rta[0].should have_entries cae: '61023008595705', cae_fch_vto: Date.new(2011, 0o1, 23), cbte_nro: 1,
-                                     resultado: 'A', observaciones: []
+          rta[0].should include(
+            cae: '61023008595705', cae_fch_vto: Date.new(2011, 0o1, 23), cbte_nro: 1,
+            resultado: 'A', observaciones: []
+          )
           rta.size.should == 1
         end
 
@@ -116,7 +118,7 @@ module Afipws
             '//FeCAEReq/FeDetReq/FECAEDetRequest[1]/Iva/AlicIva[1]/Importe' => 21,
             '//FeCAEReq/FeDetReq/FECAEDetRequest[1]/Iva/AlicIva[2]/Id' => 4,
             '//FeCAEReq/FeDetReq/FECAEDetRequest[1]/Iva/AlicIva[2]/Importe' => 5.25
-          )).returns(fixture('fecae_solicitar/autorizacion_1_cbte'))
+          )).returns(fixture('wsfe/fecae_solicitar/autorizacion_1_cbte'))
           ws.autorizar_comprobantes(cbte_tipo: 1, pto_vta: 2, comprobantes: [{iva: {alic_iva: [
             { id: 5, base_imp: 100, importe: 21 },
             { id: 4, base_imp: 50, importe: 5.25 }
@@ -130,33 +132,35 @@ module Afipws
             '//FeCAEReq/FeDetReq/FECAEDetRequest[1]/CbteHasta' => 5,
             '//FeCAEReq/FeDetReq/FECAEDetRequest[2]/CbteDesde' => 6,
             '//FeCAEReq/FeDetReq/FECAEDetRequest[2]/CbteHasta' => 6
-          )).returns(fixture('fecae_solicitar/autorizacion_2_cbtes'))
+          )).returns(fixture('wsfe/fecae_solicitar/autorizacion_2_cbtes'))
           rta = ws.autorizar_comprobantes(cbte_tipo: 1, pto_vta: 2, comprobantes: [{ cbte_nro: 5 }, { cbte_nro: 6 }])
-          rta[0].should have_entries cbte_nro: 5, cae: '61033008894096'
-          rta[1].should have_entries cbte_nro: 6, cae: '61033008894101'
+          rta[0].should include cbte_nro: 5, cae: '61033008894096'
+          rta[1].should include cbte_nro: 6, cae: '61033008894101'
         end
 
         it 'con 2 observaciones' do
-          savon.expects(:fecae_solicitar).with(message: :any).returns(fixture('fecae_solicitar/dos_observaciones'))
+          savon.expects(:fecae_solicitar).with(message: :any).returns(fixture('wsfe/fecae_solicitar/dos_observaciones'))
           rta = ws.autorizar_comprobantes comprobantes: []
-          rta[0].should have_entries cbte_nro: 3, cae: nil, resultado: 'R', observaciones: [
+          rta[0].should include cbte_nro: 3, cae: nil, resultado: 'R', observaciones: [
             {code: 10_048, msg: 'Msg 1'}, {code: 10_018, msg: 'Msg 2'}
           ]
         end
 
         it 'con 1 observación' do
-          savon.expects(:fecae_solicitar).with(message: :any).returns(fixture('fecae_solicitar/una_observacion'))
+          savon.expects(:fecae_solicitar).with(message: :any).returns(fixture('wsfe/fecae_solicitar/una_observacion'))
           rta = ws.autorizar_comprobantes comprobantes: []
-          rta[0].should have_entries observaciones: [{code: 10_048, msg: 'Msg 1'}]
+          rta[0].should include observaciones: [{code: 10_048, msg: 'Msg 1'}]
         end
       end
 
       context 'solicitar_caea' do
         it 'debería mandar automáticamente el período y orden' do
           Date.stubs today: Date.new(2011, 1, 27)
-          savon.expects(:fecaea_solicitar).with(message: has_path('//Periodo' => '201102', '//Orden' => 1)).returns(fixture('fecaea_solicitar/success'))
-          ws.solicitar_caea.should have_entries caea: '21043476341977', fch_tope_inf: Date.new(2011, 0o3, 17),
-                                                fch_vig_desde: Date.new(2011, 0o2, 0o1), fch_vig_hasta: Date.new(2011, 0o2, 15)
+          savon.expects(:fecaea_solicitar).with(message: has_path('//Periodo' => '201102', '//Orden' => 1)).returns(fixture('wsfe/fecaea_solicitar/success'))
+          ws.solicitar_caea.should include(
+            caea: '21043476341977', fch_tope_inf: Date.new(2011, 0o3, 17),
+            fch_vig_desde: Date.new(2011, 0o2, 0o1), fch_vig_hasta: Date.new(2011, 0o2, 15)
+          )
         end
 
         context 'periodo_para_solicitud_caea' do
@@ -179,15 +183,15 @@ module Afipws
           Date.stubs today: Date.new(2011, 1, 27)
           savon.expects(:fecaea_solicitar)
             .with(message: has_path('//Periodo' => '201102', '//Orden' => 1))
-            .returns(fixture('fecaea_solicitar/caea_ya_otorgado'))
+            .returns(fixture('wsfe/fecaea_solicitar/caea_ya_otorgado'))
           savon.expects(:fecaea_consultar)
             .with(message: has_path('//Periodo' => '201102', '//Orden' => 1))
-            .returns(fixture('fecaea_consultar/success'))
-          ws.solicitar_caea.should have_entries caea: '21043476341977', fch_vig_desde: Date.new(2011, 0o2, 0o1)
+            .returns(fixture('wsfe/fecaea_consultar/success'))
+          ws.solicitar_caea.should include caea: '21043476341977', fch_vig_desde: Date.new(2011, 0o2, 0o1)
         end
 
         it 'cuando hay otro error debería burbujearlo' do
-          savon.expects(:fecaea_solicitar).with(message: :any).returns(fixture('fecaea_solicitar/error_distinto'))
+          savon.expects(:fecaea_solicitar).with(message: :any).returns(fixture('wsfe/fecaea_solicitar/error_distinto'))
           -> { ws.solicitar_caea }.should raise_error WSError, /15007/
         end
       end
@@ -204,12 +208,12 @@ module Afipws
           '//FeCAEARegInfReq/FeDetReq/FECAEADetRequest[2]/CbteDesde' => 2,
           '//FeCAEARegInfReq/FeDetReq/FECAEADetRequest[2]/CbteHasta' => 2,
           '//FeCAEARegInfReq/FeDetReq/FECAEADetRequest[2]/CAEA' => '21043476341977'
-        )).returns(fixture('fecaea_reg_informativo/informe_rtdo_parcial'))
+        )).returns(fixture('wsfe/fecaea_reg_informativo/informe_rtdo_parcial'))
         rta = ws.informar_comprobantes_caea(cbte_tipo: 1, pto_vta: 3, comprobantes: [
           { cbte_nro: 1, caea: '21043476341977' }, { cbte_nro: 2, caea: '21043476341977' }
         ])
-        rta[0].should have_entries cbte_nro: 1, caea: '21043476341977', resultado: 'A', observaciones: []
-        rta[1].should have_entries cbte_nro: 2, caea: '21043476341977', resultado: 'R', observaciones: [{code: 724, msg: 'Msg'}]
+        rta[0].should include cbte_nro: 1, caea: '21043476341977', resultado: 'A', observaciones: []
+        rta[1].should include cbte_nro: 2, caea: '21043476341977', resultado: 'R', observaciones: [{code: 724, msg: 'Msg'}]
       end
 
       it 'informar_caea_sin_movimientos' do
@@ -217,27 +221,27 @@ module Afipws
           '//Auth/Token' => 't',
           '//PtoVta' => 4,
           '//CAEA' => '21043476341977'
-        )).returns(fixture('fecaea_sin_movimiento_informar/success'))
+        )).returns(fixture('wsfe/fecaea_sin_movimiento_informar/success'))
         rta = ws.informar_caea_sin_movimientos('21043476341977', 4)
-        rta.should have_entries caea: '21043476341977', resultado: 'A'
+        rta.should include caea: '21043476341977', resultado: 'A'
       end
 
       context 'consultar_caea' do
         it 'consultar_caea' do
-          savon.expects(:fecaea_consultar).with(message: has_path('//Periodo' => '201101', '//Orden' => 1)).returns(fixture('fecaea_consultar/success'))
-          ws.consultar_caea(Date.new(2011, 1, 1)).should have_entries caea: '21043476341977', fch_tope_inf: Date.new(2011, 0o3, 17)
+          savon.expects(:fecaea_consultar).with(message: has_path('//Periodo' => '201101', '//Orden' => 1)).returns(fixture('wsfe/fecaea_consultar/success'))
+          ws.consultar_caea(Date.new(2011, 1, 1)).should include caea: '21043476341977', fch_tope_inf: Date.new(2011, 0o3, 17)
         end
       end
 
       it 'ultimo_comprobante_autorizado' do
-        savon.expects(:fe_comp_ultimo_autorizado).with(message: has_path('//PtoVta' => 1, '//CbteTipo' => 1)).returns(fixture('fe_comp_ultimo_autorizado/success'))
+        savon.expects(:fe_comp_ultimo_autorizado).with(message: has_path('//PtoVta' => 1, '//CbteTipo' => 1)).returns(fixture('wsfe/fe_comp_ultimo_autorizado/success'))
         ws.ultimo_comprobante_autorizado(pto_vta: 1, cbte_tipo: 1).should == 20
       end
 
       it 'consultar_comprobante' do
         savon.expects(:fe_comp_consultar).with(message: has_path(
           '//Auth/Token' => 't', '//FeCompConsReq/PtoVta' => 1, '//FeCompConsReq/CbteTipo' => 2, '//FeCompConsReq/CbteNro' => 3
-        )).returns(fixture('fe_comp_consultar/success'))
+        )).returns(fixture('wsfe/fe_comp_consultar/success'))
         rta = ws.consultar_comprobante(pto_vta: 1, cbte_tipo: 2, cbte_nro: 3)
         rta[:cod_autorizacion].should == '61023008595705'
         rta[:emision_tipo].should == 'CAE'
@@ -255,7 +259,7 @@ module Afipws
         wsfe.wsaa.expects(:login).returns(token: 't', sign: 's')
         savon.expects(:fe_param_get_tipos_cbte).with(message: has_path(
           '//Auth/Token' => 't', '//Auth/Sign' => 's', '//Auth/Cuit' => '1'
-        )).returns(fixture('fe_param_get_tipos_cbte/success'))
+        )).returns(fixture('wsfe/fe_param_get_tipos_cbte/success'))
         wsfe.tipos_comprobantes
       end
     end
@@ -278,7 +282,7 @@ module Afipws
 
     context 'manejo de errores' do
       it 'cuando hay un error' do
-        savon.expects(:fe_param_get_tipos_cbte).with(message: :any).returns(fixture('fe_param_get_tipos_cbte/failure_1_error'))
+        savon.expects(:fe_param_get_tipos_cbte).with(message: :any).returns(fixture('wsfe/fe_param_get_tipos_cbte/failure_1_error'))
         -> { ws.tipos_comprobantes }.should raise_error { |e|
           e.should be_a WSError
           e.errors.should == [{ code: '600', msg: 'No se corresponden token con firma' }]
@@ -287,7 +291,7 @@ module Afipws
       end
 
       it 'cuando hay varios errores' do
-        savon.expects(:fe_param_get_tipos_cbte).with(message: :any).returns(fixture('fe_param_get_tipos_cbte/failure_2_errors'))
+        savon.expects(:fe_param_get_tipos_cbte).with(message: :any).returns(fixture('wsfe/fe_param_get_tipos_cbte/failure_2_errors'))
         -> { ws.tipos_comprobantes }.should raise_error { |e|
           e.should be_a WSError
           e.errors.should == [{ code: '600', msg: 'No se corresponden token con firma' }, { code: '601', msg: 'CUIT representada no incluida en token' }]

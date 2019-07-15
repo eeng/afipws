@@ -15,9 +15,9 @@ describe Hash do
     subject { Hash[1, 2, 3, 4] }
 
     it 'debería devolver true cuando self incluye todas las entries del hash parametro' do
-      should have_entries 1 => 2
-      should have_entries 3 => 4, 1 => 2
-      should_not have_entries 1 => 3
+      should include 1 => 2
+      should include 3 => 4, 1 => 2
+      should_not include 1 => 3
     end
   end
 end

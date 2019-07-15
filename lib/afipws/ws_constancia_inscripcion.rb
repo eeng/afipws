@@ -3,7 +3,7 @@ module Afipws
     WSDL = {
       development: 'https://awshomo.afip.gov.ar/sr-padron/webservices/personaServiceA5?WSDL',
       production: 'https://aws.afip.gov.ar/sr-padron/webservices/personaServiceA5?WSDL',
-      test: Root + '/spec/fixtures/ws_constancia_inscripcion.wsdl'
+      test: Root + '/spec/fixtures/ws_sr_constancia_inscripcion/ws_constancia_inscripcion.wsdl'
     }.freeze
 
     def initialize options = {}

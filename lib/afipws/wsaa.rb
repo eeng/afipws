@@ -5,11 +5,10 @@ module Afipws
     WSDL = {
       development: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl',
       production: 'https://wsaa.afip.gov.ar/ws/services/LoginCms?wsdl',
-      test: Root + '/spec/fixtures/wsaa.wsdl'
+      test: Root + '/spec/fixtures/wsaa/wsaa.wsdl'
     }
 
     def initialize options = {}
-      # TODO cambiar a :dev x defecto
       @env = (options[:env] || :test).to_sym
       @key = options[:key]
       @cert = options[:cert]
@@ -60,7 +59,6 @@ module Afipws
       raise WSError, f.message
     end
 
-    # TODO no me gusta q este metodo se llame asi, deberia ser ta asi nomas?
     def auth
       ta = obtener_y_cachear_ta
       {token: ta[:token], sign: ta[:sign]}

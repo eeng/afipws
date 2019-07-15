@@ -16,7 +16,7 @@ module Afipws
         savon.expects(:get_persona)
           .with(message: message.merge(idPersona: '98765432198'))
           .returns(fixture('ws_sr_padron_a4/get_persona/success'))
-        ws.get_persona('98765432198').should have_entries apellido: 'ERNESTO DANIEL'
+        ws.get_persona('98765432198').should include apellido: 'ERNESTO DANIEL'
       end
     end
   end

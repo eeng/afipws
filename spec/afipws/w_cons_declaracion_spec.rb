@@ -1,16 +1,6 @@
 require 'spec_helper'
 
 module Afipws
-  class FakeWSAA
-    def initialize ta:
-      @ta = ta
-    end
-
-    def auth
-      @ta
-    end
-  end
-
   describe WConsDeclaracion do
     let(:ta) { {token: 't', sign: 's'} }
     let(:ws) { WConsDeclaracion.new(env: :test, cuit: '23076925089', wsaa: FakeWSAA.new(ta: ta)) }

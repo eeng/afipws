@@ -5,7 +5,7 @@ module Afipws
     WSDL = {
       development: 'https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL',
       production: 'https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL',
-      test: Root + '/spec/fixtures/wsfe.wsdl'
+      test: Root + '/spec/fixtures/wsfe/wsfe.wsdl'
     }.freeze
 
     def initialize options = {}

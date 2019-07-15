@@ -8,30 +8,30 @@ module Afipws
 
     context 'métodos API' do
       it 'dummy' do
-        savon.expects(:dummy).returns(fixture('constancia_inscripcion_dummy/success'))
+        savon.expects(:dummy).returns(fixture('ws_sr_constancia_inscripcion/dummy/success'))
         ws.dummy.should == { appserver: 'OK', dbserver: 'OK', authserver: 'OK' }
       end
 
       it 'debería devolver un hash con los datos generales y regímenes impositivos' do
         savon.expects(:get_persona)
           .with(message: message.merge(id_persona: '20294834487'))
-          .returns(fixture('constancia_inscripcion_get_persona/success'))
+          .returns(fixture('ws_sr_constancia_inscripcion/get_persona/success'))
         r = ws.get_persona '20294834487'
-        r[:datos_generales].should have_entries(
+        r[:datos_generales].should include(
           estado_clave: 'ACTIVO', mes_cierre: '6', razon_social: 'LA REGALERIA S A',
           tipo_clave: 'CUIT', tipo_persona: 'JURIDICA'
         )
-        r[:datos_generales][:domicilio_fiscal].should have_entries(
+        r[:datos_generales][:domicilio_fiscal].should include(
           cod_postal: '2300', descripcion_provincia: 'SANTA FE',
           direccion: 'AV SIEMPRE VIVA 123', localidad: 'NUEVA YORK', tipo_domicilio: 'FISCAL'
         )
-        r[:datos_regimen_general][:actividad].should have_entries(
+        r[:datos_regimen_general][:actividad].should include(
           id_actividad: '477330', nomenclador: '883', orden: '2', periodo: '201311'
         )
-        r[:datos_regimen_general][:impuesto][1].should have_entries(
+        r[:datos_regimen_general][:impuesto][1].should include(
           descripcion_impuesto: 'IVA', id_impuesto: '30', periodo: '198903'
         )
-        r[:datos_regimen_general][:regimen].should have_entries(
+        r[:datos_regimen_general][:regimen].should include(
           id_impuesto: '208', id_regimen: '159', periodo: '199403'
         )
       end
@@ -39,9 +39,9 @@ module Afipws
       it 'cuando hay errores en la constancia sigue la misma lógica' do
         savon.expects(:get_persona)
           .with(message: message.merge(id_persona: '20294834489'))
-          .returns(fixture('constancia_inscripcion_get_persona/failure'))
+          .returns(fixture('ws_sr_constancia_inscripcion/get_persona/failure'))
         r = ws.get_persona '20294834489'
-        r[:error_regimen_general].should have_entries(
+        r[:error_regimen_general].should include(
           error: 'El contribuyente cuenta con impuestos con baja de oficio por Decreto 1299/98',
           mensaje: 'No cumple con las condiciones para enviar datos del regimen general'
         )
@@ -50,7 +50,7 @@ module Afipws
       it 'cuando no existe la persona' do
         savon.expects(:get_persona)
           .with(message: message.merge(id_persona: '123'))
-          .returns(fixture('constancia_inscripcion_get_persona/fault'))
+          .returns(fixture('ws_sr_constancia_inscripcion/get_persona/fault'))
         -> { ws.get_persona '123' }.should raise_error WSError, /No existe persona con ese Id/
       end
     end
