@@ -59,15 +59,13 @@ module Afipws
       it 'debería usar las url para development cuando el env es development' do
         Client.expects(:new).with(wsdl: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl')
         Client.expects(:new).with(wsdl: 'https://awshomo.afip.gov.ar/sr-padron/webservices/personaServiceA5?WSDL', soap_version: 1)
-        wsci = WSConstanciaInscripcion.new env: :development
-        wsci.env.should == :development
+        WSConstanciaInscripcion.new env: :development
       end
 
       it 'debería usar las url para production cuando el env es production' do
         Client.expects(:new).with(wsdl: 'https://wsaa.afip.gov.ar/ws/services/LoginCms?wsdl')
         Client.expects(:new).with(wsdl: 'https://aws.afip.gov.ar/sr-padron/webservices/personaServiceA5?WSDL', soap_version: 1)
-        wsci = WSConstanciaInscripcion.new env: 'production'
-        wsci.env.should == :production
+        WSConstanciaInscripcion.new env: :production
       end
     end
   end

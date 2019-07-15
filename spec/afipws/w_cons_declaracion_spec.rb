@@ -3,7 +3,13 @@ require 'spec_helper'
 module Afipws
   describe WConsDeclaracion do
     let(:ta) { {token: 't', sign: 's'} }
-    let(:ws) { WConsDeclaracion.new(env: :test, cuit: '23076925089', wsaa: FakeWSAA.new(ta: ta)) }
+    let(:ws) { WConsDeclaracion.new(env: :test, cuit: '23076925089').tap { |ws| ws.wsaa.stubs auth: ta } }
+
+    it 'utiliza los parámetros correctos en el WSAA' do
+      ws.wsaa.service.should == 'wconsdeclaracion'
+      ws.wsaa.cuit.should == '23076925089'
+      ws.wsaa.env.should == :test
+    end
 
     context 'métodos del WS' do
       it 'dummy' do

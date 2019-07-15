@@ -6,10 +6,12 @@ module Afipws
       test: Root + '/spec/fixtures/wconsdeclaracion/wconsdeclaracion.wsdl'
     }.freeze
 
-    def initialize env: :development, cuit:, tipo_agente: 'IMEX', rol: 'IMEX', savon: {}, **options
-      @cuit, @tipo_agente, @rol = cuit, tipo_agente, rol
-      @wsaa = options[:wsaa] || WSAA.new(options.merge(service: 'wconsdeclaracion', env: env, cuit: cuit))
-      @client = Client.new(savon.reverse_merge(wsdl: WSDL[env]))
+    attr_reader :wsaa
+
+    def initialize tipo_agente: 'IMEX', rol: 'IMEX', **options
+      @cuit, @tipo_agente, @rol = options[:cuit], tipo_agente, rol
+      @wsaa = WSAA.new(options.merge(service: 'wconsdeclaracion'))
+      @client = Client.new(Hash(options[:savon]).reverse_merge(wsdl: WSDL[@wsaa.env]))
     end
 
     def dummy

@@ -1,17 +1,19 @@
 module Afipws
-  class WSFE < WSBase
-    include TypeConversions
-
+  class WSFE
     WSDL = {
       development: 'https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL',
       production: 'https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL',
       test: Root + '/spec/fixtures/wsfe/wsfe.wsdl'
     }.freeze
 
+    include TypeConversions
+
+    attr_reader :wsaa, :cuit
+
     def initialize options = {}
-      super
+      @cuit = options[:cuit]
       @wsaa = WSAA.new options.merge(service: 'wsfe')
-      @client = Client.new Hash(options[:savon]).reverse_merge(wsdl: WSDL[env], convert_request_keys_to: :camelcase)
+      @client = Client.new Hash(options[:savon]).reverse_merge(wsdl: WSDL[@wsaa.env], convert_request_keys_to: :camelcase)
     end
 
     def dummy
