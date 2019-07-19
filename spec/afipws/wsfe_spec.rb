@@ -69,7 +69,12 @@ module Afipws
 
         it 'cuando la moneda no existe' do
           savon.expects(:fe_param_get_cotizacion).with(message: auth.merge(mon_id: 'PES')).returns(fixture('wsfe/fe_param_get_cotizacion/inexistente'))
-          -> { ws.cotizacion('PES') }.should raise_error WSError, /602: Sin Resultados/
+          -> { ws.cotizacion('PES') }.should raise_error { |error|
+            error.should be_a WSError
+            error.message.should match /602: Sin Resultados/
+            error.code?(602).should be true
+            error.code?(603).should be false
+          }
         end
       end
 
