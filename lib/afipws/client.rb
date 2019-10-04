@@ -1,7 +1,8 @@
 module Afipws
   class Client
     def initialize savon_options
-      @client = Savon.client savon_options.reverse_merge(soap_version: 2)
+      @client = Savon.client savon_options.reverse_merge(soap_version: 2, read_timeout: 120, open_timeout: 120)
+      @client
     end
 
 
