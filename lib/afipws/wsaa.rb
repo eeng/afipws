@@ -89,7 +89,7 @@ module Afipws
     end
 
     def restore_ta
-      Marshal.load(File.read(@ta_path)) if File.exist?(@ta_path)
+      Marshal.load(File.read(@ta_path)) if File.exist?(@ta_path) && !File.zero?(@ta_path)
     end
 
     def persist_ta ta
