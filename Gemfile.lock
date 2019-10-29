@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    afipws (1.2.2)
+    afipws (1.2.3)
       activesupport
       builder
       nokogiri
