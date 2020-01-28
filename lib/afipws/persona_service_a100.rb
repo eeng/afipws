@@ -1,28 +1,22 @@
 module Afipws
   class PersonaServiceA100
-    extend Forwardable
-    include TypeConversions
-    attr_reader :wsaa, :client, :env
-    def_delegators :wsaa, :ta, :auth, :cuit
-
     WSDL = {
       development: 'https://awshomo.afip.gov.ar/sr-parametros/webservices/parameterServiceA100?WSDL',
       production: 'https://aws.afip.gov.ar/sr-parametros/webservices/parameterServiceA100?WSDL',
       test: Root + '/spec/fixtures/ws_sr_padron_a100.wsdl'
     }.freeze
 
+    attr_reader :wsaa
+
     def initialize options = {}
-      @env = (options[:env] || :test).to_sym
-      @wsaa = options[:wsaa] || WSAA.new(options.merge(service: 'ws_sr_padron_a100'))
-      savon_options = (options[:savon])? options[:savon].merge(soap_version: 1) : {soap_version: 1}
-      @client = Client.new Hash(savon_options)
-        .reverse_merge(wsdl: WSDL[@env], ssl_version: :TLSv1, convert_request_keys_to: :camelcase)
+      @cuit = options[:cuit]
+      @wsaa = WSAA.new options.merge(service: 'ws_sr_padron_a100')
+      @client = Client.new Hash(options[:savon]).reverse_merge(wsdl: WSDL[@wsaa.env], soap_version: 1)
     end
 
     def dummy
-      @client.dummy[:return]
+      request(:dummy)[:return]
     end
-
 
     def jurisdictions
       get_parameter_collection_by_name 'SUPA.E_PROVINCIA'
@@ -36,22 +30,22 @@ module Afipws
       get_parameter_collection_by_name 'SUPA.E_ORGANISMO_INFORMANTE'
     end
 
-
     private
 
     def get_parameter_collection_by_name type
-      request = {
-          'token' => auth[:auth][:token],
-          'sign' => auth[:auth][:sign],
-          'cuitRepresentada' => auth[:auth][:cuit],
-          'collectionName' => type          
+      message = {
+        token: @wsaa.auth[:token],
+        sign: @wsaa.auth[:sign],
+        cuitRepresentada: @cuit,
+        collectionName: type
       }
-      @client.get_parameter_collection_by_name(request)[:parameter_collection_return][:parameter_collection]
+      request(:get_parameter_collection_by_name, message)[:parameter_collection_return][:parameter_collection]
     end
 
-
-
-    
-
+    def request action, body = nil
+      @client.request(action, body).to_hash[:"#{action}_response"]
+    rescue Savon::SOAPFault => f
+      raise WSError, f.message
+    end
   end
 end

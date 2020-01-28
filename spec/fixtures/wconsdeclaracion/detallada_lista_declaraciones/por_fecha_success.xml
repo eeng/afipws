@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <DetalladaListaDeclaracionesResponse xmlns="Ar.Gob.Afip.Dga.wconsdeclaracion">
+      <DetalladaListaDeclaracionesResult>
+        <ListaErrores>
+          <DetalleError>
+            <Codigo>0</Codigo>
+            <Descripcion>Ejecucion exitosa.
+            </Descripcion><DescripcionAdicional/></DetalleError>
+        </ListaErrores>
+        <Server>10.30.148.83</Server>
+        <TimeStamp>2019-07-15T15:06:04.897196-03:00</TimeStamp>
+        <Declaraciones>
+          <Declaracion>
+            <IdentificadorDeclaracion>19092SIMI000313M</IdentificadorDeclaracion>
+            <CuitImportadorExportador>23076925089</CuitImportadorExportador>
+            <CuitDespachante>20180963295</CuitDespachante>
+            <FechaOficializacionDeclaracion>2019-04-03T12:54:36</FechaOficializacionDeclaracion>
+            <CodigoEstadoDeclaracion>SALI</CodigoEstadoDeclaracion>
+            <FechaEstadoDeclaracion>2019-04-06T13:09:53</FechaEstadoDeclaracion>
+            <CodigoViaTransporte>-</CodigoViaTransporte>
+            <MatriculaMedioTransporte>-</MatriculaMedioTransporte>
+          </Declaracion>
+          <Declaracion>
+            <IdentificadorDeclaracion>19092SIMI000314N</IdentificadorDeclaracion>
+            <CuitImportadorExportador>23076925089</CuitImportadorExportador>
+            <CuitDespachante>20180963295</CuitDespachante>
+            <FechaOficializacionDeclaracion>2019-04-03T13:03:07</FechaOficializacionDeclaracion>
+            <CodigoEstadoDeclaracion>CANC</CodigoEstadoDeclaracion>
+            <FechaEstadoDeclaracion>2019-06-20T02:23:31</FechaEstadoDeclaracion>
+            <CodigoViaTransporte>-</CodigoViaTransporte>
+            <MatriculaMedioTransporte>-</MatriculaMedioTransporte>
+          </Declaracion>
+        </Declaraciones>
+      </DetalladaListaDeclaracionesResult>
+    </DetalladaListaDeclaracionesResponse>
+  </soap:Body>
+</soap:Envelope>

@@ -1,11 +1,11 @@
 module Afipws
   class WSAA
-    attr_reader :key, :cert, :service, :ta, :cuit, :client
+    attr_reader :key, :cert, :service, :ta, :cuit, :client, :env
 
     WSDL = {
       development: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl',
       production: 'https://wsaa.afip.gov.ar/ws/services/LoginCms?wsdl',
-      test: Root + '/spec/fixtures/wsaa.wsdl'
+      test: Root + '/spec/fixtures/wsaa/wsaa.wsdl'
     }
 
     def initialize options = {}
@@ -16,7 +16,7 @@ module Afipws
       @ttl = options[:ttl] || 2400
       @cuit = options[:cuit]
       @client = Client.new Hash(options[:savon]).reverse_merge(wsdl: WSDL[@env])
-      @ta_path = File.join(Dir.pwd, 'afip_cert', "#{@cuit}-#{@env}-#{@service}-ta.dump")
+      @ta_path = options[:ta_path] || File.join(Dir.pwd, 'tmp', "#{@cuit}-#{@env}-#{@service}-ta.dump")
     end
 
     def generar_tra service, ttl
@@ -47,7 +47,7 @@ module Afipws
     end
 
     def login
-      response = @client.raw_request :login_cms, in0: tra(@key, @cert, @service, @ttl)
+      response = @client.request :login_cms, in0: tra(@key, @cert, @service, @ttl)
       ta = Nokogiri::XML(Nokogiri::XML(response.to_xml).text)
       {
         token: ta.css('token').text,
@@ -59,10 +59,9 @@ module Afipws
       raise WSError, f.message
     end
 
-    # Obtiene un TA, lo cachea hasta que expire, y devuelve el hash Auth listo para pasarle al Client en los otros WS
     def auth
       ta = obtener_y_cachear_ta
-      {auth: {token: ta[:token], sign: ta[:sign], cuit: @cuit}}
+      {token: ta[:token], sign: ta[:sign]}
     end
 
     private
@@ -90,7 +89,7 @@ module Afipws
     end
 
     def restore_ta
-      Marshal.load(File.read(@ta_path)) if File.exist?(@ta_path)
+      Marshal.load(File.read(@ta_path)) if File.exist?(@ta_path) && !File.zero?(@ta_path)
     end
 
     def persist_ta ta

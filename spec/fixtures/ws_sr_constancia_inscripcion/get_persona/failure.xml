@@ -1,0 +1,35 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <ns2:getPersonaResponse xmlns:ns2="http://a5.soap.ws.server.puc.sr/">
+      <personaReturn>
+        <datosGenerales>
+          <apellido>ROMA</apellido>
+          <domicilioFiscal>
+            <codPostal>9410</codPostal>
+            <datoAdicional>NO DETERMINADO</datoAdicional>
+            <descripcionProvincia>TIERRA DEL FUEGO</descripcionProvincia>
+            <direccion>ROSAS 456</direccion>
+            <idProvincia>24</idProvincia>
+            <localidad>USHUAIA</localidad>
+            <tipoDatoAdicional>NO DETERMINADO</tipoDatoAdicional>
+            <tipoDomicilio>FISCAL</tipoDomicilio>
+          </domicilioFiscal>
+          <estadoClave>ACTIVO</estadoClave>
+          <idPersona>20123456782</idPersona>
+          <mesCierre>12</mesCierre>
+          <nombre>LUIS GARMENDIA</nombre>
+          <tipoClave>CUIT</tipoClave>
+          <tipoPersona>FISICA</tipoPersona>
+        </datosGenerales>
+        <errorRegimenGeneral>
+          <error>El contribuyente cuenta con impuestos con baja de oficio por Decreto 1299/98</error>
+          <mensaje>No cumple con las condiciones para enviar datos del regimen general</mensaje>
+        </errorRegimenGeneral>
+        <metadata>
+          <fechaHora>2019-01-03T15:41:42.636-03:00</fechaHora>
+          <servidor>aws.afip.gov.ar</servidor>
+        </metadata>
+      </personaReturn>
+    </ns2:getPersonaResponse>
+  </soap:Body>
+</soap:Envelope>

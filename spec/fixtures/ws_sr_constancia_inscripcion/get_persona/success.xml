@@ -1,0 +1,53 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <ns2:getPersonaResponse xmlns:ns2="http://a5.soap.ws.server.puc.sr/">
+      <personaReturn>
+        <datosGenerales>
+          <domicilioFiscal>
+            <codPostal>2300</codPostal>
+            <descripcionProvincia>SANTA FE</descripcionProvincia>
+            <direccion>AV SIEMPRE VIVA 123</direccion>
+            <idProvincia>12</idProvincia>
+            <localidad>NUEVA YORK</localidad>
+            <tipoDomicilio>FISCAL</tipoDomicilio>
+          </domicilioFiscal>
+          <estadoClave>ACTIVO</estadoClave>
+          <fechaContratoSocial>1996-07-31T12:00:00-03:00</fechaContratoSocial>
+          <idPersona>30123456784</idPersona>
+          <mesCierre>6</mesCierre>
+          <razonSocial>LA REGALERIA S A</razonSocial>
+          <tipoClave>CUIT</tipoClave>
+          <tipoPersona>JURIDICA</tipoPersona>
+        </datosGenerales>
+        <datosRegimenGeneral>
+          <actividad>
+            <descripcionActividad>VENTA AL POR MENOR DE INSTRUMENTAL MÉDICO Y ODONTOLÓGICO Y ARTÍCULOS ORTOPÉDICOS</descripcionActividad>
+            <idActividad>477330</idActividad>
+            <nomenclador>883</nomenclador>
+            <orden>2</orden>
+            <periodo>201311</periodo>
+          </actividad>
+          <impuesto>
+            <descripcionImpuesto>GANANCIAS SOCIEDADES</descripcionImpuesto>
+            <idImpuesto>10</idImpuesto>
+            <periodo>199907</periodo>
+          </impuesto>
+          <impuesto>
+            <descripcionImpuesto>IVA</descripcionImpuesto>
+            <idImpuesto>30</idImpuesto>
+            <periodo>198903</periodo>
+          </impuesto>
+          <regimen>
+            <idImpuesto>208</idImpuesto>
+            <idRegimen>159</idRegimen>
+            <periodo>199403</periodo>
+          </regimen>
+        </datosRegimenGeneral>
+        <metadata>
+          <fechaHora>2018-12-18T13:28:41.714-03:00</fechaHora>
+          <servidor>aws.afip.gov.ar</servidor>
+        </metadata>
+      </personaReturn>
+    </ns2:getPersonaResponse>
+  </soap:Body>
+</soap:Envelope>

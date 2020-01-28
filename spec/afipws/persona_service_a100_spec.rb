@@ -1,41 +1,37 @@
 require 'spec_helper'
 
-describe Afipws::PersonaServiceA100 do
-  let(:auth) { {auth: {token: 't', sign: 's', cuit: '12345678912', expiration_time: 12.hours.from_now}} }
-  let(:message) { {token: 't', sign: 's', cuitRepresentada: '12345678912', collectionName: ''} }    
-  let(:ws) { Afipws::PersonaServiceA100.new cuit: '1', wsaa: Afipws::WSAA.new.tap { |wsaa| wsaa.stubs auth: auth } }
+module Afipws
+  describe PersonaServiceA100 do
+    let(:ta) { {token: 't', sign: 's'} }
+    let(:ws) { PersonaServiceA100.new(cuit: '12345678912').tap { |ws| ws.wsaa.stubs auth: ta } }
+    let(:message) { ta.merge cuitRepresentada: '12345678912' }
 
-  context "Métodos de negocio" do
-    it "dummy" do
-      savon.expects(:dummy).returns(fixture('ws_sr_padron_a100/dummy/success'))
-      ws.dummy.should == { appserver: "OK", authserver: "OK", dbserver: "OK" }
+    context 'métodos API' do
+      it 'dummy' do
+        savon.expects(:dummy).returns(fixture('ws_sr_padron_a100/dummy/success'))
+        ws.dummy.should == { appserver: 'OK', authserver: 'OK', dbserver: 'OK' }
+      end
+
+      it 'jurisdictions' do
+        savon.expects(:get_parameter_collection_by_name)
+          .with(message: message.merge(collectionName: 'SUPA.E_PROVINCIA'))
+          .returns(fixture('ws_sr_padron_a100/jurisdictions/success'))
+        ws.jurisdictions.should include name: 'SUPA.E_PROVINCIA'
+      end
+
+      it 'company_types' do
+        savon.expects(:get_parameter_collection_by_name)
+          .with(message: message.merge(collectionName: 'SUPA.TIPO_EMPRESA_JURIDICA'))
+          .returns(fixture('ws_sr_padron_a100/company_types/success'))
+        ws.company_types.should include name: 'SUPA.TIPO_EMPRESA_JURIDICA'
+      end
+
+      it 'public_organisms' do
+        savon.expects(:get_parameter_collection_by_name)
+          .with(message: message.merge(collectionName: 'SUPA.E_ORGANISMO_INFORMANTE'))
+          .returns(fixture('ws_sr_padron_a100/public_organisms/success'))
+        ws.public_organisms.should include name: 'SUPA.E_ORGANISMO_INFORMANTE'
+      end
     end
-
-    it "jurisdictions" do
-      message['collectionName'] = 'SUPA.E_PROVINCIA'
-      savon.expects(:get_parameter_collection_by_name).with(message: message.stringify_keys).returns(fixture('ws_sr_padron_a100/jurisdictions/success'))
-      rta = ws.jurisdictions
-      rta.should have_entries name: 'SUPA.E_PROVINCIA' 
-    end
-
-    it "company_types" do
-      message['collectionName'] = 'SUPA.TIPO_EMPRESA_JURIDICA'
-      savon.expects(:get_parameter_collection_by_name).with(message: message.stringify_keys).returns(fixture('ws_sr_padron_a100/company_types/success'))
-      rta = ws.company_types
-      rta.should have_entries name: 'SUPA.TIPO_EMPRESA_JURIDICA' 
-    end
-
-    it "public_organisms" do
-      message['collectionName'] = 'SUPA.E_ORGANISMO_INFORMANTE'
-      savon.expects(:get_parameter_collection_by_name).with(message: message.stringify_keys).returns(fixture('ws_sr_padron_a100/public_organisms/success'))
-      rta = ws.public_organisms
-      rta.should have_entries name: 'SUPA.E_ORGANISMO_INFORMANTE' 
-    end
-
-
-
-
   end
-
 end
-

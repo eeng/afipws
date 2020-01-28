@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <DetalladaListaDeclaracionesResponse xmlns="Ar.Gob.Afip.Dga.wconsdeclaracion">
+      <DetalladaListaDeclaracionesResult>
+        <ListaErrores>
+          <DetalleError>
+            <Codigo>0</Codigo>
+            <Descripcion>Ejecucion exitosa.
+            </Descripcion><DescripcionAdicional/></DetalleError>
+        </ListaErrores>
+        <Server>10.30.148.106</Server>
+        <TimeStamp>2019-07-15T14:28:10.5546061-03:00</TimeStamp>
+        <Declaraciones>
+          <Declaracion>
+            <IdentificadorDeclaracion>19093SIMI000434X</IdentificadorDeclaracion>
+            <CuitImportadorExportador>23076925089</CuitImportadorExportador>
+            <CuitDespachante>20180963295</CuitDespachante>
+            <FechaOficializacionDeclaracion>2019-05-17T19:44:34</FechaOficializacionDeclaracion>
+            <CodigoEstadoDeclaracion>SALI</CodigoEstadoDeclaracion>
+            <FechaEstadoDeclaracion>2019-05-18T03:18:02</FechaEstadoDeclaracion>
+            <CodigoViaTransporte>-</CodigoViaTransporte>
+            <MatriculaMedioTransporte>-</MatriculaMedioTransporte>
+          </Declaracion>
+        </Declaraciones>
+      </DetalladaListaDeclaracionesResult>
+    </DetalladaListaDeclaracionesResponse>
+  </soap:Body>
+</soap:Envelope>

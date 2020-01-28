@@ -1,0 +1,11 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <ns2:dummyResponse xmlns:ns2="http://a5.soap.ws.server.puc.sr/">
+      <return>
+        <appserver>OK</appserver>
+        <authserver>OK</authserver>
+        <dbserver>OK</dbserver>
+      </return>
+    </ns2:dummyResponse>
+  </soap:Body>
+</soap:Envelope>
