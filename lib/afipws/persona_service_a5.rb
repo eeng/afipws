@@ -21,7 +21,7 @@ module Afipws
 
     def get_persona id
       message = @wsaa.auth.merge(cuitRepresentada: @cuit, idPersona: id)
-      request(:get_persona, message)[:persona_return][:datos_generales]
+      request(:get_persona, message)[:persona_return]
     end
 
     private
