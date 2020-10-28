@@ -24,14 +24,14 @@ end
 
 class HasXPath
   include RSpec::Matchers
-  
+
   def initialize(paths)
     @paths = paths
   end
-  
+
   def verify! xml
     @actual_xml = xml
-    @paths.each do |(path, value)| 
+    @paths.each do |(path, value)|
       @expected_xpath, @expected_value = path, value
       @actual_xml.should match_xpath @expected_xpath, @expected_value
     end
