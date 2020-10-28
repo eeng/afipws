@@ -55,8 +55,6 @@ module Afipws
         generation_time: from_xsd_datetime(ta.css('generationTime').text),
         expiration_time: from_xsd_datetime(ta.css('expirationTime').text)
       }
-    rescue Savon::SOAPFault => f
-      raise WSError, f.message
     end
 
     def auth

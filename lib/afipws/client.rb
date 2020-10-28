@@ -6,6 +6,8 @@ module Afipws
 
     def request action, body = nil
       @client.call action, message: body
+    rescue Savon::SOAPFault => e
+      raise ServerError, e.message
     end
 
     def operations

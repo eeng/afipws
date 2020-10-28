@@ -70,7 +70,7 @@ module Afipws
         it 'cuando la moneda no existe' do
           savon.expects(:fe_param_get_cotizacion).with(message: auth.merge(mon_id: 'PES')).returns(fixture('wsfe/fe_param_get_cotizacion/inexistente'))
           -> { ws.cotizacion('PES') }.should raise_error { |error|
-            error.should be_a WSError
+            error.should be_a ResponseError
             error.message.should match /602: Sin Resultados/
             error.code?(602).should be true
             error.code?(603).should be false
@@ -195,9 +195,9 @@ module Afipws
           ws.solicitar_caea.should include caea: '21043476341977', fch_vig_desde: Date.new(2011, 0o2, 0o1)
         end
 
-        it 'cuando hay otro error debería burbujearlo' do
+        it 'cuando encapsular errores' do
           savon.expects(:fecaea_solicitar).with(message: :any).returns(fixture('wsfe/fecaea_solicitar/error_distinto'))
-          -> { ws.solicitar_caea }.should raise_error WSError, /15007/
+          -> { ws.solicitar_caea }.should raise_error ResponseError, /15007/
         end
       end
 
@@ -287,7 +287,7 @@ module Afipws
       it 'cuando hay un error' do
         savon.expects(:fe_param_get_tipos_cbte).with(message: :any).returns(fixture('wsfe/fe_param_get_tipos_cbte/failure_1_error'))
         -> { ws.tipos_comprobantes }.should raise_error { |e|
-          e.should be_a WSError
+          e.should be_a ResponseError
           e.errors.should == [{ code: '600', msg: 'No se corresponden token con firma' }]
           e.message.should == '600: No se corresponden token con firma'
         }
@@ -296,8 +296,11 @@ module Afipws
       it 'cuando hay varios errores' do
         savon.expects(:fe_param_get_tipos_cbte).with(message: :any).returns(fixture('wsfe/fe_param_get_tipos_cbte/failure_2_errors'))
         -> { ws.tipos_comprobantes }.should raise_error { |e|
-          e.should be_a WSError
-          e.errors.should == [{ code: '600', msg: 'No se corresponden token con firma' }, { code: '601', msg: 'CUIT representada no incluida en token' }]
+          e.should be_a ResponseError
+          e.errors.should == [
+            { code: '600', msg: 'No se corresponden token con firma' },
+            { code: '601', msg: 'CUIT representada no incluida en token' }
+          ]
           e.message.should == '600: No se corresponden token con firma; 601: CUIT representada no incluida en token'
         }
       end

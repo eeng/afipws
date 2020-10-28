@@ -40,12 +40,10 @@ module Afipws
     def request action, body = nil
       response = @client.request(action, body).to_hash[:"#{action}_response"][:"#{action}_result"]
       if response[:lista_errores] && response[:lista_errores][:detalle_error][:codigo] != '0'
-        raise WSError, Array.wrap(response[:lista_errores][:detalle_error]).map { |e| {code: e[:codigo], msg: e[:descripcion]} }
+        raise ResponseError, Array.wrap(response[:lista_errores][:detalle_error]).map { |e| {code: e[:codigo], msg: e[:descripcion]} }
       else
         response
       end
-    rescue Savon::SOAPFault => f
-      raise WSError, f.message
     end
 
     def auth

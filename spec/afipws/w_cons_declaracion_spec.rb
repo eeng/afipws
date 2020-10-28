@@ -55,7 +55,7 @@ module Afipws
           savon.expects(:detallada_lista_declaraciones).with(message: :any)
             .returns(fixture('wconsdeclaracion/detallada_lista_declaraciones/por_id_inexistente'))
           -> { ws.detallada_lista_declaraciones identificador_declaracion: '...' }
-            .should raise_error WSError, '21248: Declaracion 19093SIMI000434. inexistente o invalida'
+            .should raise_error ResponseError, '21248: Declaracion 19093SIMI000434. inexistente o invalida'
         end
       end
 

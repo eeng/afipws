@@ -51,7 +51,7 @@ module Afipws
         savon.expects(:get_persona)
           .with(message: message.merge(id_persona: '123'))
           .returns(fixture('ws_sr_constancia_inscripcion/get_persona/fault'))
-        -> { ws.get_persona '123' }.should raise_error WSError, /No existe persona con ese Id/
+        -> { ws.get_persona '123' }.should raise_error ServerError, /No existe persona con ese Id/
       end
     end
 

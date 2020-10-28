@@ -92,8 +92,8 @@ module Afipws
 
     def solicitar_caea
       convertir_rta_caea request(:fecaea_solicitar, auth.merge(periodo_para_solicitud_caea))
-    rescue Afipws::WSError => e
-      if e.errors.any? { |e| e[:code] == '15008' }
+    rescue Afipws::ResponseError => e
+      if e.code? 15008
         consultar_caea fecha_inicio_quincena_siguiente
       else
         raise
@@ -163,7 +163,7 @@ module Afipws
     def request action, body = nil
       response = @client.request(action, body).to_hash[:"#{action}_response"][:"#{action}_result"]
       if response[:errors]
-        raise WSError, Array.wrap(response[:errors][:err])
+        raise ResponseError, Array.wrap(response[:errors][:err])
       else
         response
       end

@@ -10,14 +10,4 @@ describe Hash do
       hash.select_keys(5, 3).should == {3 => 4}
     end
   end
-
-  context 'has_entries?' do
-    subject { Hash[1, 2, 3, 4] }
-
-    it 'debería devolver true cuando self incluye todas las entries del hash parametro' do
-      should include 1 => 2
-      should include 3 => 4, 1 => 2
-      should_not include 1 => 3
-    end
-  end
 end

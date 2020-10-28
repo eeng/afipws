@@ -44,8 +44,6 @@ module Afipws
 
     def request action, body = nil
       @client.request(action, body).to_hash[:"#{action}_response"]
-    rescue Savon::SOAPFault => f
-      raise WSError, f.message
     end
   end
 end

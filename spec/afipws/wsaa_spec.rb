@@ -39,12 +39,6 @@ module Afipws
         ta[:generation_time].should == Time.new(2011, 1, 12, 18, 57, 4, '-03:00')
         ta[:expiration_time].should == Time.new(2011, 1, 13, 6, 57, 4, '-03:00')
       end
-
-      it 'debería encapsular SOAP Faults' do
-        subject.stubs(:tra).returns('')
-        savon.expects(:login_cms).with(message: :any).returns(fixture('wsaa/login_cms/fault'))
-        -> { subject.login }.should raise_error WSError, /CMS no es valido/
-      end
     end
 
     context 'auth' do
