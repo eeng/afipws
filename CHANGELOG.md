@@ -13,4 +13,4 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Changed
 
-- Rename Afipws::WSError to Afipws::Error, and create subclasses to distinguish between different types of errors.
+- Rename `Afipws::WSError` to `Afipws::Error`, and create subclasses to distinguish between different types of errors.
