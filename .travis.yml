@@ -2,4 +2,4 @@
 sudo: false
 language: ruby
 cache: bundler
-before_install: gem install bundler -v 1.16.2
+before_install: gem install bundler -v 2.1.4
