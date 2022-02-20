@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rubocop', '~> 0.80.0'
   s.add_development_dependency 'pry'
   s.add_dependency "builder"
-  s.add_dependency "savon", '~> 2.11.0'
+  s.add_dependency "savon", '~> 2.12.0'
   s.add_dependency "httpclient"
   s.add_dependency "nokogiri"
   s.add_dependency "activesupport"
