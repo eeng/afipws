@@ -2,7 +2,7 @@
 
 Ruby client para los web services de la AFIP.
 
-[![Build Status](https://travis-ci.org/eeng/afipws.svg?branch=master)](https://travis-ci.org/eeng/afipws)
+[![Build Status](https://app.travis-ci.com/eeng/afipws.svg?branch=master)](https://app.travis-ci.com/eeng/afipws)
 
 ## Servicios Disponibles
 
