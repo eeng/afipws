@@ -46,9 +46,6 @@ Style/Next:
 Style/NumericPredicate:
   Enabled: false
 
-Style/NumericLiterals:
-  Enabled: false
-
 Style/SymbolArray:
   Enabled: false
 
@@ -58,19 +55,31 @@ Style/MutableConstant:
 Style/RescueModifier:
   Enabled: false
 
+Style/HashEachMethods:
+  Enabled: false
+
+Style/HashTransformKeys:
+  Enabled: false
+
+Style/HashTransformValues:
+  Enabled: false
+
+Layout/LineLength:
+  Max: 120
+
 Layout/SpaceInsideHashLiteralBraces:
   Enabled: false
 
 Layout/MultilineMethodCallIndentation:
   Enabled: false
 
-Layout/TrailingBlankLines:
+Layout/TrailingEmptyLines:
   Enabled: false
 
-Layout/IndentArray:
+Layout/FirstArrayElementIndentation:
   EnforcedStyle: consistent
 
-Layout/AlignParameters:
+Layout/ParameterAlignment:
   EnforcedStyle: with_fixed_indentation
 
 Layout/SpaceInLambdaLiteral:
@@ -81,10 +90,6 @@ Metrics:
 
 Bundler:
   Enabled: false
-
-Lint/Void:
-  Exclude:
-    - spec/**/*.rb
 
 Lint/AssignmentInCondition:
   Enabled: false
@@ -101,5 +106,5 @@ Lint/AmbiguousOperator:
 Lint/AmbiguousBlockAssociation:
   Enabled: false
 
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   Enabled: false
