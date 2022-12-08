@@ -61,7 +61,7 @@ GEM
     mocha (0.9.10)
       rake
     nenv (0.3.0)
-    nokogiri (1.13.9)
+    nokogiri (1.13.10)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     nori (2.6.0)
@@ -75,7 +75,7 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     public_suffix (4.0.6)
-    racc (1.6.0)
+    racc (1.6.1)
     rack (2.2.3.1)
     rainbow (3.1.1)
     rake (13.0.1)
