@@ -8,6 +8,8 @@ module Afipws
       @savon.call action, message: body
     rescue Savon::SOAPFault => e
       raise ServerError, e
+    rescue HTTPClient::ConnectTimeoutError => e
+      raise NetworkError.new(e, retriable: true)
     rescue HTTPClient::TimeoutError => e
       raise NetworkError, e
     end

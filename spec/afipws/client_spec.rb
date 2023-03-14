@@ -10,10 +10,24 @@ module Afipws
         -> { subject.request :fe_dummy }.should raise_error ServerError, /CMS no es valido/
       end
 
-      it 'HTTPClient::TimeoutError se encapsulan en NetworkError' do
+      it 'HTTPClient::TimeoutError se encapsulan en NetworkError y no es retriable' do
         # Hack to mock exceptions on Savon
         subject.instance_eval('@savon').expects(:call).raises(HTTPClient::ReceiveTimeoutError, 'execution expired')
-        -> { subject.request :fe_dummy }.should raise_error NetworkError, /execution expired/
+        -> { subject.request :fe_dummy }.should raise_error { |error|
+          error.should be_a NetworkError
+          error.message.should match /execution expired/
+          error.retriable?.should be false
+        }
+      end
+
+      it 'HTTPClient::ConnectTimeoutError se encapsulan en NetworkError y es retriable' do
+        # Hack to mock exceptions on Savon
+        subject.instance_eval('@savon').expects(:call).raises(HTTPClient::ConnectTimeoutError, 'execution expired')
+        -> { subject.request :fe_dummy }.should raise_error { |error|
+          error.should be_a NetworkError
+          error.message.should match /execution expired/
+          error.retriable?.should be true
+        }
       end
     end
   end
