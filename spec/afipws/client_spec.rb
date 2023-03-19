@@ -11,8 +11,7 @@ module Afipws
       end
 
       it 'HTTPClient::TimeoutError se encapsulan en NetworkError y no es retriable' do
-        # Hack to mock exceptions on Savon
-        subject.instance_eval('@savon').expects(:call).raises(HTTPClient::ReceiveTimeoutError, 'execution expired')
+        expect_savon_to_raise HTTPClient::ReceiveTimeoutError, 'execution expired'
         -> { subject.request :fe_dummy }.should raise_error { |error|
           error.should be_a NetworkError
           error.message.should match /execution expired/
@@ -21,13 +20,17 @@ module Afipws
       end
 
       it 'HTTPClient::ConnectTimeoutError se encapsulan en NetworkError y es retriable' do
-        # Hack to mock exceptions on Savon
-        subject.instance_eval('@savon').expects(:call).raises(HTTPClient::ConnectTimeoutError, 'execution expired')
+        expect_savon_to_raise HTTPClient::ConnectTimeoutError, 'execution expired'
         -> { subject.request :fe_dummy }.should raise_error { |error|
           error.should be_a NetworkError
           error.message.should match /execution expired/
           error.retriable?.should be true
         }
+      end
+
+      def expect_savon_to_raise error_class, message
+        # Hack to mock exceptions on Savon
+        subject.instance_eval('@savon', __FILE__, __LINE__).expects(:call).raises(error_class, message)
       end
     end
   end
