@@ -2,12 +2,17 @@ require 'spec_helper'
 
 module Afipws
   describe Client do
-    context 'manejo de errores' do
+    context 'errores' do
       subject { Client.new(wsdl: Afipws::WSFE::WSDL[:test]) }
 
       it 'Savon::SOAPFault se encapsulan en ServerError' do
         savon.expects(:fe_dummy).returns(fixture('wsaa/login_cms/fault'))
         -> { subject.request :fe_dummy }.should raise_error ServerError, /CMS no es valido/
+      end
+
+      it 'Savon::HTTPError se encapsulan en ServerError' do
+        expect_savon_to_raise Savon::HTTPError, stub(code: 503, body: 'Service Unavailable')
+        -> { subject.request :fe_dummy }.should raise_error ServerError, /Service Unavailable/
       end
 
       it 'HTTPClient::TimeoutError se encapsulan en NetworkError y no es retriable' do
