@@ -2,17 +2,17 @@
 
 Ruby client para los web services de la AFIP.
 
-[![Build Status](https://app.travis-ci.com/eeng/afipws.svg?branch=master)](https://app.travis-ci.com/eeng/afipws)
+[![Build Status](https://github.com/eeng/afipws/actions/workflows/ci.yml/badge.svg)](https://github.com/eeng/afipws/actions/workflows/ci.yml)
 
 ## Servicios Disponibles
 
-* wsaa (WSAA)
-* wsfe (WSFE)
-* ws_sr_constancia_inscripcion (WSConstanciaInscripcion)
-* ws_sr_padron_a100 (PersonaServiceA100)
-* ws_sr_padron_a4 (PersonaServiceA4)
-* ws_sr_padron_a5 (PersonaServiceA5)
-* wconsdeclaracion (WConsDeclaracion)
+- wsaa (WSAA)
+- wsfe (WSFE)
+- ws_sr_constancia_inscripcion (WSConstanciaInscripcion)
+- ws_sr_padron_a100 (PersonaServiceA100)
+- ws_sr_padron_a4 (PersonaServiceA4)
+- ws_sr_padron_a5 (PersonaServiceA5)
+- wconsdeclaracion (WConsDeclaracion)
 
 ## Uso
 
