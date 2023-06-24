@@ -70,7 +70,7 @@ module Afipws
         'FeCAEReq' => {
           'FeCabReq' => opciones.select_keys(:cbte_tipo, :pto_vta).merge(cant_reg: comprobantes.size),
           'FeDetReq' => {
-            'FECAEDetRequest' => comprobantes.map { |comprobante| comprobante_to_request comprobante }
+            'FECAEDetRequest' => comprobantes.map { |comprobante| comprobante_to_request(comprobante, opciones) }
           }
         }
       }
@@ -83,11 +83,14 @@ module Afipws
       x2r r, cae_fch_vto: :date, fch_serv_desde: :date, fch_serv_hasta: :date, fch_vto_pago: :date, cbte_nro: :integer, code: :integer
     end
 
-    def comprobante_to_request comprobante
+    def comprobante_to_request(comprobante, opciones)
       nro = comprobante.delete :cbte_nro
       iva = comprobante.delete :imp_iva
       comprobante.delete :tributos if comprobante[:imp_trib] == 0
-      comprobante.merge cbte_desde: nro, cbte_hasta: nro, 'ImpIVA' => iva
+      comprobante.merge! cbte_desde: nro, cbte_hasta: nro, 'ImpIVA' => iva
+      comprobante.merge! periodo_asoc: opciones[:periodo_asoc] if opciones[:periodo_asoc]
+
+      comprobante
     end
 
     def solicitar_caea
