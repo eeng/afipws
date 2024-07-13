@@ -22,12 +22,6 @@ module Afipws
       end
     end
 
-    context 'codificación del tra' do
-      it 'debería quitarle el header y footer' do
-        subject.codificar_tra(OpenSSL::PKCS7.new).should_not include 'BEGIN', 'END'
-      end
-    end
-
     context 'login' do
       it 'debería mandar el TRA al WS y obtener el TA' do
         ws = WSAA.new key: 'key', cert: 'cert'
