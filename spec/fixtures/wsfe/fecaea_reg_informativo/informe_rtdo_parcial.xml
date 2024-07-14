@@ -3,7 +3,7 @@
       <FECAEARegInformativoResponse xmlns="http://ar.gov.afip.dif.FEV1/">
          <FECAEARegInformativoResult>
             <FeCabResp>
-               <Cuit>20300032673</Cuit>
+               <Cuit>20123456783</Cuit>
                <PtoVta>3</PtoVta>
                <CbteTipo>1</CbteTipo>
                <FchProceso>20110127</FchProceso>

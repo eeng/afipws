@@ -2,7 +2,7 @@
 &lt;loginTicketResponse version=&quot;1&quot;&gt;
     &lt;header&gt;
         &lt;source&gt;CN=wsaahomo, O=AFIP, C=AR, SERIALNUMBER=CUIT 33693450239&lt;/source&gt;
-        &lt;destination&gt;C=ar, O=nicolau emmanuel, SERIALNUMBER=CUIT 20300032673, CN=vitolendev&lt;/destination&gt;
+        &lt;destination&gt;C=ar, O=john doe, SERIALNUMBER=CUIT 20123456783, CN=acme&lt;/destination&gt;
         &lt;uniqueId&gt;1318562072&lt;/uniqueId&gt;
         &lt;generationTime&gt;2011-01-12T18:57:04.0-03:00&lt;/generationTime&gt;
         &lt;expirationTime&gt;2011-01-13T06:57:04.0-03:00&lt;/expirationTime&gt;
