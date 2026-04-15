@@ -1,0 +1,11 @@
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <FEXGetLastCmpResponse xmlns="http://ar.gov.afip.dif.fexv1/">
+      <FEXGetLastCmpResult>
+        <FEXResultLast_CMP>
+          <Cbte_nro>20</Cbte_nro>
+        </FEXResultLast_CMP>
+      </FEXGetLastCmpResult>
+    </FEXGetLastCmpResponse>
+  </soap:Body>
+</soap:Envelope>

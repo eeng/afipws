@@ -1,0 +1,19 @@
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <FEXAuthorizeResponse xmlns="http://ar.gov.afip.dif.fexv1/">
+      <FEXAuthorizeResult>
+        <FEXResultAuth>
+          <Resultado>R</Resultado>
+          <Cbte_nro>45</Cbte_nro>
+          <Motivos_Obs>Observacion</Motivos_Obs>
+        </FEXResultAuth>
+        <FEXEvents>
+          <Evt>
+            <EventCode>2001</EventCode>
+            <EventMsg>Evento programado</EventMsg>
+          </Evt>
+        </FEXEvents>
+      </FEXAuthorizeResult>
+    </FEXAuthorizeResponse>
+  </soap:Body>
+</soap:Envelope>
