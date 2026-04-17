@@ -9,8 +9,8 @@ module Afipws
       it 'ultimo_comprobante_autorizado' do
         savon.expects(:fex_get_last_cmp).with(message: has_path(
           '//Auth/Token' => 't',
-          '//PtoVta' => 3,
-          '//CbteTipo' => 19
+          '//Auth/Pto_venta' => 3,
+          '//Auth/Cbte_Tipo' => 19
         )).returns(fixture('wsfex/fex_get_last_cmp/success'))
 
         ws.ultimo_comprobante_autorizado(pto_vta: 3, cbte_tipo: 19).should == {
@@ -46,6 +46,7 @@ module Afipws
           pto_vta: 3,
           cbte_tipo: 19,
           comprobantes: [{
+            id: 44,
             cbte_nro: 44,
             fecha_cbte: Date.new(2026, 4, 14),
             tipo_expo: 2,
@@ -81,6 +82,7 @@ module Afipws
           cbte_tipo: 19,
           pto_vta: 3,
           comprobantes: [{
+            id: 45,
             cbte_nro: 45,
             cbte_fch: Date.new(2026, 4, 14),
             tipo_expo: 2,
@@ -116,6 +118,7 @@ module Afipws
           cbte_tipo: 19,
           pto_vta: 3,
           comprobantes: [{
+            id: 46,
             cbte_nro: 46,
             fecha_cbte: Date.new(2026, 4, 14),
             tipo_expo: 2,

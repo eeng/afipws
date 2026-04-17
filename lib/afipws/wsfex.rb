@@ -5,8 +5,8 @@ module Afipws
     attr_reader :wsaa, :cuit
 
     WSDL = {
-      development: 'https://webserviceshomoext.afip.gob.ar/Fiscalizacion/wsfex/Service.asmx?WSDL',
-      production: 'https://servicios1.afip.gob.ar/wsfexv1/service.asmx?WSDL',
+      development: 'https://wswhomo.afip.gov.ar/wsfexv1/service.asmx?WSDL',
+      production: 'https://servicios1.afip.gov.ar/wsfexv1/service.asmx?WSDL',
       test: Root + '/spec/fixtures/wsfex/wsfex.wsdl'
     }.freeze
 
@@ -23,7 +23,8 @@ module Afipws
     end
 
     def ultimo_comprobante_autorizado opciones
-      response = request(:fex_get_last_cmp, { 'Auth' => auth, 'PtoVta' => opciones[:pto_vta], 'CbteTipo' => opciones[:cbte_tipo] })
+      auth_block = auth.merge('Pto_venta' => opciones[:pto_vta], 'Cbte_Tipo' => opciones[:cbte_tipo])
+      response = request(:fex_get_last_cmp, { 'Auth' => auth_block })
       x2r(response[:fex_result_last_cmp] || {}, cbte_nro: :integer, cbte_fecha: :date)
     end
 
@@ -65,7 +66,6 @@ module Afipws
 
     def normalize_comprobante comprobante, opciones
       comprobante.deep_dup.tap do |payload|
-        payload[:id] ||= payload[:cbte_nro]
         payload[:cbte_tipo] ||= opciones[:cbte_tipo]
         payload[:punto_vta] ||= opciones[:pto_vta]
         payload[:fecha_cbte] ||= payload.delete(:cbte_fch)
