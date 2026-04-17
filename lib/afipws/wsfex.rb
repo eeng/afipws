@@ -11,7 +11,7 @@ module Afipws
     }.freeze
 
     REQUIRED_COMPROBANTE_FIELDS = %i[
-      id cbte_tipo punto_vta cbte_nro tipo_expo permiso_existente dst_cmp cliente
+      id cbte_tipo punto_vta cbte_nro tipo_expo dst_cmp cliente
       domicilio_cliente moneda_id imp_total idioma_cbte items
     ].freeze
     REQUIRED_ITEM_FIELDS = %i[pro_ds pro_umed pro_total_item].freeze
@@ -105,8 +105,8 @@ module Afipws
       payload['Incoterms_Ds'] = comprobante[:incoterms_ds]
       payload['Idioma_cbte'] = comprobante[:idioma_cbte]
       payload['Items'] = request_collection(comprobante[:items], 'Item') if comprobante[:items].present?
-      payload['Fecha_pago'] = comprobante[:fecha_pago]
       payload['Opcionales'] = request_collection(comprobante[:opcionales], 'Opcional') if comprobante[:opcionales].present?
+      payload['Fecha_pago'] = comprobante[:fecha_pago]
       payload['Actividades'] = request_collection(comprobante[:actividades], 'Actividad') if comprobante[:actividades].present?
       payload.compact
     end
@@ -137,15 +137,168 @@ module Afipws
       raise ArgumentError, "faltan campos obligatorios para WSFEX: #{missing_fields.join(', ')}" if missing_fields.present?
       raise ArgumentError, 'WSFEX requiere cuit_pais_cliente o id_impositivo' if comprobante[:cuit_pais_cliente].blank? && comprobante[:id_impositivo].blank?
 
-      items = Array.wrap(comprobante.dig(:items, :item))
+      validate_permiso_rules!(comprobante)
+      validate_currency_rules!(comprobante)
+      validate_payment_rules!(comprobante)
+      validate_associated_vouchers!(comprobante)
+      validate_items!(Array.wrap(comprobante.dig(:items, :item)))
+    end
+
+    def validate_permiso_rules!(comprobante)
+      cbte_tipo = comprobante[:cbte_tipo].to_i
+      tipo_expo = comprobante[:tipo_expo].to_i
+      permiso_existente = comprobante[:permiso_existente]
+      permisos = Array.wrap(comprobante.dig(:permisos, :permiso))
+
+      if permiso_existente.present? && !%w[S N].include?(permiso_existente)
+        raise ArgumentError, 'WSFEX requiere que permiso_existente sea S, N o vacío'
+      end
+
+      if [2, 4].include?(tipo_expo)
+        raise ArgumentError, 'WSFEX requiere permiso_existente vacío para tipo_expo 2 o 4' if permiso_existente.present?
+        raise ArgumentError, 'WSFEX no permite permisos para tipo_expo 2 o 4' if permisos.present?
+        return
+      end
+
+      if cbte_tipo == 19
+        raise ArgumentError, 'WSFEX requiere permiso_existente para cbte_tipo 19 y tipo_expo 1' if permiso_existente.blank?
+        raise ArgumentError, 'WSFEX requiere permisos cuando permiso_existente es S' if permiso_existente == 'S' && permisos.blank?
+        raise ArgumentError, 'WSFEX no permite permisos cuando permiso_existente es N' if permiso_existente == 'N' && permisos.present?
+      else
+        raise ArgumentError, 'WSFEX requiere permiso_existente vacío para cbte_tipo 20 o 21' if permiso_existente.present?
+      end
+
+      permisos.each_with_index do |permiso, index|
+        if permiso[:id_permiso].blank? || permiso[:dst_merc].blank?
+          raise ArgumentError, "WSFEX requiere id_permiso y dst_merc en permiso #{index + 1}"
+        end
+      end
+    end
+
+    def validate_currency_rules! comprobante
+      cbte_tipo = comprobante[:cbte_tipo].to_i
+      moneda_id = comprobante[:moneda_id].to_s
+      moneda_ctz = comprobante[:moneda_ctz]
+      can_mis_mon_ext = comprobante[:can_mis_mon_ext]
+
+      if can_mis_mon_ext.present? && !%w[S N].include?(can_mis_mon_ext)
+        raise ArgumentError, 'WSFEX requiere que can_mis_mon_ext sea S o N'
+      end
+
+      if can_mis_mon_ext.present? && (moneda_id == 'PES' || [20, 21].include?(cbte_tipo))
+        raise ArgumentError, 'WSFEX no permite can_mis_mon_ext para moneda PES o cbte_tipo 20/21'
+      end
+
+      numeric_moneda_ctz = numeric_value(moneda_ctz)
+      if can_mis_mon_ext != 'S'
+        raise ArgumentError, 'WSFEX requiere moneda_ctz si can_mis_mon_ext no es S' if moneda_ctz.blank?
+      end
+
+      if moneda_ctz.present? && (numeric_moneda_ctz.nil? || numeric_moneda_ctz <= 0)
+        raise ArgumentError, 'WSFEX requiere que moneda_ctz sea mayor a 0'
+      end
+
+      if moneda_id == 'PES' && moneda_ctz.present? && numeric_moneda_ctz != 1.0
+        raise ArgumentError, 'WSFEX requiere moneda_ctz igual a 1 cuando moneda_id es PES'
+      end
+    end
+
+    def validate_payment_rules! comprobante
+      cbte_tipo = comprobante[:cbte_tipo].to_i
+      tipo_expo = comprobante[:tipo_expo].to_i
+      fecha_pago = comprobante[:fecha_pago]
+
+      raise ArgumentError, 'WSFEX requiere forma_pago para cbte_tipo 19' if cbte_tipo == 19 && comprobante[:forma_pago].blank?
+      if cbte_tipo == 19 && tipo_expo == 1 && comprobante[:incoterms].blank?
+        raise ArgumentError, 'WSFEX requiere incoterms para cbte_tipo 19 y tipo_expo 1'
+      end
+      if comprobante[:incoterms_ds].present? && comprobante[:incoterms].blank?
+        raise ArgumentError, 'WSFEX requiere incoterms cuando se informa incoterms_ds'
+      end
+
+      if fecha_pago.present? && parse_ws_date(fecha_pago).nil?
+        raise ArgumentError, 'WSFEX requiere que fecha_pago tenga formato YYYYMMDD o sea Date'
+      end
+
+      if cbte_tipo == 19 && [2, 4].include?(tipo_expo)
+        raise ArgumentError, 'WSFEX requiere fecha_pago para cbte_tipo 19 y tipo_expo 2 o 4' if fecha_pago.blank?
+
+        fecha_cbte = parse_ws_date(comprobante[:fecha_cbte])
+        fecha_pago_value = parse_ws_date(fecha_pago)
+        if fecha_cbte.present? && fecha_pago_value.present? && fecha_pago_value < fecha_cbte
+          raise ArgumentError, 'WSFEX requiere que fecha_pago sea igual o posterior a fecha_cbte'
+        end
+      elsif cbte_tipo != 19 && fecha_pago.present?
+        raise ArgumentError, 'WSFEX no permite fecha_pago cuando cbte_tipo no es 19'
+      end
+    end
+
+    def validate_associated_vouchers! comprobante
+      cbte_tipo = comprobante[:cbte_tipo].to_i
+      tipo_expo = comprobante[:tipo_expo].to_i
+      cmps_asoc = Array.wrap(comprobante.dig(:cmps_asoc, :cmp_asoc))
+
+      if [20, 21].include?(cbte_tipo) && tipo_expo == 2 && cmps_asoc.blank?
+        raise ArgumentError, 'WSFEX requiere cmps_asoc para notas de servicio'
+      end
+
+      return if cmps_asoc.blank?
+
+      if cbte_tipo == 19
+        allowed_remitos = [88, 89, 91, 993, 994]
+        if cmps_asoc.any? { |cmp_asoc| !allowed_remitos.include?(cmp_asoc[:cbte_tipo].to_i) }
+          raise ArgumentError, 'WSFEX solo permite remitos de tabaco como cmps_asoc para cbte_tipo 19'
+        end
+      elsif ![20, 21].include?(cbte_tipo)
+        raise ArgumentError, 'WSFEX solo permite cmps_asoc para cbte_tipo 19, 20 o 21'
+      end
+
+      remitos_sin_tope = [88, 89, 91, 993, 994]
+      if cmps_asoc.size > 1 && cmps_asoc.any? { |cmp_asoc| !remitos_sin_tope.include?(cmp_asoc[:cbte_tipo].to_i) }
+        raise ArgumentError, 'WSFEX solo permite más de un cmps_asoc cuando todos son remitos tipo 88, 89, 91, 993 o 994'
+      end
+    end
+
+    def validate_items! items
       raise ArgumentError, 'WSFEX requiere al menos un item' if items.blank?
+      raise ArgumentError, 'WSFEX permite hasta 9999 items' if items.size > 9999
 
       items.each_with_index do |item, index|
         missing_item_fields = REQUIRED_ITEM_FIELDS.select { |field| item[field].blank? }
-        next if missing_item_fields.blank?
+        if missing_item_fields.present?
+          raise ArgumentError, "faltan campos obligatorios para WSFEX en item #{index + 1}: #{missing_item_fields.join(', ')}"
+        end
 
-        raise ArgumentError, "faltan campos obligatorios para WSFEX en item #{index + 1}: #{missing_item_fields.join(', ')}"
+        pro_umed = item[:pro_umed].to_i
+        if ![0, 97, 99].include?(pro_umed)
+          raise ArgumentError, "WSFEX requiere pro_qty en item #{index + 1}" if item[:pro_qty].blank?
+          raise ArgumentError, "WSFEX requiere pro_precio_uni en item #{index + 1}" if item[:pro_precio_uni].blank?
+        else
+          %i[pro_qty pro_precio_uni pro_bonificacion].each do |field|
+            next if item[field].blank?
+
+            value = numeric_value(item[field])
+            if value.nil? || value != 0
+              raise ArgumentError, "WSFEX requiere #{field} igual a 0 o no informado cuando pro_umed es 0, 97 o 99 en item #{index + 1}"
+            end
+          end
+        end
       end
+    end
+
+    def parse_ws_date value
+      return value if value.is_a?(Date)
+      return nil if value.blank?
+
+      Date.strptime(value.to_s, '%Y%m%d')
+    rescue ArgumentError
+      nil
+    end
+
+    def numeric_value value
+      Float(value)
+    rescue ArgumentError, TypeError
+      nil
     end
 
     def observaciones result, errores
