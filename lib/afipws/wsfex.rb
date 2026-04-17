@@ -7,7 +7,7 @@ module Afipws
     }.freeze
 
     REQUIRED_COMPROBANTE_FIELDS = %i[
-      id cbte_tipo punto_vta cbte_nro tipo_expo permiso_existente dst_cmp cliente
+      id fecha_cbte cbte_tipo punto_vta cbte_nro tipo_expo permiso_existente dst_cmp cliente
       domicilio_cliente moneda_id moneda_ctz imp_total idioma_cbte items
     ].freeze
     REQUIRED_ITEM_FIELDS = %i[pro_ds pro_umed pro_total_item].freeze
@@ -30,15 +30,16 @@ module Afipws
       Array.wrap(opciones[:comprobantes]).map do |comprobante|
         response = request(:fex_authorize, { 'Auth' => auth, 'Cmp' => comprobante_to_request(comprobante, opciones) }, raise_on_errors: false)
         result = x2r(response[:fex_result_auth] || {}, id: :integer, cuit: :integer, cbte_tipo: :integer, punto_vta: :integer,
-          cbte_nro: :integer, fch_venc_cae: :date, fecha_vencimiento_cae: :date, fch_cbte: :date)
+          cbte_nro: :integer, fch_venc_cae: :date, fch_cbte: :date)
         errores = normalize_messages(response[:fex_err], :err_code, :err_msg)
         eventos = normalize_messages(response[:fex_events], :event_code, :event_msg)
 
         {
           resultado: result[:resultado],
           cae: result[:cae],
-          cae_fch_vto: result[:fch_venc_cae] || result[:fecha_vencimiento_cae],
+          cae_fch_vto: result[:fch_venc_cae],
           cbte_nro: result[:cbte_nro],
+          reproceso: result[:reproceso] == 'S',
           observaciones: observaciones(result, errores),
           errores: errores,
           eventos: eventos
@@ -77,34 +78,32 @@ module Afipws
     end
 
     def request_payload comprobante
-      payload = {
-        'Id' => comprobante[:id],
-        'Fecha_cbte' => comprobante[:fecha_cbte],
-        'Cbte_Tipo' => comprobante[:cbte_tipo],
-        'Punto_vta' => comprobante[:punto_vta],
-        'Cbte_nro' => comprobante[:cbte_nro],
-        'Tipo_expo' => comprobante[:tipo_expo],
-        'Permiso_existente' => comprobante[:permiso_existente],
-        'Dst_cmp' => comprobante[:dst_cmp],
-        'Cliente' => comprobante[:cliente],
-        'Cuit_pais_cliente' => comprobante[:cuit_pais_cliente],
-        'Domicilio_cliente' => comprobante[:domicilio_cliente],
-        'Id_impositivo' => comprobante[:id_impositivo],
-        'Moneda_Id' => comprobante[:moneda_id],
-        'Moneda_ctz' => comprobante[:moneda_ctz],
-        'Obs_comerciales' => comprobante[:obs_comerciales],
-        'Imp_total' => comprobante[:imp_total],
-        'Obs' => comprobante[:obs],
-        'Forma_pago' => comprobante[:forma_pago],
-        'Incoterms' => comprobante[:incoterms],
-        'Incoterms_Ds' => comprobante[:incoterms_ds],
-        'Idioma_cbte' => comprobante[:idioma_cbte],
-        'Fecha_pago' => comprobante[:fecha_pago]
-      }
-
+      payload = {}
+      payload['Id'] = comprobante[:id]
+      payload['Fecha_cbte'] = comprobante[:fecha_cbte]
+      payload['Cbte_Tipo'] = comprobante[:cbte_tipo]
+      payload['Punto_vta'] = comprobante[:punto_vta]
+      payload['Cbte_nro'] = comprobante[:cbte_nro]
+      payload['Tipo_expo'] = comprobante[:tipo_expo]
+      payload['Permiso_existente'] = comprobante[:permiso_existente]
       payload['Permisos'] = request_collection(comprobante[:permisos], 'Permiso') if comprobante[:permisos].present?
+      payload['Dst_cmp'] = comprobante[:dst_cmp]
+      payload['Cliente'] = comprobante[:cliente]
+      payload['Cuit_pais_cliente'] = comprobante[:cuit_pais_cliente]
+      payload['Domicilio_cliente'] = comprobante[:domicilio_cliente]
+      payload['Id_impositivo'] = comprobante[:id_impositivo]
+      payload['Moneda_Id'] = comprobante[:moneda_id]
+      payload['Moneda_ctz'] = comprobante[:moneda_ctz]
+      payload['Obs_comerciales'] = comprobante[:obs_comerciales]
+      payload['Imp_total'] = comprobante[:imp_total]
+      payload['Obs'] = comprobante[:obs]
       payload['Cmps_asoc'] = request_collection(comprobante[:cmps_asoc], 'Cmp_asoc') if comprobante[:cmps_asoc].present?
+      payload['Forma_pago'] = comprobante[:forma_pago]
+      payload['Incoterms'] = comprobante[:incoterms]
+      payload['Incoterms_Ds'] = comprobante[:incoterms_ds]
+      payload['Idioma_cbte'] = comprobante[:idioma_cbte]
       payload['Items'] = request_collection(comprobante[:items], 'Item') if comprobante[:items].present?
+      payload['Fecha_pago'] = comprobante[:fecha_pago]
       payload['Opcionales'] = request_collection(comprobante[:opcionales], 'Opcional') if comprobante[:opcionales].present?
       payload['Actividades'] = request_collection(comprobante[:actividades], 'Actividad') if comprobante[:actividades].present?
       payload.compact
