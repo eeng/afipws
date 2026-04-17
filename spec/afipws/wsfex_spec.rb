@@ -13,7 +13,10 @@ module Afipws
           '//CbteTipo' => 19
         )).returns(fixture('wsfex/fex_get_last_cmp/success'))
 
-        ws.ultimo_comprobante_autorizado(pto_vta: 3, cbte_tipo: 19).should == 20
+        ws.ultimo_comprobante_autorizado(pto_vta: 3, cbte_tipo: 19).should == {
+          cbte_nro: 20,
+          cbte_fecha: Date.new(2026, 4, 10)
+        }
       end
 
       it 'autorizar_comprobantes' do

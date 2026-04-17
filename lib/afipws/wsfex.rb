@@ -1,5 +1,9 @@
 module Afipws
   class WSFEX
+    include TypeConversions
+
+    attr_reader :wsaa, :cuit
+
     WSDL = {
       development: 'https://webserviceshomoext.afip.gob.ar/Fiscalizacion/wsfex/Service.asmx?WSDL',
       production: 'https://servicios1.afip.gob.ar/wsfexv1/service.asmx?WSDL',
@@ -7,14 +11,10 @@ module Afipws
     }.freeze
 
     REQUIRED_COMPROBANTE_FIELDS = %i[
-      id fecha_cbte cbte_tipo punto_vta cbte_nro tipo_expo permiso_existente dst_cmp cliente
-      domicilio_cliente moneda_id moneda_ctz imp_total idioma_cbte items
+      id cbte_tipo punto_vta cbte_nro tipo_expo permiso_existente dst_cmp cliente
+      domicilio_cliente moneda_id imp_total idioma_cbte items
     ].freeze
     REQUIRED_ITEM_FIELDS = %i[pro_ds pro_umed pro_total_item].freeze
-
-    include TypeConversions
-
-    attr_reader :wsaa, :cuit
 
     def initialize options = {}
       @cuit = options[:cuit]
@@ -23,7 +23,8 @@ module Afipws
     end
 
     def ultimo_comprobante_autorizado opciones
-      request(:fex_get_last_cmp, { 'Auth' => auth, 'PtoVta' => opciones[:pto_vta], 'CbteTipo' => opciones[:cbte_tipo] })[:fex_result_last_cmp][:cbte_nro].to_i
+      response = request(:fex_get_last_cmp, { 'Auth' => auth, 'PtoVta' => opciones[:pto_vta], 'CbteTipo' => opciones[:cbte_tipo] })
+      x2r(response[:fex_result_last_cmp] || {}, cbte_nro: :integer, cbte_fecha: :date)
     end
 
     def autorizar_comprobantes opciones
@@ -94,6 +95,7 @@ module Afipws
       payload['Id_impositivo'] = comprobante[:id_impositivo]
       payload['Moneda_Id'] = comprobante[:moneda_id]
       payload['Moneda_ctz'] = comprobante[:moneda_ctz]
+      payload['CanMisMonExt'] = comprobante[:can_mis_mon_ext]
       payload['Obs_comerciales'] = comprobante[:obs_comerciales]
       payload['Imp_total'] = comprobante[:imp_total]
       payload['Obs'] = comprobante[:obs]
