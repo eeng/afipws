@@ -23,12 +23,12 @@ module Afipws
     end
 
     def ultimo_comprobante_autorizado opciones
-      request(:fex_get_last_cmp, 'Auth' => auth, 'PtoVta' => opciones[:pto_vta], 'CbteTipo' => opciones[:cbte_tipo])[:fex_result_last_cmp][:cbte_nro].to_i
+      request(:fex_get_last_cmp, { 'Auth' => auth, 'PtoVta' => opciones[:pto_vta], 'CbteTipo' => opciones[:cbte_tipo] })[:fex_result_last_cmp][:cbte_nro].to_i
     end
 
     def autorizar_comprobantes opciones
       Array.wrap(opciones[:comprobantes]).map do |comprobante|
-        response = request(:fex_authorize, 'Auth' => auth, 'Cmp' => comprobante_to_request(comprobante, opciones), raise_on_errors: false)
+        response = request(:fex_authorize, { 'Auth' => auth, 'Cmp' => comprobante_to_request(comprobante, opciones) }, raise_on_errors: false)
         result = x2r(response[:fex_result_auth] || {}, id: :integer, cuit: :integer, cbte_tipo: :integer, punto_vta: :integer,
           cbte_nro: :integer, fch_venc_cae: :date, fecha_vencimiento_cae: :date, fch_cbte: :date)
         errores = normalize_messages(response[:fex_err], :err_code, :err_msg)

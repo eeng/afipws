@@ -104,6 +104,40 @@ module Afipws
         ]
       end
 
+      it 'autorizar_comprobantes con error devuelve el error sin levantar excepción' do
+        savon.expects(:fex_authorize).with(message: :any).returns(fixture('wsfex/fex_authorize/con_error'))
+
+        ws.autorizar_comprobantes(
+          cbte_tipo: 19,
+          pto_vta: 3,
+          comprobantes: [{
+            cbte_nro: 46,
+            fecha_cbte: Date.new(2026, 4, 14),
+            tipo_expo: 2,
+            permiso_existente: 'N',
+            dst_cmp: 200,
+            cliente: 'Cliente del exterior',
+            cuit_pais_cliente: 55_555_555_555,
+            domicilio_cliente: 'Rua Falsa 123',
+            moneda_id: 'DOL',
+            moneda_ctz: 1,
+            imp_total: 121,
+            idioma_cbte: 1,
+            items: [{ pro_ds: 'Servicio mensual', pro_umed: 7, pro_total_item: 121 }]
+          }]
+        ).should == [
+          {
+            resultado: 'R',
+            cae: nil,
+            cae_fch_vto: nil,
+            cbte_nro: 46,
+            observaciones: [{ code: 1570, msg: 'Cuit_pais_cliente invalido' }],
+            errores: [{ code: 1570, msg: 'Cuit_pais_cliente invalido' }],
+            eventos: []
+          }
+        ]
+      end
+
       it 'valida campos obligatorios del comprobante' do
         -> { ws.autorizar_comprobantes(cbte_tipo: 19, pto_vta: 3, comprobantes: [{ cbte_nro: 44 }]) }.should raise_error(
           ArgumentError,
