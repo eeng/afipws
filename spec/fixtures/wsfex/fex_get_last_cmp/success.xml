@@ -6,6 +6,14 @@
           <Cbte_nro>20</Cbte_nro>
           <Cbte_fecha>20260410</Cbte_fecha>
         </FEXResult_LastCMP>
+        <FEXErr>
+          <ErrCode>0</ErrCode>
+          <ErrMsg>OK</ErrMsg>
+        </FEXErr>
+        <FEXEvents>
+          <EventCode>0</EventCode>
+          <EventMsg></EventMsg>
+        </FEXEvents>
       </FEXGetLast_CMPResult>
     </FEXGetLast_CMPResponse>
   </soap:Body>

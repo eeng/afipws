@@ -3,15 +3,23 @@
     <FEXAuthorizeResponse xmlns="http://ar.gov.afip.dif.fexv1/">
       <FEXAuthorizeResult>
         <FEXResultAuth>
-          <Resultado>R</Resultado>
+          <Id>45</Id>
+          <Cuit>20111111112</Cuit>
+          <Cbte_tipo>19</Cbte_tipo>
+          <Punto_vta>3</Punto_vta>
           <Cbte_nro>45</Cbte_nro>
+          <Fch_cbte>20260414</Fch_cbte>
+          <Resultado>R</Resultado>
+          <Reproceso>N</Reproceso>
           <Motivos_Obs>Observacion</Motivos_Obs>
         </FEXResultAuth>
+        <FEXErr>
+          <ErrCode>0</ErrCode>
+          <ErrMsg>OK</ErrMsg>
+        </FEXErr>
         <FEXEvents>
-          <Evt>
-            <EventCode>2001</EventCode>
-            <EventMsg>Evento programado</EventMsg>
-          </Evt>
+          <EventCode>2001</EventCode>
+          <EventMsg>Evento programado</EventMsg>
         </FEXEvents>
       </FEXAuthorizeResult>
     </FEXAuthorizeResponse>
