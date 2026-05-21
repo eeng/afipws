@@ -16,6 +16,24 @@ module Afipws
     ].freeze
     REQUIRED_ITEM_FIELDS = %i[pro_ds pro_umed pro_total_item].freeze
 
+    # Tipos de comprobante (manual WSFEX v3.1.1, pág. 19)
+    FACTURA_E = 19
+    NOTA_DEBITO_E = 20
+    NOTA_CREDITO_E = 21
+    NOTAS_DE_AJUSTE_E = [NOTA_DEBITO_E, NOTA_CREDITO_E].freeze
+
+    # Tipos de exportación (pág. 13): 1=Bienes, 2=Servicios, 4=Otros
+    TIPOS_EXPO_NO_BIENES = [2, 4].freeze
+
+    # Remitos sin tope de cantidad como cmps_asoc (pág. 19)
+    REMITOS_SIN_TOPE = [88, 89, 91, 993, 994].freeze
+
+    # Unidades de medida que indican intangibles/servicios sin pro_qty (pág. 21)
+    UMEDS_SIN_CANTIDAD = [0, 97, 99].freeze
+
+    # Tope máximo de ítems por comprobante (pág. 21, código 1781)
+    MAX_ITEMS_POR_COMPROBANTE = 9999
+
     def initialize options = {}
       @cuit = options[:cuit]
       @wsaa = WSAA.new options.merge(service: 'wsfex')
@@ -154,13 +172,13 @@ module Afipws
         raise ArgumentError, 'WSFEX requiere que permiso_existente sea S, N o vacío'
       end
 
-      if [2, 4].include?(tipo_expo)
+      if TIPOS_EXPO_NO_BIENES.include?(tipo_expo)
         raise ArgumentError, 'WSFEX requiere permiso_existente vacío para tipo_expo 2 o 4' if permiso_existente.present?
         raise ArgumentError, 'WSFEX no permite permisos para tipo_expo 2 o 4' if permisos.present?
         return
       end
 
-      if cbte_tipo == 19
+      if cbte_tipo == FACTURA_E
         raise ArgumentError, 'WSFEX requiere permiso_existente para cbte_tipo 19 y tipo_expo 1' if permiso_existente.blank?
         raise ArgumentError, 'WSFEX requiere permisos cuando permiso_existente es S' if permiso_existente == 'S' && permisos.blank?
         raise ArgumentError, 'WSFEX no permite permisos cuando permiso_existente es N' if permiso_existente == 'N' && permisos.present?
@@ -185,7 +203,7 @@ module Afipws
         raise ArgumentError, 'WSFEX requiere que can_mis_mon_ext sea S o N'
       end
 
-      if can_mis_mon_ext.present? && (moneda_id == 'PES' || [20, 21].include?(cbte_tipo))
+      if can_mis_mon_ext.present? && (moneda_id == 'PES' || NOTAS_DE_AJUSTE_E.include?(cbte_tipo))
         raise ArgumentError, 'WSFEX no permite can_mis_mon_ext para moneda PES o cbte_tipo 20/21'
       end
 
@@ -208,8 +226,8 @@ module Afipws
       tipo_expo = comprobante[:tipo_expo].to_i
       fecha_pago = comprobante[:fecha_pago]
 
-      raise ArgumentError, 'WSFEX requiere forma_pago para cbte_tipo 19' if cbte_tipo == 19 && comprobante[:forma_pago].blank?
-      if cbte_tipo == 19 && tipo_expo == 1 && comprobante[:incoterms].blank?
+      raise ArgumentError, 'WSFEX requiere forma_pago para cbte_tipo 19' if cbte_tipo == FACTURA_E && comprobante[:forma_pago].blank?
+      if cbte_tipo == FACTURA_E && tipo_expo == 1 && comprobante[:incoterms].blank?
         raise ArgumentError, 'WSFEX requiere incoterms para cbte_tipo 19 y tipo_expo 1'
       end
       if comprobante[:incoterms_ds].present? && comprobante[:incoterms].blank?
@@ -220,7 +238,7 @@ module Afipws
         raise ArgumentError, 'WSFEX requiere que fecha_pago tenga formato YYYYMMDD o sea Date'
       end
 
-      if cbte_tipo == 19 && [2, 4].include?(tipo_expo)
+      if cbte_tipo == FACTURA_E && TIPOS_EXPO_NO_BIENES.include?(tipo_expo)
         raise ArgumentError, 'WSFEX requiere fecha_pago para cbte_tipo 19 y tipo_expo 2 o 4' if fecha_pago.blank?
 
         fecha_cbte = parse_ws_date(comprobante[:fecha_cbte])
@@ -228,7 +246,7 @@ module Afipws
         if fecha_cbte.present? && fecha_pago_value.present? && fecha_pago_value < fecha_cbte
           raise ArgumentError, 'WSFEX requiere que fecha_pago sea igual o posterior a fecha_cbte'
         end
-      elsif cbte_tipo != 19 && fecha_pago.present?
+      elsif cbte_tipo != FACTURA_E && fecha_pago.present?
         raise ArgumentError, 'WSFEX no permite fecha_pago cuando cbte_tipo no es 19'
       end
     end
@@ -238,30 +256,28 @@ module Afipws
       tipo_expo = comprobante[:tipo_expo].to_i
       cmps_asoc = Array.wrap(comprobante.dig(:cmps_asoc, :cmp_asoc))
 
-      if [20, 21].include?(cbte_tipo) && tipo_expo == 2 && cmps_asoc.blank?
+      if NOTAS_DE_AJUSTE_E.include?(cbte_tipo) && tipo_expo == 2 && cmps_asoc.blank?
         raise ArgumentError, 'WSFEX requiere cmps_asoc para notas de servicio'
       end
 
       return if cmps_asoc.blank?
 
-      if cbte_tipo == 19
-        allowed_remitos = [88, 89, 91, 993, 994]
-        if cmps_asoc.any? { |cmp_asoc| !allowed_remitos.include?(cmp_asoc[:cbte_tipo].to_i) }
+      if cbte_tipo == FACTURA_E
+        if cmps_asoc.any? { |cmp_asoc| !REMITOS_SIN_TOPE.include?(cmp_asoc[:cbte_tipo].to_i) }
           raise ArgumentError, 'WSFEX solo permite remitos de tabaco como cmps_asoc para cbte_tipo 19'
         end
-      elsif ![20, 21].include?(cbte_tipo)
+      elsif !NOTAS_DE_AJUSTE_E.include?(cbte_tipo)
         raise ArgumentError, 'WSFEX solo permite cmps_asoc para cbte_tipo 19, 20 o 21'
       end
 
-      remitos_sin_tope = [88, 89, 91, 993, 994]
-      if cmps_asoc.size > 1 && cmps_asoc.any? { |cmp_asoc| !remitos_sin_tope.include?(cmp_asoc[:cbte_tipo].to_i) }
+      if cmps_asoc.size > 1 && cmps_asoc.any? { |cmp_asoc| !REMITOS_SIN_TOPE.include?(cmp_asoc[:cbte_tipo].to_i) }
         raise ArgumentError, 'WSFEX solo permite más de un cmps_asoc cuando todos son remitos tipo 88, 89, 91, 993 o 994'
       end
     end
 
     def validate_items! items
       raise ArgumentError, 'WSFEX requiere al menos un item' if items.blank?
-      raise ArgumentError, 'WSFEX permite hasta 9999 items' if items.size > 9999
+      raise ArgumentError, "WSFEX permite hasta #{MAX_ITEMS_POR_COMPROBANTE} items" if items.size > MAX_ITEMS_POR_COMPROBANTE
 
       items.each_with_index do |item, index|
         missing_item_fields = REQUIRED_ITEM_FIELDS.select { |field| item[field].blank? }
@@ -270,7 +286,7 @@ module Afipws
         end
 
         pro_umed = item[:pro_umed].to_i
-        if ![0, 97, 99].include?(pro_umed)
+        if !UMEDS_SIN_CANTIDAD.include?(pro_umed)
           raise ArgumentError, "WSFEX requiere pro_qty en item #{index + 1}" if item[:pro_qty].blank?
           raise ArgumentError, "WSFEX requiere pro_precio_uni en item #{index + 1}" if item[:pro_precio_uni].blank?
         else
