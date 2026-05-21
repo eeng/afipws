@@ -60,7 +60,7 @@ module Afipws
       validate_comprobante!(comprobante)
 
       request_payload(
-        r2x(comprobante, fecha_cbte: :date, fecha_pago: :date, fecha_permiso_existente: :date)
+        r2x(comprobante.compact, fecha_cbte: :date, fecha_pago: :date, fecha_permiso_existente: :date)
       )
     end
 
