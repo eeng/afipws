@@ -72,7 +72,7 @@ module Afipws
             cae_fch_vto: Date.new(2026, 5, 1),
             cbte_nro: 44,
             reproceso: false,
-            observaciones: [],
+            observaciones: nil,
             errores: [],
             eventos: []
           }
@@ -109,7 +109,7 @@ module Afipws
             cae_fch_vto: nil,
             cbte_nro: 45,
             reproceso: false,
-            observaciones: [{ code: nil, msg: 'Observacion' }],
+            observaciones: 'Observacion',
             errores: [],
             eventos: [{ code: 2001, msg: 'Evento programado' }]
           }
@@ -146,7 +146,7 @@ module Afipws
             cae_fch_vto: nil,
             cbte_nro: 46,
             reproceso: false,
-            observaciones: [{ code: 1570, msg: 'Cuit_pais_cliente invalido' }],
+            observaciones: nil,
             errores: [{ code: 1570, msg: 'Cuit_pais_cliente invalido' }],
             eventos: []
           }

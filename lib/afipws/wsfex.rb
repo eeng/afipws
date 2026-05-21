@@ -42,7 +42,7 @@ module Afipws
           cae_fch_vto: result[:fch_venc_cae],
           cbte_nro: result[:cbte_nro],
           reproceso: result[:reproceso] == 'S',
-          observaciones: observaciones(result, errores),
+          observaciones: result[:motivos_obs].presence,
           errores: errores,
           eventos: eventos
         }
@@ -299,14 +299,6 @@ module Afipws
       Float(value)
     rescue ArgumentError, TypeError
       nil
-    end
-
-    def observaciones result, errores
-      return errores if errores.present?
-      motivos = result[:motivos_obs]
-      return [] if motivos.blank?
-
-      [{ code: nil, msg: motivos }]
     end
 
     def normalize_messages raw_messages, code_key, msg_key
