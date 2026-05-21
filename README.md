@@ -84,7 +84,7 @@ Para `autorizar_comprobantes`, el payload mínimo sigue la estructura documentad
 - `cliente`
 - `domicilio_cliente`
 - `moneda_id`
-- `moneda_ctz`
+- `moneda_ctz` (no requerido si `can_mis_mon_ext` es `'S'`; debe ser mayor a 0)
 - `imp_total`
 - `idioma_cbte`
 - `items`
