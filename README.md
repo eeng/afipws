@@ -74,12 +74,11 @@ rta = ws.autorizar_comprobantes(
 Para `autorizar_comprobantes`, el payload mínimo sigue la estructura documentada por AFIP para `FEXAuthorize`. A nivel comprobante se validan como obligatorios:
 
 - `id` (se completa automáticamente con `cbte_nro` si no se envía)
-- `fecha_cbte`
 - `cbte_tipo`
 - `punto_vta`
 - `cbte_nro`
 - `tipo_expo`
-- `permiso_existente`
+- `permiso_existente` (requerido sólo para `cbte_tipo=19` y `tipo_expo=1`; vacío en otros casos)
 - `dst_cmp`
 - `cliente`
 - `domicilio_cliente`
