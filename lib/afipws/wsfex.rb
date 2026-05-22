@@ -67,11 +67,11 @@ module Afipws
       end
     end
 
+    private
+
     def auth
       wsaa.auth.merge(cuit: cuit).transform_keys { |key| soap_key(key) }
     end
-
-    private
 
     def comprobante_to_request comprobante, opciones
       comprobante = normalize_comprobante(comprobante, opciones)
