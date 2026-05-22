@@ -86,6 +86,7 @@ module Afipws
       comprobante.deep_dup.tap do |payload|
         payload[:cbte_tipo] ||= opciones[:cbte_tipo]
         payload[:punto_vta] ||= opciones[:pto_vta]
+        payload[:id] ||= payload[:cbte_nro]
         payload[:fecha_cbte] ||= payload.delete(:cbte_fch)
         payload[:fecha_pago] ||= payload.delete(:fch_vto_pago)
         payload[:items] = normalize_collection(payload[:items], :item)

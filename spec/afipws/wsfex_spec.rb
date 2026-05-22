@@ -160,6 +160,34 @@ module Afipws
         )
       end
 
+      it 'usa cbte_nro como id cuando no se envía explícito' do
+        savon.expects(:fex_authorize).with(message: has_path(
+          '//Cmp/Id' => 44,
+          '//Cmp/Cbte_nro' => 44
+        )).returns(fixture('wsfex/fex_authorize/autorizacion_1_cbte'))
+
+        ws.autorizar_comprobantes(
+          pto_vta: 3,
+          cbte_tipo: 19,
+          comprobantes: [{
+            cbte_nro: 44,
+            fecha_cbte: Date.new(2026, 4, 14),
+            tipo_expo: 2,
+            dst_cmp: 200,
+            cliente: 'Cliente del exterior',
+            cuit_pais_cliente: 55_555_555_555,
+            domicilio_cliente: 'Rua Falsa 123',
+            moneda_id: 'DOL',
+            moneda_ctz: 1,
+            imp_total: 121,
+            forma_pago: 'Transferencia',
+            idioma_cbte: 1,
+            fecha_pago: Date.new(2026, 4, 20),
+            items: [{ pro_ds: 'Servicio mensual', pro_qty: 1, pro_umed: 7, pro_precio_uni: 121, pro_total_item: 121 }]
+          }]
+        )
+      end
+
       it 'requiere fecha_pago para facturas de servicios' do
         -> do
           ws.autorizar_comprobantes(
