@@ -105,7 +105,7 @@ module Afipws
       payload['Punto_vta'] = comprobante[:punto_vta]
       payload['Cbte_nro'] = comprobante[:cbte_nro]
       payload['Tipo_expo'] = comprobante[:tipo_expo]
-      payload['Permiso_existente'] = comprobante[:permiso_existente]
+      payload['Permiso_existente'] = comprobante[:permiso_existente] || ''
       payload['Permisos'] = request_collection(comprobante[:permisos], 'Permiso') if comprobante[:permisos].present?
       payload['Dst_cmp'] = comprobante[:dst_cmp]
       payload['Cliente'] = comprobante[:cliente]
