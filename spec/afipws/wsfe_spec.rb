@@ -333,12 +333,12 @@ module Afipws
     end
 
     context 'comprobante_to_request' do
-      def c2r comprobante
-        subject.comprobante_to_request comprobante
+      def c2r comprobante, opciones
+        subject.comprobante_to_request comprobante, opciones
       end
 
       it 'no debería enviar tag tributos si el impTrib es 0' do
-        c2r(imp_trib: 0.0, tributos: { tributo: [] }).should_not have_key :tributos
+        c2r({imp_trib: 0.0, tributos: { tributo: [] }},{}).should_not have_key :tributos
       end
     end
   end

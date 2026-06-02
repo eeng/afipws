@@ -1,0 +1,27 @@
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <FEXAuthorizeResponse xmlns="http://ar.gov.afip.dif.fexv1/">
+      <FEXAuthorizeResult>
+        <FEXResultAuth>
+          <Id>46</Id>
+          <Cuit>20111111112</Cuit>
+          <Cbte_tipo>19</Cbte_tipo>
+          <Punto_vta>3</Punto_vta>
+          <Cbte_nro>46</Cbte_nro>
+          <Fch_cbte>20260414</Fch_cbte>
+          <Resultado>R</Resultado>
+          <Reproceso>N</Reproceso>
+          <Motivos_Obs></Motivos_Obs>
+        </FEXResultAuth>
+        <FEXErr>
+          <ErrCode>1570</ErrCode>
+          <ErrMsg>Cuit_pais_cliente invalido</ErrMsg>
+        </FEXErr>
+        <FEXEvents>
+          <EventCode>0</EventCode>
+          <EventMsg></EventMsg>
+        </FEXEvents>
+      </FEXAuthorizeResult>
+    </FEXAuthorizeResponse>
+  </soap:Body>
+</soap:Envelope>
