@@ -55,6 +55,30 @@ mise run test
 
 También se puede abrir una consola interactiva con `mise run console`.
 
+### Smoke test manual
+
+El script `script/smoke_test.rb` ejecuta consultas de solo lectura contra el
+entorno de homologación. Requiere un certificado vigente y autorizado para los
+servicios consultados:
+
+```sh
+ARCA_CUIT='...' \
+ARCA_KEY='path/to/development.key' \
+ARCA_CERT='path/to/development.crt' \
+bundle exec ruby -Ilib script/smoke_test.rb
+```
+
+```sh
+ARCA_ENV=production \
+ARCA_CUIT='...' ARCA_KEY='path/to/production.key' \
+ARCA_CERT='path/to/production.crt' \
+bundle exec ruby -Ilib script/smoke_test.rb
+```
+
+Las consultas de padrón requieren además `ARCA_PERSONA_ID`. La consulta de
+`wconsdeclaracion` es opcional y requiere `ARCA_RUN_WCONS=1`, además de los
+valores correctos para `ARCA_TIPO_AGENTE` y `ARCA_ROL`.
+
 ## Contributing
 
 Las contribuciones son bienvenidas. Consultá [AGENTS.md](AGENTS.md) para la
