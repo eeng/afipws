@@ -4,7 +4,7 @@
 
 This repository is the `afipws` Ruby gem, a client for AFIP web services. Public entry points and service implementations live in `lib/`: `lib/afipws.rb` loads the gem, while files such as `wsfe.rb`, `wsaa.rb`, and `persona_service_a100.rb` implement individual services. Shared errors and extensions belong in `lib/afipws/errors/` and `lib/afipws/core_ext/`.
 
-RSpec tests mirror production paths under `spec/afipws/` (for example, `lib/afipws/client.rb` maps to `spec/afipws/client_spec.rb`). Keep recorded SOAP XML and WSDL inputs in the corresponding `spec/fixtures/` service directory. `examples/` contains runnable usage samples; update these when a public API change needs illustration.
+RSpec tests mirror production paths under `spec/afipws/` (for example, `lib/afipws/client.rb` maps to `spec/afipws/client_spec.rb`). Keep recorded SOAP XML and WSDL inputs in the corresponding `spec/fixtures/` service directory. Use the README and manual smoke test for runnable usage examples.
 
 ## Build, Test, and Development Commands
 
