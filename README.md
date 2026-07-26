@@ -48,9 +48,15 @@ También se puede abrir una consola interactiva con `mise run console`.
 
 ## Contributing
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Test, test, test (`guard`)
-4. Commit your changes (`git commit -am 'Add some feature'`)
-5. Push to the branch (`git push origin my-new-feature`)
-6. Create new Pull Request
+Las contribuciones son bienvenidas. Consultá [AGENTS.md](AGENTS.md) para la
+estructura del proyecto, estilo de código, pruebas y criterios para commits y
+pull requests.
+
+Antes de abrir un pull request, ejecutá la suite completa:
+
+```sh
+mise run test
+```
+
+Incluí una descripción breve del cambio y las pruebas realizadas. No incluyas
+certificados, claves privadas ni credenciales en commits o ejemplos.
