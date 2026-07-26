@@ -34,6 +34,15 @@ puts ws.cotizacion 'DOL'
 
 Ver specs para más ejemplos.
 
+### WSFE en producción
+
+El endpoint de producción de WSFE utiliza actualmente parámetros Diffie-Hellman
+que OpenSSL rechaza con su nivel de seguridad predeterminado. `WSFE` aplica
+automáticamente una compatibilidad limitada a ese endpoint (`DEFAULT@SECLEVEL=1`):
+mantiene TLS 1.2, la verificación del certificado y no modifica otros servicios.
+El ajuste se puede reemplazar pasando `savon: {ssl_ciphers: '...'}`; debe usarse
+únicamente mientras ARCA mantenga este problema de infraestructura.
+
 ## Desarrollo
 
 Este proyecto usa [mise](https://mise.jdx.dev/) para seleccionar Ruby y ejecutar las tareas de desarrollo. El archivo `.ruby-version` fija la versión de Ruby requerida.

@@ -2,6 +2,12 @@ require 'spec_helper'
 
 module Afipws
   describe Client do
+    it 'preserva los modificadores de seguridad OpenSSL en cifrados explícitos' do
+      ssl = HTTPI::Auth::SSL.new
+      ssl.ciphers = RawSSLCipherString.new('DEFAULT@SECLEVEL=1')
+      ssl.ciphers.should == 'DEFAULT@SECLEVEL=1'
+    end
+
     context 'errores' do
       subject { Client.new(wsdl: Afipws::WSFE::WSDL[:test]) }
 
