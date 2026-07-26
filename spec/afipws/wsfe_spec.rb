@@ -278,8 +278,34 @@ module Afipws
 
       it 'debería usar las url para production cuando el env es production' do
         Client.expects(:new).with(wsdl: 'https://wsaa.afip.gov.ar/ws/services/LoginCms?wsdl')
-        Client.expects(:new).with(wsdl: 'https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL', convert_request_keys_to: :camelcase)
+        Client.expects(:new).with(
+          wsdl: 'https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL',
+          convert_request_keys_to: :camelcase,
+          ssl_ciphers: WSFE::PRODUCTION_SSL_CIPHERS
+        )
         WSFE.new env: 'production'
+      end
+
+      it 'permite reemplazar los cifrados de production explícitamente' do
+        Client.expects(:new).with(
+          wsdl: 'https://wsaa.afip.gov.ar/ws/services/LoginCms?wsdl',
+          ssl_ciphers: 'DEFAULT'
+        )
+        Client.expects(:new).with(
+          wsdl: 'https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL',
+          convert_request_keys_to: :camelcase,
+          ssl_ciphers: 'DEFAULT'
+        )
+        WSFE.new env: :production, savon: {ssl_ciphers: 'DEFAULT'}
+      end
+
+      it 'no debilita los cifrados fuera de production' do
+        Client.expects(:new).with(wsdl: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl')
+        Client.expects(:new).with(
+          wsdl: 'https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL',
+          convert_request_keys_to: :camelcase
+        )
+        WSFE.new env: :development
       end
     end
 

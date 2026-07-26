@@ -1,5 +1,10 @@
 module Afipws
   class WSFE
+    # ARCA's production WSFE endpoint currently uses DH parameters rejected by
+    # OpenSSL's default security level. Keep this exception local to WSFE's
+    # production client; do not weaken TLS settings for other services.
+    PRODUCTION_SSL_CIPHERS = 'DEFAULT@SECLEVEL=1'.freeze
+
     WSDL = {
       development: 'https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL',
       production: 'https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL',
@@ -13,7 +18,14 @@ module Afipws
     def initialize options = {}
       @cuit = options[:cuit]
       @wsaa = WSAA.new options.merge(service: 'wsfe')
-      @client = Client.new Hash(options[:savon]).reverse_merge(wsdl: WSDL[@wsaa.env], convert_request_keys_to: :camelcase)
+      savon_options = Hash(options[:savon]).reverse_merge(
+        wsdl: WSDL[@wsaa.env],
+        convert_request_keys_to: :camelcase
+      )
+      if @wsaa.env == :production
+        savon_options[:ssl_ciphers] ||= RawSSLCipherString.new(PRODUCTION_SSL_CIPHERS)
+      end
+      @client = Client.new savon_options
     end
 
     def dummy
