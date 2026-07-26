@@ -34,6 +34,18 @@ puts ws.cotizacion 'DOL'
 
 Ver specs para más ejemplos.
 
+## Desarrollo
+
+Este proyecto usa [mise](https://mise.jdx.dev/) para seleccionar Ruby y ejecutar las tareas de desarrollo. El archivo `.ruby-version` fija la versión de Ruby requerida.
+
+```sh
+mise install
+mise run setup
+mise run test
+```
+
+También se puede abrir una consola interactiva con `mise run console`.
+
 ## Contributing
 
 1. Fork it

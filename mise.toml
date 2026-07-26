@@ -1,0 +1,14 @@
+[tools]
+ruby = "3.3.4"
+
+[tasks.setup]
+description = "Install Ruby dependencies"
+run = "bundle install"
+
+[tasks.test]
+description = "Run the test suite"
+run = "bundle exec rake"
+
+[tasks.console]
+description = "Open the project console"
+run = "bundle exec ruby -Ilib bin/console"
