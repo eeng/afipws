@@ -84,7 +84,7 @@ GEM
       net-smtp
     method_source (1.1.0)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.7)
+    mini_portile2 (2.8.9)
     minitest (5.27.0)
     mocha (0.9.10)
       rake
@@ -102,10 +102,10 @@ GEM
     net-smtp (0.5.0)
       net-protocol
     nkf (0.2.0)
-    nokogiri (1.16.6)
+    nokogiri (1.19.4)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.16.6-x86_64-linux)
+    nokogiri (1.19.4-x86_64-linux-gnu)
       racc (~> 1.4)
     nori (2.7.0)
       bigdecimal
@@ -116,7 +116,7 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     public_suffix (7.0.5)
-    racc (1.8.0)
+    racc (1.8.1)
     rack (3.1.21)
     rake (13.0.1)
     rb-fsevent (0.11.2)
