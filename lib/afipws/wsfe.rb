@@ -67,6 +67,11 @@ module Afipws
       x2r get_array(r, :tributo_tipo), id: :integer, fch_desde: :date, fch_hasta: :date
     end
 
+    def tipos_condicion_iva_receptor
+      r = request :fe_param_get_condicion_iva_receptor, auth
+      x2r get_array(r, :condicion_iva_receptor), id: :integer
+    end
+
     def puntos_venta
       r = request :fe_param_get_ptos_venta, auth
       x2r get_array(r, :pto_venta), nro: :integer, fch_baja: :date, bloqueado: :boolean
@@ -98,8 +103,9 @@ module Afipws
     def comprobante_to_request comprobante
       nro = comprobante.delete :cbte_nro
       iva = comprobante.delete :imp_iva
+      iva_receptor_id = comprobante.delete :condicion_iva_receptor_id
       comprobante.delete :tributos if comprobante[:imp_trib] == 0
-      comprobante.merge cbte_desde: nro, cbte_hasta: nro, 'ImpIVA' => iva
+      comprobante.merge cbte_desde: nro, cbte_hasta: nro, 'ImpIVA' => iva, 'CondicionIVAReceptorId' => iva_receptor_id
     end
 
     def solicitar_caea
